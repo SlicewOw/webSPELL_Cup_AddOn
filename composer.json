@@ -1,0 +1,16 @@
+{
+    "name": "myrisk/webspell_cup_addon",
+    "description": "Composer package of my Cup add-on for webSPELL NG",
+    "authors": [
+        {
+            "name": "SlicewOw",
+            "email": "slicewow@cup-addon.de"
+        }
+    ],
+    "require": {
+        "php": "^7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.2"
+    }
+}
