@@ -1151,12 +1151,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SlicewOw/webSPELL_NG_QueryBuilder.git",
-                "reference": "1d585cbf0a05cd9fec16be82d364385af64ab107"
+                "reference": "6af2528b64ce7ae6229070a828dd6f5e6d38995d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SlicewOw/webSPELL_NG_QueryBuilder/zipball/1d585cbf0a05cd9fec16be82d364385af64ab107",
-                "reference": "1d585cbf0a05cd9fec16be82d364385af64ab107",
+                "url": "https://api.github.com/repos/SlicewOw/webSPELL_NG_QueryBuilder/zipball/6af2528b64ce7ae6229070a828dd6f5e6d38995d",
+                "reference": "6af2528b64ce7ae6229070a828dd6f5e6d38995d",
                 "shasum": ""
             },
             "require": {
@@ -1183,7 +1183,7 @@
                 }
             ],
             "description": "QueryBuilder can be used within webSPELL NG projects to execute queries",
-            "time": "2020-07-30T20:44:56+00:00"
+            "time": "2020-07-30T21:00:27+00:00"
         }
     ],
     "packages-dev": [
