@@ -45,4 +45,14 @@ final class CupTest extends TestCase
 
     }
 
+    public function testIfInvalidArgumentExceptionIsThrownIfCupStatusIsInvalid(): void
+    {
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $cup = new Cup();
+        $cup->setStatus(5);
+
+    }
+
 }

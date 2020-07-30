@@ -4,6 +4,8 @@ namespace myrisk\Cup;
 
 use DateTime;
 
+use \Respect\Validation\Validator;
+
 use \myrisk\Cup\Participant;
 use \myrisk\Cup\Enum\CupEnums;
 
@@ -51,6 +53,9 @@ class Cup {
 
     public function setStatus(int $cup_status): void
     {
+        if (!Validator::numericVal()->positive()->between(1, 4)->validate($cup_status)) {
+            throw new \InvalidArgumentException("cup_status_value_is_invalid");
+        }
         $this->cup_status = $cup_status;
     }
 
