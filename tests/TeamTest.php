@@ -10,7 +10,7 @@ final class TeamTest extends TestCase
     public function testIfCupInstanceCanBeCreated(): void
     {
 
-        $team = new \myrisk\Cup\Team();
+        $team = new Team();
         $team->setTeamId(1337);
         $team->setName("Test Cup Team Name");
 

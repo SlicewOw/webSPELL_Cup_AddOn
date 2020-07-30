@@ -13,4 +13,11 @@ abstract class CupEnums
     const CUP_STATUS_RUNNING = 3;
     const CUP_STATUS_FINISHED = 4;
 
+    /**
+     * Cup format
+     */
+    const CUP_FORMAT_BEST_OF_ONE = "bo1";
+    const CUP_FORMAT_BEST_OF_THREE = "bo3";
+    const CUP_FORMAT_BEST_OF_FIVE = "bo5";
+
 }

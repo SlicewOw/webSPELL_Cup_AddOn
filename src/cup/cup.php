@@ -4,14 +4,15 @@ namespace myrisk\Cup;
 
 use DateTime;
 
-use \myrisk\Cup\CupParticipant;
+use \myrisk\Cup\Participant;
+use \myrisk\Cup\Enum\CupEnums;
 
 class Cup {
 
     private $cup_id = null;
     private $cup_name = null;
-    private $cup_format = null;
-    private $cup_status = null;
+    private $cup_format = CupEnums::CUP_FORMAT_BEST_OF_ONE;
+    private $cup_status = CupEnums::CUP_STATUS_REGISTRATION;
 
     private $checkin_datetime = null;
     private $start_datetime = null;
@@ -48,12 +49,12 @@ class Cup {
         return $this->cup_format;
     }
 
-    public function setStatus(string $cup_status): void
+    public function setStatus(int $cup_status): void
     {
         $this->cup_status = $cup_status;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?int
     {
         return $this->cup_status;
     }
@@ -78,7 +79,7 @@ class Cup {
         return $this->start_datetime;
     }
 
-    public function addCupParticipant(\myrisk\Cup\Participant $participant): void
+    public function addCupParticipant(Participant $participant): void
     {
         array_push($this->participants, $participant);
     }
