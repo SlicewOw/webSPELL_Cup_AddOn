@@ -13,6 +13,7 @@ class Cup {
 
     private $cup_id = null;
     private $cup_name = null;
+    private $cup_mode = CupEnums::CUP_MODE_5ON5;
     private $cup_format = CupEnums::CUP_FORMAT_BEST_OF_ONE;
     private $cup_status = CupEnums::CUP_STATUS_REGISTRATION;
 
@@ -41,14 +42,14 @@ class Cup {
         return $this->cup_name;
     }
 
-    public function setFormat(string $cup_format): void
+    public function setMode(string $cup_mode): void
     {
-        $this->cup_format = $cup_format;
+        $this->cup_mode = $cup_mode;
     }
 
-    public function getFormat(): ?string
+    public function getMode(): ?string
     {
-        return $this->cup_format;
+        return $this->cup_mode;
     }
 
     public function setStatus(int $cup_status): void

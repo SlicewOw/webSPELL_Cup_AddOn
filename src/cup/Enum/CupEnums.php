@@ -14,10 +14,11 @@ abstract class CupEnums
     const CUP_STATUS_FINISHED = 4;
 
     /**
-     * Cup format
+     * Cup mode
      */
-    const CUP_FORMAT_BEST_OF_ONE = "bo1";
-    const CUP_FORMAT_BEST_OF_THREE = "bo3";
-    const CUP_FORMAT_BEST_OF_FIVE = "bo5";
+    const CUP_MODE_1ON1 = "1on1";
+    const CUP_MODE_2ON2 = "2on2";
+    const CUP_MODE_5ON5 = "5on5";
+    const CUP_MODE_11ON11 = "11on11";
 
 }
