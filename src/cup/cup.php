@@ -4,6 +4,8 @@ namespace myrisk\Cup;
 
 use DateTime;
 
+use \myrisk\Cup\CupParticipant;
+
 class Cup {
 
     private $cup_id = null;
@@ -76,9 +78,9 @@ class Cup {
         return $this->start_datetime;
     }
 
-    public function setCupParticipants(array $participants): void
+    public function addCupParticipant(\myrisk\Cup\Participant $participant): void
     {
-        $this->participants = $participants;
+        array_push($this->participants, $participant);
     }
 
     public function getCupParticipants(): array
