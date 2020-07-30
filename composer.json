@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "myrisk\\Cup\\": "src/cup/"
+            "myrisk\\": "src/"
         }
     }
 }
