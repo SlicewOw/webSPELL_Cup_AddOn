@@ -2,13 +2,10 @@
 
 namespace myrisk\Cup;
 
-use DateTime;
-
 use \Respect\Validation\Validator;
 
 use \myrisk\Cup\Participant;
 use \myrisk\Cup\Enum\CupEnums;
-use \myrisk\Cup\Enum\MatchEnums;
 
 class Cup {
 
@@ -65,22 +62,22 @@ class Cup {
         return $this->cup_status;
     }
 
-    public function setCheckInDateTime(DateTime $datetime): void
+    public function setCheckInDateTime(\DateTime $datetime): void
     {
         $this->checkin_datetime = $datetime;
     }
 
-    public function getCheckInDateTime(): ?DateTime
+    public function getCheckInDateTime(): ?\DateTime
     {
         return $this->checkin_datetime;
     }
 
-    public function setStartDateTime(DateTime $datetime): void
+    public function setStartDateTime(\DateTime $datetime): void
     {
         $this->start_datetime = $datetime;
     }
 
-    public function getStartDateTime(): ?DateTime
+    public function getStartDateTime(): ?\DateTime
     {
         return $this->start_datetime;
     }
