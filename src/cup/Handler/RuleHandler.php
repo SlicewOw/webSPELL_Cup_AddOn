@@ -6,9 +6,9 @@ use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
+use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Rule;
-use myrisk\Cup\Utils\DateUtils;
 
 class RuleHandler {
 

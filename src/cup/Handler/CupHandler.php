@@ -6,12 +6,12 @@ use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
+use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Cup;
 use myrisk\Cup\Enum\CupEnums;
 use myrisk\Cup\TeamParticipant;
 use myrisk\Cup\UserParticipant;
-use myrisk\Cup\Utils\DateUtils;
 
 class CupHandler {
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f3201cdfcddea70cb995c8f2c6955b5c",
+    "content-hash": "52d720f66ec77e611d951f6a1a1277d5",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -1256,6 +1256,47 @@
             "description": "Symfony Validator Component",
             "homepage": "https://symfony.com",
             "time": "2020-07-23T06:35:25+00:00"
+        },
+        {
+            "name": "webspell_ng/data_structures",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SlicewOw/webSPELL_NG_DataStructures.git",
+                "reference": "7a410506a7fcf01dd30d10c4c21295a9342c8c60"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SlicewOw/webSPELL_NG_DataStructures/zipball/7a410506a7fcf01dd30d10c4c21295a9342c8c60",
+                "reference": "7a410506a7fcf01dd30d10c4c21295a9342c8c60",
+                "shasum": ""
+            },
+            "require": {
+                "respect/validation": "^2.0",
+                "webspell_ng/query_builder": "dev-master"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12.36",
+                "phpunit/phpunit": "^9.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webspell_ng\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "SlicewOw",
+                    "email": "slicewow@webspell-ng.de"
+                }
+            ],
+            "description": "Abstract classes to be used within webSPELL NG projects",
+            "time": "2020-08-05T19:37:37+00:00"
         },
         {
             "name": "webspell_ng/query_builder",
@@ -2935,7 +2976,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "webspell_ng/query_builder": 20
+        "webspell_ng/query_builder": 20,
+        "webspell_ng/data_structures": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
