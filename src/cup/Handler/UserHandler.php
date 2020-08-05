@@ -21,7 +21,7 @@ class UserHandler {
         $queryBuilder
             ->select('*')
             ->from(WebSpellDatabaseConnection::getTablePrefix() . 'user')
-            ->where('teamID = ?')
+            ->where('userID = ?')
             ->setParameter(0, $user_id);
 
         $user_query = $queryBuilder->execute();
