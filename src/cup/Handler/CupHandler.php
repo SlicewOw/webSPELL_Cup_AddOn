@@ -2,13 +2,12 @@
 
 namespace myrisk\Cup\Handler;
 
-use DateTime;
-
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
 
 use myrisk\Cup\Cup;
+use myrisk\Cup\Participant;
 use myrisk\Cup\Utils\DateUtils;
 
 class CupHandler {
@@ -37,6 +36,41 @@ class CupHandler {
         $cup->setStatus($cup_result[0]['status']);
         $cup->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($cup_result[0]['checkin_date']));
         $cup->setStartDateTime(DateUtils::getDateTimeByMktimeValue($cup_result[0]['start_date']));
+
+        $cup = CupHandler::getCupParticipantsOfCup($cup);
+
+        return $cup;
+
+    }
+
+    private static function getCupParticipantsOfCup(\myrisk\Cup\Cup $cup): Cup
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->select('*')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . 'cups_teilnehmer')
+            ->where('cupID = ?')
+            ->setParameter(0, $cup->getCupId());
+
+        $cup_participant_query = $queryBuilder->execute();
+
+        while ($cup_participant_result = $cup_participant_query->fetch()) {
+
+            $particpant = new Participant();
+            $particpant->setParticipantId($cup_participant_result['ID']);
+            $particpant->setTeamId($cup_participant_result['teamID']);
+            $particpant->setCheckedIn($cup_participant_result['checked_in']);
+            $particpant->setRegisterDateTime(DateUtils::getDateTimeByMktimeValue($cup_participant_result['date_register']));
+
+            $date_checking = $cup_participant_result['date_checkin'];
+            if (Validator::numericVal()->min(1)->validate($date_checking)) {
+                $particpant->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($date_checking));
+            }
+
+            $cup->addCupParticipant($particpant);
+
+        }
 
         return $cup;
 
