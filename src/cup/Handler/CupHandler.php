@@ -7,7 +7,9 @@ use Respect\Validation\Validator;
 use webspell_ng\WebSpellDatabaseConnection;
 
 use myrisk\Cup\Cup;
-use myrisk\Cup\Participant;
+use myrisk\Cup\Enum\CupEnums;
+use myrisk\Cup\TeamParticipant;
+use myrisk\Cup\UserParticipant;
 use myrisk\Cup\Utils\DateUtils;
 
 class CupHandler {
@@ -57,20 +59,55 @@ class CupHandler {
 
         while ($cup_participant_result = $cup_participant_query->fetch()) {
 
-            $particpant = new Participant();
-            $particpant->setParticipantId($cup_participant_result['ID']);
-            $particpant->setTeamId($cup_participant_result['teamID']);
-            $particpant->setCheckedIn($cup_participant_result['checked_in']);
-            $particpant->setRegisterDateTime(DateUtils::getDateTimeByMktimeValue($cup_participant_result['date_register']));
-
-            $date_checking = $cup_participant_result['date_checkin'];
-            if (Validator::numericVal()->min(1)->validate($date_checking)) {
-                $particpant->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($date_checking));
+            if ($cup->getMode() == CupEnums::CUP_MODE_1ON1) {
+                $cup = CupHandler::addUserParticipantToCup($cup, $cup_participant_result);
+            } else {
+                $cup = CupHandler::addTeamParticipantToCup($cup, $cup_participant_result);
             }
 
-            $cup->addCupParticipant($particpant);
-
         }
+
+        return $cup;
+
+    }
+
+    private static function addUserParticipantToCup(\myrisk\Cup\Cup $cup, array $user_participant): Cup
+    {
+
+        $user_particpant = new UserParticipant();
+        $user_particpant->setParticipantId($user_participant['ID']);
+        $user_particpant->setCheckedIn($user_participant['checked_in']);
+        $user_particpant->setRegisterDateTime(DateUtils::getDateTimeByMktimeValue($user_participant['date_register']));
+
+        $date_checking = $user_participant['date_checkin'];
+        if (Validator::numericVal()->min(1)->validate($date_checking)) {
+            $user_particpant->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($date_checking));
+        }
+
+        $user_particpant->setUser(UserHandler::getUserByUserId($user_participant['teamID']));
+
+        $cup->addCupParticipant($user_particpant);
+
+        return $cup;
+
+    }
+
+    private static function addTeamParticipantToCup(\myrisk\Cup\Cup $cup, array $team_participant): Cup
+    {
+
+        $team_particpant = new TeamParticipant();
+        $team_particpant->setParticipantId($team_participant['ID']);
+        $team_particpant->setCheckedIn($team_participant['checked_in']);
+        $team_particpant->setRegisterDateTime(DateUtils::getDateTimeByMktimeValue($team_participant['date_register']));
+
+        $date_checking = $team_participant['date_checkin'];
+        if (Validator::numericVal()->min(1)->validate($date_checking)) {
+            $team_particpant->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($date_checking));
+        }
+
+        $team_particpant->setTeam(TeamHandler::getTeamByTeamId($team_participant['teamID']));
+
+        $cup->addCupParticipant($team_particpant);
 
         return $cup;
 
