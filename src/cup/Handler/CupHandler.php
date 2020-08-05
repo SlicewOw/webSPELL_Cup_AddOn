@@ -6,6 +6,7 @@ use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
+use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Cup;
@@ -54,7 +55,7 @@ class CupHandler {
 
     }
 
-    private static function getCupParticipantsOfCup(\myrisk\Cup\Cup $cup): Cup
+    private static function getCupParticipantsOfCup(Cup $cup): Cup
     {
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
@@ -83,7 +84,7 @@ class CupHandler {
     /**
      * @param array<mixed> $user_participant
      */
-    private static function addUserParticipantToCup(\myrisk\Cup\Cup $cup, array $user_participant): Cup
+    private static function addUserParticipantToCup(Cup $cup, array $user_participant): Cup
     {
 
         $user_particpant = new UserParticipant();
@@ -107,7 +108,7 @@ class CupHandler {
     /**
      * @param array<mixed> $team_participant
      */
-    private static function addTeamParticipantToCup(\myrisk\Cup\Cup $cup, array $team_participant): Cup
+    private static function addTeamParticipantToCup(Cup $cup, array $team_participant): Cup
     {
 
         $team_particpant = new TeamParticipant();

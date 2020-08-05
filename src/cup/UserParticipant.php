@@ -2,13 +2,13 @@
 
 namespace myrisk\Cup;
 
-use myrisk\Cup\User;
+use webspell_ng\User;
 
 class UserParticipant extends Participant {
 
     private User $user;
 
-    public function setUser(\myrisk\Cup\User $user): void
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
