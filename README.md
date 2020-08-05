@@ -30,5 +30,5 @@ Please execute PHPUnit tests:
 Please execute PHPStan wit level 5:
 
 ```
-./vendor/bin/phpstan analyse -l 6 src tests
+./vendor/bin/phpstan analyse -l 5 src tests
 ```
