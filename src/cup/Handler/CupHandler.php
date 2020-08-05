@@ -9,6 +9,7 @@ use Respect\Validation\Validator;
 use webspell_ng\WebSpellDatabaseConnection;
 
 use myrisk\Cup\Cup;
+use myrisk\Cup\Utils\DateUtils;
 
 class CupHandler {
 
@@ -34,8 +35,8 @@ class CupHandler {
         $cup->setName($cup_result[0]['name']);
         $cup->setMode($cup_result[0]['mode']);
         $cup->setStatus($cup_result[0]['status']);
-        $cup->setCheckInDateTime(new DateTime($cup_result[0]['checkin_date']));
-        $cup->setStartDateTime(new DateTime($cup_result[0]['start_date']));
+        $cup->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($cup_result[0]['checkin_date']));
+        $cup->setStartDateTime(DateUtils::getDateTimeByMktimeValue($cup_result[0]['start_date']));
 
         return $cup;
 
