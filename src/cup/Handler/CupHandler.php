@@ -22,7 +22,7 @@ class CupHandler {
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->select('*')
-            ->from('ws_j12_cups')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . 'cups')
             ->where('cupID = ?')
             ->setParameter(0, $cup_id);
 
