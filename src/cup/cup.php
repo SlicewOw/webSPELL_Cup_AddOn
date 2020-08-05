@@ -8,13 +8,13 @@ use \Respect\Validation\Validator;
 
 use \myrisk\Cup\Participant;
 use \myrisk\Cup\Enum\CupEnums;
+use \myrisk\Cup\Enum\MatchEnums;
 
 class Cup {
 
     private $cup_id = null;
     private $cup_name = null;
     private $cup_mode = CupEnums::CUP_MODE_5ON5;
-    private $cup_format = CupEnums::CUP_FORMAT_BEST_OF_ONE;
     private $cup_status = CupEnums::CUP_STATUS_REGISTRATION;
 
     private $checkin_datetime = null;
@@ -65,22 +65,22 @@ class Cup {
         return $this->cup_status;
     }
 
-    public function setCheckInDateTime(\DateTime $datetime): void
+    public function setCheckInDateTime(DateTime $datetime): void
     {
         $this->checkin_datetime = $datetime;
     }
 
-    public function getCheckInDateTime(): ?\DateTime
+    public function getCheckInDateTime(): ?DateTime
     {
         return $this->checkin_datetime;
     }
 
-    public function setStartDateTime(\DateTime $datetime): void
+    public function setStartDateTime(DateTime $datetime): void
     {
         $this->start_datetime = $datetime;
     }
 
-    public function getStartDateTime(): ?\DateTime
+    public function getStartDateTime(): ?DateTime
     {
         return $this->start_datetime;
     }
