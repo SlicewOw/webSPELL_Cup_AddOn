@@ -2,7 +2,7 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\DriverManager;
+use DateTime;
 
 use Respect\Validation\Validator;
 
@@ -26,15 +26,16 @@ class CupHandler {
             ->where('cupID = ?')
             ->setParameter(0, $cup_id);
 
-        $cup_result = $queryBuilder->execute();
+        $cup_query = $queryBuilder->execute();
+        $cup_result = $cup_query->fetchAll();
 
         $cup = new Cup();
-        $cup->setCupId($cup_result['cupID']);
-        $cup->setName($cup_result['name']);
-        $cup->setMode($cup_result['mode']);
-        $cup->setStatus($cup_result['status']);
-        $cup->setCheckInDateTime($cup_result['checkin_date']);
-        $cup->setStartDateTime($cup_result['start_date']);
+        $cup->setCupId($cup_result[0]['cupID']);
+        $cup->setName($cup_result[0]['name']);
+        $cup->setMode($cup_result[0]['mode']);
+        $cup->setStatus($cup_result[0]['status']);
+        $cup->setCheckInDateTime(new DateTime($cup_result[0]['checkin_date']));
+        $cup->setStartDateTime(new DateTime($cup_result[0]['start_date']));
 
         return $cup;
 
