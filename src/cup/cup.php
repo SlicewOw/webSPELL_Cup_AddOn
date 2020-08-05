@@ -14,6 +14,13 @@ class Cup {
     private string $cup_mode = CupEnums::CUP_MODE_5ON5;
     private int $cup_status = CupEnums::CUP_STATUS_REGISTRATION;
 
+    private ?Rule $cup_rule;
+
+    /**
+     * @var array<Sponsor> $participants
+     */
+    private array $cup_sponsors = array();
+
     private \DateTime $checkin_datetime;
     private \DateTime $start_datetime;
 
@@ -63,6 +70,29 @@ class Cup {
     public function getStatus(): ?int
     {
         return $this->cup_status;
+    }
+
+    public function setRule(Rule $rule): void
+    {
+        $this->cup_rule = $rule;
+    }
+
+    public function getRule(): ?Rule
+    {
+        return $this->cup_rule;
+    }
+
+    public function addSponsor(Sponsor $sponsor): void
+    {
+        array_push($this->cup_sponsors, $sponsor);
+    }
+
+    /**
+     * @return array<Sponsor>
+     */
+    public function getSponsors(): array
+    {
+        return $this->cup_sponsors;
     }
 
     public function setCheckInDateTime(\DateTime $datetime): void
