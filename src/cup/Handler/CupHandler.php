@@ -2,6 +2,7 @@
 
 namespace myrisk\Cup\Handler;
 
+use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
@@ -29,15 +30,15 @@ class CupHandler {
             ->setParameter(0, $cup_id);
 
         $cup_query = $queryBuilder->execute();
-        $cup_result = $cup_query->fetchAll();
+        $cup_result = $cup_query->fetch(FetchMode::MIXED);
 
         $cup = new Cup();
-        $cup->setCupId($cup_result[0]['cupID']);
-        $cup->setName($cup_result[0]['name']);
-        $cup->setMode($cup_result[0]['mode']);
-        $cup->setStatus($cup_result[0]['status']);
-        $cup->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($cup_result[0]['checkin_date']));
-        $cup->setStartDateTime(DateUtils::getDateTimeByMktimeValue($cup_result[0]['start_date']));
+        $cup->setCupId($cup_result['cupID']);
+        $cup->setName($cup_result['name']);
+        $cup->setMode($cup_result['mode']);
+        $cup->setStatus($cup_result['status']);
+        $cup->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['checkin_date']));
+        $cup->setStartDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['start_date']));
 
         $cup = CupHandler::getCupParticipantsOfCup($cup);
 
@@ -57,7 +58,7 @@ class CupHandler {
 
         $cup_participant_query = $queryBuilder->execute();
 
-        while ($cup_participant_result = $cup_participant_query->fetch()) {
+        while ($cup_participant_result = $cup_participant_query->fetch(FetchMode::MIXED)) {
 
             if ($cup->getMode() == CupEnums::CUP_MODE_1ON1) {
                 $cup = CupHandler::addUserParticipantToCup($cup, $cup_participant_result);
@@ -71,6 +72,9 @@ class CupHandler {
 
     }
 
+    /**
+     * @param array<mixed> $user_participant
+     */
     private static function addUserParticipantToCup(\myrisk\Cup\Cup $cup, array $user_participant): Cup
     {
 
@@ -92,6 +96,9 @@ class CupHandler {
 
     }
 
+    /**
+     * @param array<mixed> $team_participant
+     */
     private static function addTeamParticipantToCup(\myrisk\Cup\Cup $cup, array $team_participant): Cup
     {
 

@@ -4,10 +4,10 @@ namespace myrisk\Cup;
 
 class User {
 
-    private $user_id = null;
-    private $user_name = null;
-    private $firstname = null;
-    private $lastname = null;
+    private int $user_id;
+    private string $user_name;
+    private ?string $firstname;
+    private ?string $lastname;
 
     public function setUserId(int $user_id): void
     {

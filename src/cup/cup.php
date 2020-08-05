@@ -9,15 +9,18 @@ use \myrisk\Cup\Enum\CupEnums;
 
 class Cup {
 
-    private $cup_id = null;
-    private $cup_name = null;
-    private $cup_mode = CupEnums::CUP_MODE_5ON5;
-    private $cup_status = CupEnums::CUP_STATUS_REGISTRATION;
+    private int $cup_id;
+    private string $cup_name;
+    private string $cup_mode = CupEnums::CUP_MODE_5ON5;
+    private int $cup_status = CupEnums::CUP_STATUS_REGISTRATION;
 
-    private $checkin_datetime = null;
-    private $start_datetime = null;
+    private \DateTime $checkin_datetime;
+    private \DateTime $start_datetime;
 
-    private $participants = array();
+    /**
+     * @var array<mixed> $participants
+     */
+    private array $participants = array();
 
     public function setCupId(int $cup_id): void
     {
@@ -87,6 +90,9 @@ class Cup {
         array_push($this->participants, $participant);
     }
 
+    /**
+     * @return array<Participant>
+     */
     public function getCupParticipants(): array
     {
         return $this->participants;

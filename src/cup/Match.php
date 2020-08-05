@@ -2,15 +2,13 @@
 
 namespace myrisk\Cup;
 
-use DateTime;
-
 use \myrisk\Cup\Enum\MatchEnums;
 
 class Match {
 
-    private $match_id = null;
-    private $match_format = MatchEnums::CUP_FORMAT_BEST_OF_ONE;
-    private $match_date = null;
+    private int $match_id;
+    private string $match_format = MatchEnums::CUP_FORMAT_BEST_OF_ONE;
+    private \DateTime $match_date;
 
     public function setMatchId(int $match_id): void
     {
@@ -32,12 +30,12 @@ class Match {
         return $this->match_format;
     }
 
-    public function setMatchDate(DateTime $match_date): void
+    public function setMatchDate(\DateTime $match_date): void
     {
         $this->match_date = $match_date;
     }
 
-    public function getMatchDate(): ?DateTime
+    public function getMatchDate(): \DateTime
     {
         return $this->match_date;
     }

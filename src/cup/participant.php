@@ -4,11 +4,11 @@ namespace myrisk\Cup;
 
 class Participant {
 
-    private $participant_id = null;
-    private $team_id = null;
-    private $is_checked_in = false;
-    private $register_datetime = null;
-    private $checkin_datetime = null;
+    private int $participant_id;
+    private int $team_id;
+    private bool $is_checked_in = false;
+    private \DateTime $register_datetime;
+    private \DateTime $checkin_datetime;
 
     public function setParticipantId(int $participant_id): void
     {
