@@ -34,7 +34,7 @@ class Cup {
         $this->cup_id = $cup_id;
     }
 
-    public function getCupId(): ?int
+    public function getCupId(): int
     {
         return $this->cup_id;
     }

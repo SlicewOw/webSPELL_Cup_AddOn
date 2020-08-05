@@ -40,6 +40,14 @@ class CupHandler {
         $cup->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['checkin_date']));
         $cup->setStartDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['start_date']));
 
+        $rule_id = $cup_result['ruleID'];
+        if ($rule_id > 0) {
+            $cup->setRule(
+                RuleHandler::getRuleByRuleId($rule_id)
+            );
+        }
+
+        $cup = SponsorHandler::getSponsorByCup($cup);
         $cup = CupHandler::getCupParticipantsOfCup($cup);
 
         return $cup;
