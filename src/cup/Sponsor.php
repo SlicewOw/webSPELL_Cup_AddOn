@@ -4,8 +4,11 @@ namespace myrisk\Cup;
 
 class Sponsor {
 
-    private int $cup_sponsor_id;
-    private int $sponsor_id;
+    /** @var int $cup_sponsor_id */
+    private $cup_sponsor_id;
+
+    /** @var int $sponsor_id */
+    private $sponsor_id;
 
     public function setCupSponsorId(int $cup_sponsor_id): void
     {

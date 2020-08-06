@@ -4,11 +4,20 @@ namespace myrisk\Cup;
 
 class Team {
 
-    private int $team_id;
-    private string $team_name;
-    private string $team_tag;
-    private string $country = "de";
-    private ?string $homepage;
+    /** @var int $team_id */
+    private $team_id;
+
+    /** @var string $team_name */
+    private $team_name;
+
+    /** @var string $team_tag */
+    private $team_tag;
+
+    /** @var string $country */
+    private $country = "de";
+
+    /** @var ?string $homepage */
+    private $homepage;
 
     public function setTeamId(int $team_id): void
     {

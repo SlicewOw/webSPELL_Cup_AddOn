@@ -9,25 +9,32 @@ use \myrisk\Cup\Enum\CupEnums;
 
 class Cup {
 
-    private int $cup_id;
-    private string $cup_name;
-    private string $cup_mode = CupEnums::CUP_MODE_5ON5;
-    private int $cup_status = CupEnums::CUP_STATUS_REGISTRATION;
+    /** @var int $cup_id */
+    private $cup_id;
 
-    private ?Rule $cup_rule;
+    /** @var string $cup_name */
+    private $cup_name;
 
-    /**
-     * @var array<Sponsor> $participants
-     */
-    private array $cup_sponsors = array();
+    /** @var string $cup_mode */
+    private $cup_mode = CupEnums::CUP_MODE_5ON5;
 
-    private \DateTime $checkin_datetime;
-    private \DateTime $start_datetime;
+    /** @var int $cup_status */
+    private $cup_status = CupEnums::CUP_STATUS_REGISTRATION;
 
-    /**
-     * @var array<mixed> $participants
-     */
-    private array $participants = array();
+    /** @var ?Rule $cup_rule */
+    private $cup_rule;
+
+    /** @var array<Sponsor> $participants */
+    private $cup_sponsors = array();
+
+    /** @var \DateTime $checkin_datetime */
+    private $checkin_datetime;
+
+    /** @var \DateTime $start_datetime */
+    private $start_datetime;
+
+    /** @var array<mixed> $participants */
+    private $participants = array();
 
     public function setCupId(int $cup_id): void
     {

@@ -4,11 +4,20 @@ namespace myrisk\Cup;
 
 class Rule {
 
-    private int $rule_id;
-    private int $game_id;
-    private string $rule_name;
-    private string $text;
-    private \DateTime $last_change_on;
+    /** @var int $rule_id */
+    private $rule_id;
+
+    /** @var int $game_id */
+    private $game_id;
+
+    /** @var string $rule_name */
+    private $rule_name;
+
+    /** @var string $text */
+    private $text;
+
+    /** @var \DateTime $last_change_on */
+    private $last_change_on;
 
     public function setRuleId(int $rule_id): void
     {

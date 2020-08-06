@@ -6,7 +6,8 @@ use myrisk\Cup\Team;
 
 class TeamParticipant extends Participant {
 
-    private Team $team;
+    /** @var Team $team */
+    private $team;
 
     public function setTeam(\myrisk\Cup\Team $team): void
     {

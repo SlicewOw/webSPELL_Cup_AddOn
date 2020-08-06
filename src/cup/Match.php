@@ -6,9 +6,14 @@ use \myrisk\Cup\Enum\MatchEnums;
 
 class Match {
 
-    private int $match_id;
-    private string $match_format = MatchEnums::CUP_FORMAT_BEST_OF_ONE;
-    private \DateTime $match_date;
+    /** @var int $match_id */
+    private $match_id;
+
+    /** @var string $match_format */
+    private $match_format = MatchEnums::CUP_FORMAT_BEST_OF_ONE;
+
+    /** @var \DateTime $match_date */
+    private $match_date;
 
     public function setMatchId(int $match_id): void
     {
