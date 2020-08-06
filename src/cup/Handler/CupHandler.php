@@ -35,6 +35,10 @@ class CupHandler {
         $cup_query = $queryBuilder->execute();
         $cup_result = $cup_query->fetch(FetchMode::MIXED);
 
+        if (empty($cup_result)) {
+            throw new \InvalidArgumentException("cannot_get_cup_by_cup_id");
+        }
+
         $cup = new Cup();
         $cup->setCupId($cup_result['cupID']);
         $cup->setName($cup_result['name']);
@@ -163,6 +167,15 @@ class CupHandler {
             $cup->addAdmin($admin);
 
         }
+
+        return $cup;
+
+    }
+
+    public static function saveCup(Cup $cup): Cup
+    {
+
+        //TODO: Insert new cup into database
 
         return $cup;
 
