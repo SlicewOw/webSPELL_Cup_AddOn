@@ -1151,12 +1151,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SlicewOw/webSPELL_NG_DataStructures.git",
-                "reference": "77a0f729e1791c97ebb3a8fb0fd67b0bb41af648"
+                "reference": "3e9049d99172fcc652f959b1b8ef2acd1a23dfac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SlicewOw/webSPELL_NG_DataStructures/zipball/77a0f729e1791c97ebb3a8fb0fd67b0bb41af648",
-                "reference": "77a0f729e1791c97ebb3a8fb0fd67b0bb41af648",
+                "url": "https://api.github.com/repos/SlicewOw/webSPELL_NG_DataStructures/zipball/3e9049d99172fcc652f959b1b8ef2acd1a23dfac",
+                "reference": "3e9049d99172fcc652f959b1b8ef2acd1a23dfac",
                 "shasum": ""
             },
             "require": {
@@ -1184,7 +1184,7 @@
                 }
             ],
             "description": "Abstract classes to be used within webSPELL NG projects",
-            "time": "2020-08-05T19:45:23+00:00"
+            "time": "2020-08-06T06:13:47+00:00"
         },
         {
             "name": "webspell_ng/query_builder",
