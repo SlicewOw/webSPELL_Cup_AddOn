@@ -4,6 +4,8 @@ namespace myrisk\Cup;
 
 use \Respect\Validation\Validator;
 
+use \webspell_ng\Game;
+
 use \myrisk\Cup\Participant;
 use \myrisk\Cup\Enum\CupEnums;
 
@@ -20,6 +22,9 @@ class Cup {
 
     /** @var int $cup_status */
     private $cup_status = CupEnums::CUP_STATUS_REGISTRATION;
+
+    /** @var Game $game */
+    private $game;
 
     /** @var ?Rule $cup_rule */
     private $cup_rule;
@@ -77,6 +82,16 @@ class Cup {
     public function getStatus(): ?int
     {
         return $this->cup_status;
+    }
+
+    public function setGame(Game $game): void
+    {
+        $this->game = $game;
+    }
+
+    public function getGame(): Game
+    {
+        return $this->game;
     }
 
     public function setRule(Rule $rule): void

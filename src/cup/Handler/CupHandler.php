@@ -6,6 +6,7 @@ use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
+use webspell_ng\Handler\GameHandler;
 use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\DateUtils;
 
@@ -45,6 +46,13 @@ class CupHandler {
         if ($rule_id > 0) {
             $cup->setRule(
                 RuleHandler::getRuleByRuleId($rule_id)
+            );
+        }
+
+        $game_id = $cup_result['gameID'];
+        if ($game_id > 0) {
+            $cup->setGame(
+                GameHandler::getGameByGameId($game_id)
             );
         }
 
