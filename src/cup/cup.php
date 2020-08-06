@@ -6,7 +6,9 @@ use \Respect\Validation\Validator;
 
 use \webspell_ng\Game;
 
+use \myrisk\Cup\Admin;
 use \myrisk\Cup\Participant;
+use \myrisk\Cup\Sponsor;
 use \myrisk\Cup\Enum\CupEnums;
 
 class Cup {
@@ -31,6 +33,9 @@ class Cup {
 
     /** @var array<Sponsor> $participants */
     private $cup_sponsors = array();
+
+    /** @var array<Admin> $admins */
+    private $admins = array();
 
     /** @var \DateTime $checkin_datetime */
     private $checkin_datetime;
@@ -115,6 +120,19 @@ class Cup {
     public function getSponsors(): array
     {
         return $this->cup_sponsors;
+    }
+
+    public function addAdmin(Admin $admin): void
+    {
+        array_push($this->admins, $admin);
+    }
+
+    /**
+     * @return array<Admin>
+     */
+    public function getAdmins(): array
+    {
+        return $this->admins;
     }
 
     public function setCheckInDateTime(\DateTime $datetime): void

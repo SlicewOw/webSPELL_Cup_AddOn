@@ -3,6 +3,7 @@
 namespace myrisk\Cup\Handler;
 
 use Doctrine\DBAL\FetchMode;
+use myrisk\Cup\Admin;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
@@ -58,6 +59,7 @@ class CupHandler {
 
         $cup = SponsorHandler::getSponsorByCup($cup);
         $cup = CupHandler::getCupParticipantsOfCup($cup);
+        $cup = CupHandler::getAdminsOfCup($cup);
 
         return $cup;
 
@@ -132,6 +134,35 @@ class CupHandler {
         $team_particpant->setTeam(TeamHandler::getTeamByTeamId($team_participant['teamID']));
 
         $cup->addCupParticipant($team_particpant);
+
+        return $cup;
+
+    }
+
+    private static function getAdminsOfCup(Cup $cup): Cup
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->select('*')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . 'cups_admin')
+            ->where('cupID = ?')
+            ->setParameter(0, $cup->getCupId());
+
+        $admin_query = $queryBuilder->execute();
+
+        while ($admin_result = $admin_query->fetch(FetchMode::MIXED)) {
+
+            $admin = new Admin();
+            $admin->setAdminId($admin_result['adminID']);
+            $admin->setRight($admin_result['rights']);
+            $admin->setUser(
+                UserHandler::getUserByUserId($admin_result['userID'])
+            );
+
+            $cup->addAdmin($admin);
+
+        }
 
         return $cup;
 
