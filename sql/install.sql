@@ -1,3 +1,5 @@
+USE `webspell_ng`;
+
 CREATE TABLE `ws_p40_cups` (
   `cupID` int(11) NOT NULL,
   `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
