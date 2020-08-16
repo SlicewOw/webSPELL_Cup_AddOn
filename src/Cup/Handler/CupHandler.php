@@ -175,7 +175,31 @@ class CupHandler {
     public static function saveCup(Cup $cup): Cup
     {
 
-        //TODO: Insert new cup into database
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->insert(WebSpellDatabaseConnection::getTablePrefix() . 'cups')
+            ->values(
+                    [
+                        'name' => '?',
+                        'checkin_date' => '?',
+                        'start_date' => '?',
+                        'mode' => '?',
+                        'status' => '?'
+                    ]
+                )
+            ->setParameters(
+                    [
+                        0 => $cup->getName(),
+                        1 => $cup->getCheckInDateTime()->getTimestamp(),
+                        2 => $cup->getStartDateTime()->getTimestamp(),
+                        3 => $cup->getMode(),
+                        4 => $cup->getStatus()
+                    ]
+                );
+
+        $result = $queryBuilder->execute();
+
+        $cup->setCupId(1);
 
         return $cup;
 
