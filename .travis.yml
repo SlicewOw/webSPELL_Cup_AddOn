@@ -2,7 +2,7 @@ language: php
 php:
   - '7.4.9'
 before_install:
-  - mysql -u root --password="" < test/resources/travis.sql
+  - mysql -u root --password="" < tests/resources/travis.sql
   - mysql -u root --password="" < sql/install.sql
 install: composer install
 services:
