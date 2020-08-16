@@ -31,7 +31,7 @@ class Cup {
     /** @var ?Rule $cup_rule */
     private $cup_rule;
 
-    /** @var array<Sponsor> $participants */
+    /** @var array<Sponsor> $cup_sponsors */
     private $cup_sponsors = array();
 
     /** @var array<Admin> $admins */
