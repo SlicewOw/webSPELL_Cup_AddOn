@@ -374,9 +374,6 @@ ALTER TABLE `ws_p40_cups_awards`
 ALTER TABLE `ws_p40_cups_awards_category`
   ADD PRIMARY KEY (`awardID`);
 
-ALTER TABLE `ws_p40_cups_bot_settings`
-  ADD PRIMARY KEY (`cupID`);
-
 ALTER TABLE `ws_p40_cups_gameaccounts`
   ADD PRIMARY KEY (`gameaccID`),
   ADD UNIQUE KEY `gameaccID` (`gameaccID`);
