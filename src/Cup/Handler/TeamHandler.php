@@ -33,6 +33,7 @@ class TeamHandler {
         $team->setTag($team_result['tag']);
         $team->setCountry($team_result['country']);
         $team->setHomepage($team_result['hp']);
+        $team->setIsDeleted($team_result['deleted']);
 
         return $team;
 

@@ -19,6 +19,9 @@ class Team {
     /** @var ?string $homepage */
     private $homepage;
 
+    /** @var bool $is_deleted */
+    private $is_deleted = false;
+
     public function setTeamId(int $team_id): void
     {
         $this->team_id = $team_id;
@@ -67,6 +70,16 @@ class Team {
     public function getHomepage(): ?string
     {
         return $this->homepage;
+    }
+
+    public function setIsDeleted(bool $is_deleted): void
+    {
+        $this->is_deleted = $is_deleted;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->is_deleted;
     }
 
 }

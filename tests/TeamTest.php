@@ -13,10 +13,12 @@ final class TeamTest extends TestCase
         $team = new Team();
         $team->setTeamId(1337);
         $team->setName("Test Cup Team Name");
+        $team->setIsDeleted(true);
 
         $this->assertInstanceOf(Team::class, $team);
         $this->assertEquals(1337, $team->getTeamId(), "Cup team ID is set.");
         $this->assertEquals("Test Cup Team Name", $team->getName(), "Cup team name is set.");
+        $this->assertEquals(true, $team->isDeleted(), "Cup team is deleted.");
 
     }
 
