@@ -2,6 +2,8 @@
 
 namespace myrisk\Cup;
 
+use \myrisk\Cup\TeamMember;
+
 class Team {
 
     /** @var int $team_id */
@@ -21,6 +23,9 @@ class Team {
 
     /** @var bool $is_deleted */
     private $is_deleted = false;
+
+    /** @var array<TeamMember> $members */
+    private $members = array();
 
     public function setTeamId(int $team_id): void
     {
@@ -80,6 +85,19 @@ class Team {
     public function isDeleted(): bool
     {
         return $this->is_deleted;
+    }
+
+    public function addMember(TeamMember $members): void
+    {
+        array_push($this->members, $members);
+    }
+
+    /**
+     * @return array<TeamMember>
+     */
+    public function getMembers(): array
+    {
+        return $this->members;
     }
 
 }

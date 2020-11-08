@@ -7,6 +7,8 @@ use Respect\Validation\Validator;
 use webspell_ng\WebSpellDatabaseConnection;
 
 use myrisk\Cup\Team;
+use myrisk\Cup\TeamMember;
+use myrisk\Cup\Handler\TeamMemberHandler;
 
 class TeamHandler {
 
@@ -31,6 +33,8 @@ class TeamHandler {
             throw new \InvalidArgumentException('unknown_cup_team');
         }
 
+        $admin_id = $team_result['userID'];
+
         $team = new Team();
         $team->setTeamId($team_result['teamID']);
         $team->setName($team_result['name']);
@@ -38,6 +42,9 @@ class TeamHandler {
         $team->setCountry($team_result['country']);
         $team->setHomepage($team_result['hp']);
         $team->setIsDeleted($team_result['deleted']);
+        $team->addMember(
+            TeamMemberHandler::getMemberByUserIdAndTeam($admin_id, $team)
+        );
 
         return $team;
 
