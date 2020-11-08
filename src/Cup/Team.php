@@ -100,4 +100,18 @@ class Team {
         return $this->members;
     }
 
+    public function getTeamAdmin(): ?TeamMember
+    {
+
+        $members = $this->getMembers();
+        foreach ($members as $member) {
+            if ($member->getPosition() == 1) {
+                return $member;
+            }
+        }
+
+        return null;
+
+    }
+
 }
