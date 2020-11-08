@@ -27,7 +27,7 @@ class TeamHandler {
         $team_query = $queryBuilder->execute();
         $team_result = $team_query->fetch();
 
-        if (Validator::key('teamID', Validator::intType())->validate($team_result['teamID'])) {
+        if (count($team_result) < 1) {
             throw new \InvalidArgumentException('unknown_cup_team');
         }
 
