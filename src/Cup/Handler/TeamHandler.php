@@ -27,8 +27,7 @@ class TeamHandler {
         $team_query = $queryBuilder->execute();
         $team_result = $team_query->fetch();
 
-        print_r($team_result);
-        if (count($team_result) < 1) {
+        if (!$team_result || count($team_result) < 1) {
             throw new \InvalidArgumentException('unknown_cup_team');
         }
 
