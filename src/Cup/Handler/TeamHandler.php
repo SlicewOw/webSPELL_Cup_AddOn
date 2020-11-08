@@ -27,6 +27,10 @@ class TeamHandler {
         $team_query = $queryBuilder->execute();
         $team_result = $team_query->fetch();
 
+        if (Validator::key('teamID', Validator::intType())->validate($team_result['teamID'])) {
+            throw new \InvalidArgumentException('unknown_cup_team');
+        }
+
         $team = new Team();
         $team->setTeamId($team_result['teamID']);
         $team->setName($team_result['name']);
