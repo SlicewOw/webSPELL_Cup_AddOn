@@ -10,6 +10,7 @@ use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Team;
 use myrisk\Cup\TeamMember;
+use myrisk\Cup\TeamMemberPosition;
 
 class TeamMemberHandler {
 
@@ -40,7 +41,9 @@ class TeamMemberHandler {
         $member->setUser(
             UserHandler::getUserByUserId($member_result['userID'])
         );
-        $member->setPosition($member_result['position']);
+        $member->setPosition(
+            TeamMemberPositionHandler::getPositionByPositionId($member_result['position'])
+        );
         $member->setJoinDate(
             DateUtils::getDateTimeByMktimeValue($member_result['join_date'])
         );

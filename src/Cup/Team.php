@@ -105,7 +105,7 @@ class Team {
 
         $members = $this->getMembers();
         foreach ($members as $member) {
-            if ($member->getPosition() == 1) {
+            if ($member->getPosition()->getPosition() == "Admin") {
                 return $member;
             }
         }

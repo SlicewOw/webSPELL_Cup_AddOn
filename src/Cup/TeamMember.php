@@ -2,6 +2,8 @@
 
 namespace myrisk\Cup;
 
+use \myrisk\Cup\TeamMemberPosition;
+
 use \webspell_ng\User;
 
 class TeamMember {
@@ -12,7 +14,7 @@ class TeamMember {
     /** @var User $user */
     private $user;
 
-    /** @var int $position */
+    /** @var TeamMemberPosition $position */
     private $position;
 
     /** @var \DateTime $join_date */
@@ -47,12 +49,12 @@ class TeamMember {
         return $this->user;
     }
 
-    public function setPosition(int $position): void
+    public function setPosition(TeamMemberPosition $position): void
     {
         $this->position = $position;
     }
 
-    public function getPosition(): int
+    public function getPosition(): TeamMemberPosition
     {
         return $this->position;
     }
