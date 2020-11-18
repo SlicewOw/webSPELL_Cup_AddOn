@@ -9,6 +9,9 @@ class Team {
     /** @var int $team_id */
     private $team_id;
 
+    /** @var \DateTime $date */
+    private $date;
+
     /** @var string $team_name */
     private $team_name;
 
@@ -20,6 +23,9 @@ class Team {
 
     /** @var ?string $homepage */
     private $homepage;
+
+    /** @var ?string $logotype */
+    private $logotype;
 
     /** @var bool $is_deleted */
     private $is_deleted = false;
@@ -35,6 +41,16 @@ class Team {
     public function getTeamId(): ?int
     {
         return $this->team_id;
+    }
+
+    public function setCreationDate(\DateTime $date): void
+    {
+        $this->date = $date;
+    }
+
+    public function getCreationDate(): ?\DateTime
+    {
+        return $this->date;
     }
 
     public function setName(string $team_name): void
@@ -75,6 +91,16 @@ class Team {
     public function getHomepage(): ?string
     {
         return $this->homepage;
+    }
+
+    public function setLogotype(string $logotype): void
+    {
+        $this->logotype = $logotype;
+    }
+
+    public function getLogotype(): ?string
+    {
+        return $this->logotype;
     }
 
     public function setIsDeleted(bool $is_deleted): void

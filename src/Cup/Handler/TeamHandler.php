@@ -37,10 +37,12 @@ class TeamHandler {
 
         $team = new Team();
         $team->setTeamId($team_result['teamID']);
+        $team->setCreationDate($team_result['date']);
         $team->setName($team_result['name']);
         $team->setTag($team_result['tag']);
         $team->setCountry($team_result['country']);
         $team->setHomepage($team_result['hp']);
+        $team->setLogotype($team_result['logotype']);
         $team->setIsDeleted($team_result['deleted']);
         $team->addMember(
             TeamMemberHandler::getMemberByUserIdAndTeam($admin_id, $team)
