@@ -6,7 +6,9 @@ use webspell_ng\User;
 
 class UserParticipant extends Participant {
 
-    /** @var User $user */
+    /**
+     * @var User $user
+     */
     private $user;
 
     public function setUser(User $user): void
