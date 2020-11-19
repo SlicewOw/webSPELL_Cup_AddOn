@@ -6,31 +6,49 @@ use \myrisk\Cup\TeamMember;
 
 class Team {
 
-    /** @var int $team_id */
+    /**
+     * @var int $team_id
+     */
     private $team_id;
 
-    /** @var \DateTime $date */
+    /**
+     * @var \DateTime $date
+     */
     private $date;
 
-    /** @var string $team_name */
+    /**
+     * @var string $team_name
+     */
     private $team_name;
 
-    /** @var string $team_tag */
+    /**
+     * @var string $team_tag
+     */
     private $team_tag;
 
-    /** @var string $country */
+    /**
+     * @var string $country
+     */
     private $country = "de";
 
-    /** @var ?string $homepage */
+    /**
+     * @var ?string $homepage
+     */
     private $homepage;
 
-    /** @var ?string $logotype */
+    /**
+     * @var ?string $logotype
+     */
     private $logotype;
 
-    /** @var bool $is_deleted */
+    /**
+     * @var bool $is_deleted
+     */
     private $is_deleted = false;
 
-    /** @var array<TeamMember> $members */
+    /**
+     * @var array<TeamMember> $members
+     */
     private $members = array();
 
     public function setTeamId(int $team_id): void

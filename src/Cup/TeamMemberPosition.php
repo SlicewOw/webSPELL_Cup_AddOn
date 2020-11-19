@@ -4,13 +4,19 @@ namespace myrisk\Cup;
 
 class TeamMemberPosition {
 
-    /** @var int $position_id */
+    /**
+     * @var int $position_id
+     */
     private $position_id;
 
-    /** @var string $position */
+    /**
+     * @var string $position
+     */
     private $position;
 
-    /** @var int $sort */
+    /**
+     * @var int $sort
+     */
     private $sort;
 
     public function setPositionId(int $position_id): void
@@ -28,7 +34,7 @@ class TeamMemberPosition {
         $this->position = $position;
     }
 
-    public function getPosition(): int
+    public function getPosition(): string
     {
         return $this->position;
     }

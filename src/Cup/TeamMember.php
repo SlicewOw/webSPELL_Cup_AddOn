@@ -8,25 +8,39 @@ use \webspell_ng\User;
 
 class TeamMember {
 
-    /** @var int $member_id */
+    /**
+     * @var int $member_id
+     */
     private $member_id;
 
-    /** @var User $user */
+    /**
+     * @var User $user
+     */
     private $user;
 
-    /** @var TeamMemberPosition $position */
+    /**
+     * @var TeamMemberPosition $position
+     */
     private $position;
 
-    /** @var \DateTime $join_date */
+    /**
+     * @var \DateTime $join_date
+     */
     private $join_date;
 
-    /** @var ?\DateTime $left_date */
+    /**
+     * @var ?\DateTime $left_date
+     */
     private $left_date = null;
 
-    /** @var ?int $kick_id */
+    /**
+     * @var ?int $kick_id
+     */
     private $kick_id = null;
 
-    /** @var bool $is_active */
+    /**
+     * @var bool $is_active
+     */
     private $is_active = true;
 
     public function setMemberId(int $member_id): void
