@@ -5,13 +5,14 @@ namespace myrisk\Cup\Handler;
 use Doctrine\DBAL\FetchMode;
 
 use webspell_ng\WebSpellDatabaseConnection;
+use webspell_ng\Handler\SponsorHandler;
 
 use myrisk\Cup\Cup;
-use myrisk\Cup\Sponsor;
+use myrisk\Cup\CupSponsor;
 
-class SponsorHandler {
+class CupSponsorHandler {
 
-    public static function getSponsorByCup(Cup $cup): Cup
+    public static function getSponsorsOfCup(Cup $cup): Cup
     {
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
@@ -25,9 +26,11 @@ class SponsorHandler {
 
         while ($sponsor_result = $sponsor_query->fetch(FetchMode::MIXED)) {
 
-            $sponsor = new Sponsor();
+            $sponsor = new CupSponsor();
             $sponsor->setCupSponsorId($sponsor_result['id']);
-            $sponsor->setSponsorId($sponsor_result['sponsorID']);
+            $sponsor->setSponsor(
+                SponsorHandler::getSponsorBySponsorId($sponsor_result['sponsorID'])
+            );
 
             $cup->addSponsor($sponsor);
 

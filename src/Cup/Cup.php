@@ -7,8 +7,8 @@ use \Respect\Validation\Validator;
 use \webspell_ng\Game;
 
 use \myrisk\Cup\Admin;
+use \myrisk\Cup\CupSponsor;
 use \myrisk\Cup\Participant;
-use \myrisk\Cup\Sponsor;
 use \myrisk\Cup\Enum\CupEnums;
 
 class Cup {
@@ -31,7 +31,7 @@ class Cup {
     /** @var ?Rule $cup_rule */
     private $cup_rule;
 
-    /** @var array<Sponsor> $cup_sponsors */
+    /** @var array<CupSponsor> $cup_sponsors */
     private $cup_sponsors = array();
 
     /** @var array<Admin> $admins */
@@ -109,13 +109,13 @@ class Cup {
         return $this->cup_rule;
     }
 
-    public function addSponsor(Sponsor $sponsor): void
+    public function addSponsor(CupSponsor $sponsor): void
     {
         array_push($this->cup_sponsors, $sponsor);
     }
 
     /**
-     * @return array<Sponsor>
+     * @return array<CupSponsor>
      */
     public function getSponsors(): array
     {

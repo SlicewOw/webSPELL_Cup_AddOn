@@ -4,8 +4,8 @@ use PHPUnit\Framework\TestCase;
 
 use \webspell_ng\Game;
 
-use \myrisk\Cup\Enum\CupEnums;
 use \myrisk\Cup\Cup;
+use \myrisk\Cup\Enum\CupEnums;
 use \myrisk\Cup\Handler\CupHandler;
 
 final class CupHandlerTest extends TestCase

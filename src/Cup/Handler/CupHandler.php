@@ -12,9 +12,10 @@ use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Cup;
-use myrisk\Cup\Enum\CupEnums;
 use myrisk\Cup\TeamParticipant;
 use myrisk\Cup\UserParticipant;
+use myrisk\Cup\Enum\CupEnums;
+use myrisk\Cup\Handler\CupSponsorHandler;
 
 class CupHandler {
 
@@ -61,9 +62,9 @@ class CupHandler {
             );
         }
 
-        $cup = SponsorHandler::getSponsorByCup($cup);
-        $cup = CupHandler::getCupParticipantsOfCup($cup);
-        $cup = CupHandler::getAdminsOfCup($cup);
+        $cup = CupSponsorHandler::getSponsorsOfCup($cup);
+        $cup = self::getCupParticipantsOfCup($cup);
+        $cup = self::getAdminsOfCup($cup);
 
         return $cup;
 
@@ -84,9 +85,9 @@ class CupHandler {
         while ($cup_participant_result = $cup_participant_query->fetch(FetchMode::MIXED)) {
 
             if ($cup->getMode() == CupEnums::CUP_MODE_1ON1) {
-                $cup = CupHandler::addUserParticipantToCup($cup, $cup_participant_result);
+                $cup = self::addUserParticipantToCup($cup, $cup_participant_result);
             } else {
-                $cup = CupHandler::addTeamParticipantToCup($cup, $cup_participant_result);
+                $cup = self::addTeamParticipantToCup($cup, $cup_participant_result);
             }
 
         }
