@@ -12,8 +12,16 @@
     </report>
   </coverage>
   <php>
+
     <ini name="error_reporting" value="-1"/>
     <ini name="memory_limit" value="3G"/>
+
+    <env name="DB_HOST" value="127.0.0.1" />
+    <env name="DB_USER" value="root"/>
+    <env name="DB_PASS" value=""/>
+    <env name="DB_NAME" value="myrisk_neu"/>
+    <env name="DB_PREFIX" value="ws_j12_" />
+
   </php>
   <testsuites>
     <testsuite name="webspell-cup-addon">
