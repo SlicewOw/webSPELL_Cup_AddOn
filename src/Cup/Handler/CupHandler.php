@@ -175,6 +175,10 @@ class CupHandler {
     public static function saveCup(Cup $cup): Cup
     {
 
+        if (is_null($cup->getGame())) {
+            throw new \InvalidArgumentException('game_of_cup_is_not_set_yet');
+        }
+
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->insert(WebSpellDatabaseConnection::getTablePrefix() . 'cups')
@@ -184,7 +188,9 @@ class CupHandler {
                         'checkin_date' => '?',
                         'start_date' => '?',
                         'mode' => '?',
-                        'status' => '?'
+                        'status' => '?',
+                        'game' => '?',
+                        'gameID' => '?'
                     ]
                 )
             ->setParameters(
@@ -193,12 +199,15 @@ class CupHandler {
                         1 => $cup->getCheckInDateTime()->getTimestamp(),
                         2 => $cup->getStartDateTime()->getTimestamp(),
                         3 => $cup->getMode(),
-                        4 => $cup->getStatus()
+                        4 => $cup->getStatus(),
+                        5 => $cup->getGame()->getTag(),
+                        6 => $cup->getGame()->getGameId()
                     ]
                 );
 
         $result = $queryBuilder->execute();
 
+        // TODO: Set real cup id instead of dummy index
         $cup->setCupId(1);
 
         return $cup;
