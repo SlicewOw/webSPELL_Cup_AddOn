@@ -14,6 +14,16 @@ abstract class CupEnums
     const CUP_STATUS_FINISHED = 4;
 
     /**
+     * Cup phases
+     */
+    const CUP_PHASE_ADMIN_REGISTER = "admin_register";
+    const CUP_PHASE_REGISTER = "register";
+    const CUP_PHASE_ADMIN_CHECKIN = "admin_checkin";
+    const CUP_PHASE_CHECKIN = "checkin";
+    const CUP_PHASE_RUNNING = "running";
+    const CUP_PHASE_FINISHED = "finished";
+
+    /**
      * Cup mode
      */
     const CUP_MODE_1ON1 = "1on1";

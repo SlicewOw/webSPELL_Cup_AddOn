@@ -41,6 +41,7 @@ final class CupHandlerTest extends TestCase
         $cup = CupHandler::getCupByCupId($saved_cup->getCupId());
 
         $this->assertInstanceOf(Cup::class, $cup);
+        $this->assertEquals(CupEnums::CUP_PHASE_RUNNING, $cup->getPhase(), "Cup phase is set correctly.");
 
     }
 

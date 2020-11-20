@@ -16,6 +16,7 @@ use myrisk\Cup\TeamParticipant;
 use myrisk\Cup\UserParticipant;
 use myrisk\Cup\Enum\CupEnums;
 use myrisk\Cup\Handler\CupSponsorHandler;
+use myrisk\Cup\Handler\TeamHandler;
 
 class CupHandler {
 
@@ -45,6 +46,9 @@ class CupHandler {
         $cup->setName($cup_result['name']);
         $cup->setMode($cup_result['mode']);
         $cup->setStatus($cup_result['status']);
+        $cup->setPhase(
+            self::getPhaseOfCup($cup)
+        );
         $cup->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['checkin_date']));
         $cup->setStartDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['start_date']));
 
@@ -63,14 +67,41 @@ class CupHandler {
         }
 
         $cup = CupSponsorHandler::getSponsorsOfCup($cup);
-        $cup = self::getCupParticipantsOfCup($cup);
-        $cup = self::getAdminsOfCup($cup);
+        $cup = self::setCupParticipantsOfCup($cup);
+        $cup = self::setAdminsOfCup($cup);
 
         return $cup;
 
     }
 
-    private static function getCupParticipantsOfCup(Cup $cup): Cup
+    private static function getPhaseOfCup(Cup $cup): string
+    {
+
+        $cup_status = $cup->getStatus();
+
+        if ($cup_status == 4) {
+            $phase = CupEnums::CUP_PHASE_FINISHED;
+        } else if ($cup_status > 1) {
+            $phase = CupEnums::CUP_PHASE_RUNNING;
+        } else {
+
+            $now = new \DateTime("now");
+
+            if (($cup->getMode() == CupEnums::CUP_MODE_1ON1) || TeamHandler::isAnyTeamAdmin()) {
+                $phase = ($now <= $cup->getStartDateTime()) ? CupEnums::CUP_PHASE_ADMIN_REGISTER : CupEnums::CUP_PHASE_ADMIN_CHECKIN;
+            } else if (TeamHandler::isAnyTeamMember()) {
+                $phase = ($now <= $cup->getCheckInDateTime()) ? CupEnums::CUP_PHASE_REGISTER : CupEnums::CUP_PHASE_CHECKIN;
+            } else {
+                $phase = CupEnums::CUP_PHASE_RUNNING;
+            }
+
+        }
+
+        return $phase;
+
+    }
+
+    private static function setCupParticipantsOfCup(Cup $cup): Cup
     {
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
@@ -144,7 +175,7 @@ class CupHandler {
 
     }
 
-    private static function getAdminsOfCup(Cup $cup): Cup
+    private static function setAdminsOfCup(Cup $cup): Cup
     {
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();

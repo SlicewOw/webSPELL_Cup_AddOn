@@ -9,6 +9,7 @@ use \webspell_ng\Game;
 use \myrisk\Cup\Admin;
 use \myrisk\Cup\CupSponsor;
 use \myrisk\Cup\Participant;
+use \myrisk\Cup\Phase;
 use \myrisk\Cup\Enum\CupEnums;
 
 class Cup {
@@ -32,6 +33,11 @@ class Cup {
      * @var int $cup_status
      */
     private $cup_status = CupEnums::CUP_STATUS_REGISTRATION;
+
+    /**
+     * @var string $cup_phase
+     */
+    private $cup_phase = CupEnums::CUP_PHASE_RUNNING;
 
     /**
      * @var Game $game
@@ -112,6 +118,26 @@ class Cup {
     public function getStatus(): ?int
     {
         return $this->cup_status;
+    }
+
+    public function setPhase(string $phase): void
+    {
+        $allowed_phases = array(
+            CupEnums::CUP_PHASE_ADMIN_REGISTER,
+            CupEnums::CUP_PHASE_REGISTER,
+            CupEnums::CUP_PHASE_ADMIN_CHECKIN,
+            CupEnums::CUP_PHASE_CHECKIN,
+            CupEnums::CUP_PHASE_RUNNING,
+            CupEnums::CUP_PHASE_FINISHED
+        );
+        if (in_array($phase, $allowed_phases)) {
+            $this->cup_phase = $phase;
+        }
+    }
+
+    public function getPhase(): string
+    {
+        return $this->cup_phase;
     }
 
     public function setGame(Game $game): void

@@ -54,4 +54,16 @@ class TeamHandler {
 
     }
 
+    // TODO: Implement when class 'UserSession' is moved to project
+    public static function isAnyTeamAdmin(): bool
+    {
+        return false;
+    }
+
+    // TODO: Implement when class 'UserSession' is moved to project
+    public static function isAnyTeamMember(): bool
+    {
+        return false;
+    }
+
 }
