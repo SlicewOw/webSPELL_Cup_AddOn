@@ -40,4 +40,33 @@ class CupSponsorHandler {
 
     }
 
+    public static function saveSponsorToCup(CupSponsor $sponsor, Cup $cup): CupSponsor
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->insert(WebSpellDatabaseConnection::getTablePrefix() . 'cups_sponsors')
+            ->values(
+                    [
+                        'cupID' => '?',
+                        'sponsorID' => '?'
+                    ]
+                )
+            ->setParameters(
+                    [
+                        0 => $cup->getCupId(),
+                        1 => $sponsor->getSponsor()->getSponsorId()
+                    ]
+                );
+
+        $queryBuilder->execute();
+
+        $sponsor->setCupSponsorId(
+            (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
+        );
+
+        return $sponsor;
+
+    }
+
 }
