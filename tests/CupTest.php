@@ -2,10 +2,15 @@
 
 use PHPUnit\Framework\TestCase;
 
+use \webspell_ng\Sponsor;
+use \webspell_ng\User;
+
+use \myrisk\Cup\Admin;
 use \myrisk\Cup\Cup;
+use \myrisk\Cup\CupSponsor;
 use \myrisk\Cup\TeamParticipant;
+use \myrisk\Cup\UserParticipant;
 use \myrisk\Cup\Enum\CupEnums;
-use myrisk\Cup\UserParticipant;
 
 final class CupTest extends TestCase
 {
@@ -15,6 +20,9 @@ final class CupTest extends TestCase
 
         $datetime_now = new DateTime('now');
         $datetime_later = new DateTime('2025-05-01 13:37:00');
+
+        $sponsor = new CupSponsor();
+        $sponsor->setSponsor(new Sponsor());
 
         $cup_participant_01 = new TeamParticipant();
         $cup_participant_01->setParticipantId(100);
@@ -30,6 +38,16 @@ final class CupTest extends TestCase
         $cup_participant_02->setRegisterDateTime($datetime_now);
         $cup_participant_02->setCheckInDateTime($datetime_later);
 
+        $cup_participant_03 = new TeamParticipant();
+        $cup_participant_03->setParticipantId(101);
+        $cup_participant_03->setTeamId(666);
+        $cup_participant_03->setCheckedIn(false);
+        $cup_participant_03->setRegisterDateTime($datetime_now);
+        $cup_participant_03->setCheckInDateTime($datetime_later);
+
+        $admin = new Admin();
+        $admin->setUser(new User());
+
         $cup = new Cup();
         $cup->setCupId(1337);
         $cup->setName("Test Cup Name");
@@ -39,6 +57,9 @@ final class CupTest extends TestCase
         $cup->setStartDateTime($datetime_later);
         $cup->addCupParticipant($cup_participant_01);
         $cup->addCupParticipant($cup_participant_02);
+        $cup->addCupParticipant($cup_participant_03);
+        $cup->addSponsor($sponsor);
+        $cup->addAdmin($admin);
 
         $this->assertInstanceOf(Cup::class, $cup);
         $this->assertEquals(1337, $cup->getCupId(), "Cup ID is set.");
@@ -47,7 +68,10 @@ final class CupTest extends TestCase
         $this->assertEquals(3, $cup->getStatus(), "Cup status is set.");
         $this->assertEquals($datetime_now, $cup->getCheckInDateTime(), "Cup check-in datetime is set.");
         $this->assertEquals($datetime_later, $cup->getStartDateTime(), "Cup start datetime is set.");
-        $this->assertEquals(2, count($cup->getCupParticipants()), "Cup participant count is expected.");
+        $this->assertEquals(3, count($cup->getCupParticipants()), "Cup participant count is expected.");
+        $this->assertEquals(2, count($cup->getCheckedInCupParticipants()), "Cup participants which are checked in are expected.");
+        $this->assertEquals(1, count($cup->getSponsors()), "Cup spoonsor count is expected.");
+        $this->assertEquals(1, count($cup->getAdmins()), "Cup admin count is expected.");
 
         $this->assertInstanceOf(TeamParticipant::class, $cup->getCupParticipants()[0]);
         $this->assertEquals(100, $cup->getCupParticipants()[0]->getParticipantId(), "Cup participant ID is set.");
@@ -62,6 +86,16 @@ final class CupTest extends TestCase
         $this->assertEquals($datetime_now, $cup->getCupParticipants()[1]->getRegisterDateTime(), "Cup participant register datetime is set.");
         $this->assertEquals($datetime_later, $cup->getCupParticipants()[1]->getCheckInDateTime(), "Cup participant check-in datetime is set.");
         $this->assertTrue($cup->getCupParticipants()[1]->getCheckedIn(), "Cup participant is checked in.");
+
+    }
+
+    public function testIfInvalidArgumentExceptionIsThrownIfCupIdIsInvalid(): void
+    {
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $cup = new Cup();
+        $cup->setCupId(0);
 
     }
 
