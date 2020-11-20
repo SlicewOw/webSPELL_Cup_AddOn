@@ -244,4 +244,23 @@ class Cup {
         return $this->participants;
     }
 
+    /**
+     * @return array<Participant>
+     */
+    public function getCheckedInCupParticipants(): array
+    {
+
+        $checked_in_participants = array();
+
+        $participants = $this->getCupParticipants();
+        foreach ($participants as $participant) {
+            if ($participant->getCheckedIn()) {
+                array_push($checked_in_participants, $participant);
+            }
+        }
+
+        return $checked_in_participants;
+
+    }
+
 }
