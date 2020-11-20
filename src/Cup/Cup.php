@@ -13,41 +13,66 @@ use \myrisk\Cup\Enum\CupEnums;
 
 class Cup {
 
-    /** @var int $cup_id */
+    /**
+     * @var int $cup_id
+     */
     private $cup_id;
 
-    /** @var string $cup_name */
+    /**
+     * @var string $cup_name
+     */
     private $cup_name;
 
-    /** @var string $cup_mode */
+    /**
+     * @var string $cup_mode
+     */
     private $cup_mode = CupEnums::CUP_MODE_5ON5;
 
-    /** @var int $cup_status */
+    /**
+     * @var int $cup_status
+     */
     private $cup_status = CupEnums::CUP_STATUS_REGISTRATION;
 
-    /** @var Game $game */
+    /**
+     * @var Game $game
+     */
     private $game;
 
-    /** @var ?Rule $cup_rule */
+    /**
+     * @var ?Rule $cup_rule
+     */
     private $cup_rule;
 
-    /** @var array<CupSponsor> $cup_sponsors */
+    /**
+     * @var array<CupSponsor> $cup_sponsors
+     */
     private $cup_sponsors = array();
 
-    /** @var array<Admin> $admins */
+    /**
+     * @var array<Admin> $admins
+     */
     private $admins = array();
 
-    /** @var \DateTime $checkin_datetime */
+    /**
+     * @var \DateTime $checkin_datetime
+     */
     private $checkin_datetime;
 
-    /** @var \DateTime $start_datetime */
+    /**
+     * @var \DateTime $start_datetime
+     */
     private $start_datetime;
 
-    /** @var array<mixed> $participants */
+    /**
+     * @var array<mixed> $participants
+     */
     private $participants = array();
 
     public function setCupId(int $cup_id): void
     {
+        if (!Validator::numericVal()->positive()->min(1)->validate($cup_id)) {
+            throw new \InvalidArgumentException("cup_id_value_is_invalid");
+        }
         $this->cup_id = $cup_id;
     }
 

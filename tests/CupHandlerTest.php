@@ -2,9 +2,10 @@
 
 use PHPUnit\Framework\TestCase;
 
-use \webspell_ng\Game;
+use \webspell_ng\Handler\GameHandler;
 
 use \myrisk\Cup\Cup;
+use \myrisk\Cup\Rule;
 use \myrisk\Cup\Enum\CupEnums;
 use \myrisk\Cup\Handler\CupHandler;
 
@@ -17,9 +18,14 @@ final class CupHandlerTest extends TestCase
         $datetime_now = new DateTime('now');
         $datetime_later = new DateTime('2025-05-01 13:37:00');
 
-        $game = new Game();
-        $game->setGameId(1337);
-        $game->setTag("tag");
+        $game = GameHandler::getGameByGameId(1);
+
+        $rule = new Rule();
+        $rule->setRuleId(123);
+        $rule->setGame($game);
+        $rule->setName("Test Rule 123");
+        $rule->setText("empty rule!");
+        $rule->setLastChangeOn($datetime_now);
 
         $new_cup = new Cup();
         $new_cup->setName("Test Cup Name");
@@ -28,6 +34,7 @@ final class CupHandlerTest extends TestCase
         $new_cup->setCheckInDateTime($datetime_now);
         $new_cup->setStartDateTime($datetime_later);
         $new_cup->setGame($game);
+        $new_cup->setRule($rule);
 
         $saved_cup = CupHandler::saveCup($new_cup);
 

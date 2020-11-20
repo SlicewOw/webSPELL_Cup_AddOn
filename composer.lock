@@ -1681,12 +1681,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SlicewOw/webSPELL_NG_DataStructures.git",
-                "reference": "1313cbbc956bc397795469891ffd731ba11160d4"
+                "reference": "4578f22af24fbeb59ca497dadd78264ce86d2b8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SlicewOw/webSPELL_NG_DataStructures/zipball/1313cbbc956bc397795469891ffd731ba11160d4",
-                "reference": "1313cbbc956bc397795469891ffd731ba11160d4",
+                "url": "https://api.github.com/repos/SlicewOw/webSPELL_NG_DataStructures/zipball/4578f22af24fbeb59ca497dadd78264ce86d2b8c",
+                "reference": "4578f22af24fbeb59ca497dadd78264ce86d2b8c",
                 "shasum": ""
             },
             "require": {
@@ -1721,7 +1721,7 @@
                 "issues": "https://github.com/SlicewOw/webSPELL_NG_DataStructures/issues",
                 "source": "https://github.com/SlicewOw/webSPELL_NG_DataStructures/tree/master"
             },
-            "time": "2020-11-19T17:07:31+00:00"
+            "time": "2020-11-20T12:29:51+00:00"
         },
         {
             "name": "webspell_ng/query_builder",
@@ -1729,12 +1729,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SlicewOw/webSPELL_NG_QueryBuilder.git",
-                "reference": "d3fbbf93376f2dcb0057e41071fe44d73eaa1e34"
+                "reference": "821430fafbaad27e464da658653ac5fbb8e03345"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SlicewOw/webSPELL_NG_QueryBuilder/zipball/d3fbbf93376f2dcb0057e41071fe44d73eaa1e34",
-                "reference": "d3fbbf93376f2dcb0057e41071fe44d73eaa1e34",
+                "url": "https://api.github.com/repos/SlicewOw/webSPELL_NG_QueryBuilder/zipball/821430fafbaad27e464da658653ac5fbb8e03345",
+                "reference": "821430fafbaad27e464da658653ac5fbb8e03345",
                 "shasum": ""
             },
             "require": {
@@ -1768,7 +1768,7 @@
                 "issues": "https://github.com/SlicewOw/webSPELL_NG_QueryBuilder/issues",
                 "source": "https://github.com/SlicewOw/webSPELL_NG_QueryBuilder/tree/master"
             },
-            "time": "2020-11-19T16:53:21+00:00"
+            "time": "2020-11-20T12:56:03+00:00"
         }
     ],
     "packages-dev": [

@@ -36,8 +36,8 @@ class CupHandler {
         $cup_query = $queryBuilder->execute();
         $cup_result = $cup_query->fetch(FetchMode::MIXED);
 
-        if (empty($cup_result)) {
-            throw new \InvalidArgumentException("cannot_get_cup_by_cup_id");
+        if (!$cup_result || count($cup_result) < 1) {
+            throw new \InvalidArgumentException('unknown_cup');
         }
 
         $cup = new Cup();
@@ -58,7 +58,7 @@ class CupHandler {
         $game_id = $cup_result['gameID'];
         if ($game_id > 0) {
             $cup->setGame(
-                GameHandler::getGameByGameId($game_id)
+                GameHandler::getGameByGameId((int) $game_id)
             );
         }
 
@@ -76,7 +76,7 @@ class CupHandler {
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->select('*')
-            ->from(WebSpellDatabaseConnection::getTablePrefix() . 'cups_teilnehmer')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . 'cups_participants')
             ->where('cupID = ?')
             ->setParameter(0, $cup->getCupId());
 
@@ -180,6 +180,10 @@ class CupHandler {
             throw new \InvalidArgumentException('game_of_cup_is_not_set_yet');
         }
 
+        if (is_null($cup->getRule())) {
+            throw new \InvalidArgumentException('rule_of_cup_is_not_set_yet');
+        }
+
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->insert(WebSpellDatabaseConnection::getTablePrefix() . 'cups')
@@ -206,10 +210,13 @@ class CupHandler {
                     ]
                 );
 
-        $result = $queryBuilder->execute();
+        $queryBuilder->execute();
 
-        // TODO: Set real cup id instead of dummy index
-        $cup->setCupId(1);
+        $cup_id = (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId();
+        print_r("\nCup ID: " . $cup_id . "\n");
+        $cup->setCupId(
+            $cup_id
+        );
 
         return $cup;
 

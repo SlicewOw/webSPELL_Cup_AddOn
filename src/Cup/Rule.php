@@ -2,21 +2,33 @@
 
 namespace myrisk\Cup;
 
+use \webspell_ng\Game;
+
 class Rule {
 
-    /** @var int $rule_id */
+    /**
+     * @var int $rule_id
+     */
     private $rule_id;
 
-    /** @var int $game_id */
-    private $game_id;
+    /**
+     * @var Game $game
+     */
+    private $game;
 
-    /** @var string $rule_name */
+    /**
+     * @var string $rule_name
+     */
     private $rule_name;
 
-    /** @var string $text */
+    /**
+     * @var string $text
+     */
     private $text;
 
-    /** @var \DateTime $last_change_on */
+    /**
+     * @var \DateTime $last_change_on
+     */
     private $last_change_on;
 
     public function setRuleId(int $rule_id): void
@@ -29,14 +41,14 @@ class Rule {
         return $this->rule_id;
     }
 
-    public function setGameId(int $game_id): void
+    public function setGame(Game $game): void
     {
-        $this->game_id = $game_id;
+        $this->game = $game;
     }
 
-    public function getGameId(): int
+    public function getGame(): Game
     {
-        return $this->game_id;
+        return $this->game;
     }
 
     public function setName(string $rule_name): void
