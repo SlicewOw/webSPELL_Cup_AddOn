@@ -40,4 +40,33 @@ class TeamMemberPositionHandler {
 
     }
 
+    public static function saveTeamMemberPosition(TeamMemberPosition $position): TeamMemberPosition
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->insert(WebSpellDatabaseConnection::getTablePrefix() . 'cups_teams_position')
+            ->values(
+                    [
+                        'name' => '?',
+                        'sort' => '?'
+                    ]
+                )
+            ->setParameters(
+                    [
+                        0 => $position->getPosition(),
+                        1 => $position->getSort()
+                    ]
+                );
+
+        $queryBuilder->execute();
+
+        $position->setPositionId(
+            (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
+        );
+
+        return $position;
+
+    }
+
 }

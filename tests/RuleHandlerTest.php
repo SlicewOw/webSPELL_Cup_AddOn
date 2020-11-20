@@ -10,7 +10,12 @@ use \myrisk\Cup\Handler\RuleHandler;
 final class RuleHandlerTest extends TestCase
 {
 
-    public function testIfCupHandlerReturnsCupInstance(): void
+    private function getRandomString(): string
+    {
+        return bin2hex(random_bytes(10));
+    }
+
+    public function testIfRuleHandlerReturnsRuleInstance(): void
     {
 
         $datetime_now = new DateTime('now');
@@ -19,8 +24,8 @@ final class RuleHandlerTest extends TestCase
         $game = GameHandler::getGameByGameId(1);
 
         $new_rule = new Rule();
-        $new_rule->setName("Test Rule 123");
-        $new_rule->setText("empty rule!");
+        $new_rule->setName("Test Rule " . $this->getRandomString());
+        $new_rule->setText($this->getRandomString());
         $new_rule->setGame($game);
         $new_rule->setLastChangeOn($datetime_now);
 
@@ -57,6 +62,15 @@ final class RuleHandlerTest extends TestCase
         $this->expectException(TypeError::class);
 
         RuleHandler::saveRule(new Rule());
+
+    }
+
+    public function testIfInvalidArgumentExceptionIsThrownIfRuleDoesNotExist(): void
+    {
+
+        $this->expectException(InvalidArgumentException::class);
+
+        RuleHandler::getRuleByRuleId(99999999);
 
     }
 

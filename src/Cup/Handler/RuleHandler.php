@@ -30,7 +30,7 @@ class RuleHandler {
         $rule_query = $queryBuilder->execute();
         $rule_result = $rule_query->fetch(FetchMode::MIXED);
 
-        if (empty($rule)) {
+        if (empty($rule_result)) {
             throw new \InvalidArgumentException('unknown_cup_rule');
         }
 

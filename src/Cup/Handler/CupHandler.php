@@ -184,26 +184,9 @@ class CupHandler {
     private static function setAdminsOfCup(Cup $cup): Cup
     {
 
-        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
-        $queryBuilder
-            ->select('*')
-            ->from(WebSpellDatabaseConnection::getTablePrefix() . 'cups_admin')
-            ->where('cupID = ?')
-            ->setParameter(0, $cup->getCupId());
-
-        $admin_query = $queryBuilder->execute();
-
-        while ($admin_result = $admin_query->fetch(FetchMode::MIXED)) {
-
-            $admin = new Admin();
-            $admin->setAdminId($admin_result['adminID']);
-            $admin->setRight($admin_result['rights']);
-            $admin->setUser(
-                UserHandler::getUserByUserId($admin_result['userID'])
-            );
-
+        $admins = AdminHandler::getAdminsOfCup($cup);
+        foreach ($admins as $admin) {
             $cup->addAdmin($admin);
-
         }
 
         return $cup;
@@ -212,10 +195,6 @@ class CupHandler {
 
     public static function saveCup(Cup $cup): Cup
     {
-
-        if (is_null($cup->getGame())) {
-            throw new \InvalidArgumentException('game_of_cup_is_not_set_yet');
-        }
 
         if (is_null($cup->getRule())) {
             throw new \InvalidArgumentException('rule_of_cup_is_not_set_yet');
@@ -233,7 +212,8 @@ class CupHandler {
                         'max_size' => '?',
                         'status' => '?',
                         'game' => '?',
-                        'gameID' => '?'
+                        'gameID' => '?',
+                        'ruleID' => '?'
                     ]
                 )
             ->setParameters(
@@ -245,7 +225,8 @@ class CupHandler {
                         4 => $cup->getSize(),
                         5 => $cup->getStatus(),
                         6 => $cup->getGame()->getTag(),
-                        7 => $cup->getGame()->getGameId()
+                        7 => $cup->getGame()->getGameId(),
+                        8 => (!is_null($cup->getRule())) ? $cup->getRule()->getRuleId() : null
                     ]
                 );
 

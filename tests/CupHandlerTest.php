@@ -2,15 +2,22 @@
 
 use PHPUnit\Framework\TestCase;
 
+use \webspell_ng\Game;
 use \webspell_ng\Handler\GameHandler;
 
 use \myrisk\Cup\Cup;
 use \myrisk\Cup\Rule;
 use \myrisk\Cup\Enum\CupEnums;
 use \myrisk\Cup\Handler\CupHandler;
+use \myrisk\Cup\Handler\RuleHandler;
 
 final class CupHandlerTest extends TestCase
 {
+
+    private function getRandomString(): string
+    {
+        return bin2hex(random_bytes(10));
+    }
 
     public function testIfCupHandlerReturnsCupInstance(): void
     {
@@ -21,11 +28,12 @@ final class CupHandlerTest extends TestCase
         $game = GameHandler::getGameByGameId(1);
 
         $rule = new Rule();
-        $rule->setRuleId(123);
         $rule->setGame($game);
-        $rule->setName("Test Rule 123");
-        $rule->setText("empty rule!");
+        $rule->setName("Test Rule " . $this->getRandomString());
+        $rule->setText($this->getRandomString());
         $rule->setLastChangeOn($datetime_now);
+
+        $rule = RuleHandler::saveRule($rule);
 
         $new_cup = new Cup();
         $new_cup->setName("Test Cup Name");
@@ -44,6 +52,60 @@ final class CupHandlerTest extends TestCase
         $this->assertInstanceOf(Cup::class, $cup);
         $this->assertEquals(CupEnums::CUP_SIZE_8, $cup->getSize(), "Cup size is set correctly.");
         $this->assertEquals(CupEnums::CUP_PHASE_RUNNING, $cup->getPhase(), "Cup phase is set correctly.");
+        $this->assertGreaterThan(0, $cup->getRule()->getRuleId(), "Rule is set.");
+
+    }
+
+    public function testIfInvalidArgumentExceptionIsThrownIfCupIdIsInvalid(): void
+    {
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $cup = CupHandler::getCupByCupId(-1);
+
+        // This line is hopefully never be reached
+        $this->assertLessThan(1, $cup->getCupId());
+
+    }
+
+    public function testIfInvalidArgumentExceptionIsThrownIfCupDoesNotExist(): void
+    {
+
+        $this->expectException(InvalidArgumentException::class);
+
+        CupHandler::getCupByCupId(99999999);
+
+    }
+
+    public function testIfTypeErrorIsThrownIfGameOfCupDoesNotExist(): void
+    {
+
+        $this->expectException(TypeError::class);
+
+        $cup = new Cup();
+        $cup->setName("Test Cup Name");
+        $cup->setMode(CupEnums::CUP_MODE_5ON5);
+        $cup->setSize(CupEnums::CUP_SIZE_4);
+        $cup->setStatus(CupEnums::CUP_STATUS_RUNNING);
+        $cup->setCheckInDateTime(new \DateTime("now"));
+        $cup->setStartDateTime(new \DateTime("now"));
+        $cup->setRule(new Rule());
+
+        CupHandler::saveCup($cup);
+
+    }
+
+    public function testIfInvalidArgumentExceptionIsThrownIfRuleOfCupDoesNotExist(): void
+    {
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $cup = new Cup();
+        $cup->setGame(
+            GameHandler::getGameByGameId(2)
+        );
+
+        CupHandler::saveCup($cup);
 
     }
 

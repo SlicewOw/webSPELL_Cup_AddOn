@@ -6,13 +6,19 @@ use webspell_ng\User;
 
 class Admin {
 
-    /** @var int $admin_id */
+    /**
+     * @var int $admin_id
+     */
     private $admin_id;
 
-    /** @var int $right */
+    /**
+     * @var int $right
+     */
     private $right;
 
-    /** @var User $user */
+    /**
+     * @var User $user
+     */
     private $user;
 
     public function setAdminId(int $admin_id): void
