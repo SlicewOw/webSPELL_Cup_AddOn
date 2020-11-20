@@ -212,10 +212,8 @@ class CupHandler {
 
         $queryBuilder->execute();
 
-        $cup_id = (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId();
-        print_r("\nCup ID: " . $cup_id . "\n");
         $cup->setCupId(
-            $cup_id
+            (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
         );
 
         return $cup;
