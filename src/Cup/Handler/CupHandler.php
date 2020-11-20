@@ -45,6 +45,7 @@ class CupHandler {
         $cup->setCupId($cup_result['cupID']);
         $cup->setName($cup_result['name']);
         $cup->setMode($cup_result['mode']);
+        $cup->setSize($cup_result['max_size']);
         $cup->setStatus($cup_result['status']);
         $cup->setPhase(
             self::getPhaseOfCup($cup)
@@ -224,6 +225,7 @@ class CupHandler {
                         'checkin_date' => '?',
                         'start_date' => '?',
                         'mode' => '?',
+                        'max_size' => '?',
                         'status' => '?',
                         'game' => '?',
                         'gameID' => '?'
@@ -235,9 +237,10 @@ class CupHandler {
                         1 => $cup->getCheckInDateTime()->getTimestamp(),
                         2 => $cup->getStartDateTime()->getTimestamp(),
                         3 => $cup->getMode(),
-                        4 => $cup->getStatus(),
-                        5 => $cup->getGame()->getTag(),
-                        6 => $cup->getGame()->getGameId()
+                        4 => $cup->getSize(),
+                        5 => $cup->getStatus(),
+                        6 => $cup->getGame()->getTag(),
+                        7 => $cup->getGame()->getGameId()
                     ]
                 );
 

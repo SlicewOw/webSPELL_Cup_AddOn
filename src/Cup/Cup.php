@@ -30,6 +30,11 @@ class Cup {
     private $cup_mode = CupEnums::CUP_MODE_5ON5;
 
     /**
+     * @var int $cup_size
+     */
+    private $cup_size = CupEnums::CUP_SIZE_32;
+
+    /**
      * @var int $cup_status
      */
     private $cup_status = CupEnums::CUP_STATUS_REGISTRATION;
@@ -105,6 +110,26 @@ class Cup {
     public function getMode(): ?string
     {
         return $this->cup_mode;
+    }
+
+    public function setSize(int $size): void
+    {
+        $allowed_sizes = array(
+            CupEnums::CUP_SIZE_2,
+            CupEnums::CUP_SIZE_4,
+            CupEnums::CUP_SIZE_8,
+            CupEnums::CUP_SIZE_16,
+            CupEnums::CUP_SIZE_32
+        );
+        if (in_array($size, $allowed_sizes)) {
+            $this->cup_size = $size;
+        }
+
+    }
+
+    public function getSize(): int
+    {
+        return $this->cup_size;
     }
 
     public function setStatus(int $cup_status): void

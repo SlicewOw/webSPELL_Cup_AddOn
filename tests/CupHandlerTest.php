@@ -30,6 +30,7 @@ final class CupHandlerTest extends TestCase
         $new_cup = new Cup();
         $new_cup->setName("Test Cup Name");
         $new_cup->setMode(CupEnums::CUP_MODE_5ON5);
+        $new_cup->setSize(CupEnums::CUP_SIZE_8);
         $new_cup->setStatus(CupEnums::CUP_STATUS_RUNNING);
         $new_cup->setCheckInDateTime($datetime_now);
         $new_cup->setStartDateTime($datetime_later);
@@ -41,6 +42,7 @@ final class CupHandlerTest extends TestCase
         $cup = CupHandler::getCupByCupId($saved_cup->getCupId());
 
         $this->assertInstanceOf(Cup::class, $cup);
+        $this->assertEquals(CupEnums::CUP_SIZE_8, $cup->getSize(), "Cup size is set correctly.");
         $this->assertEquals(CupEnums::CUP_PHASE_RUNNING, $cup->getPhase(), "Cup phase is set correctly.");
 
     }

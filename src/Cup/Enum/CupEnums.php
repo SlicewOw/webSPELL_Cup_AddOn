@@ -31,4 +31,14 @@ abstract class CupEnums
     const CUP_MODE_5ON5 = "5on5";
     const CUP_MODE_11ON11 = "11on11";
 
+    /**
+     * Cup size
+     */
+    const CUP_SIZE_2 = 2;
+    const CUP_SIZE_4 = 4;
+    const CUP_SIZE_8 = 8;
+    const CUP_SIZE_16 = 16;
+    const CUP_SIZE_32 = 32;
+    const CUP_SIZE_64 = 64;
+
 }
