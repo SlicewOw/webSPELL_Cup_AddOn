@@ -3,7 +3,6 @@
 namespace myrisk\Cup\Handler;
 
 use Doctrine\DBAL\FetchMode;
-use myrisk\Cup\Admin;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
@@ -11,6 +10,7 @@ use webspell_ng\Handler\GameHandler;
 use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\DateUtils;
 
+use myrisk\Cup\Admin;
 use myrisk\Cup\Cup;
 use myrisk\Cup\TeamParticipant;
 use myrisk\Cup\UserParticipant;
