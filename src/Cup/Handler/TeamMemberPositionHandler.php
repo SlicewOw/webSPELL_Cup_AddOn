@@ -27,7 +27,7 @@ class TeamMemberPositionHandler {
         $position_query = $queryBuilder->execute();
         $position_result = $position_query->fetch();
 
-        if (!$position_result || count($position_result) < 1) {
+        if (empty($position_result)) {
             throw new \InvalidArgumentException('unknown_cup_team_member_position');
         }
 

@@ -32,7 +32,7 @@ class TeamMemberHandler {
         $member_query = $queryBuilder->execute();
         $member_result = $member_query->fetch();
 
-        if (!$member_result || count($member_result) < 1) {
+        if (empty($member_result)) {
             throw new \InvalidArgumentException('unknown_cup_team_member');
         }
 

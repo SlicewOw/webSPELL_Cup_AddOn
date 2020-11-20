@@ -30,6 +30,10 @@ class RuleHandler {
         $rule_query = $queryBuilder->execute();
         $rule_result = $rule_query->fetch(FetchMode::MIXED);
 
+        if (empty($rule)) {
+            throw new \InvalidArgumentException('unknown_cup_rule');
+        }
+
         $rule = new Rule();
         $rule->setRuleId($rule_result['ruleID']);
         $rule->setGame(

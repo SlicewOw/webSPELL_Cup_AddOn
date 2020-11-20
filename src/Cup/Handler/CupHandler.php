@@ -37,7 +37,7 @@ class CupHandler {
         $cup_query = $queryBuilder->execute();
         $cup_result = $cup_query->fetch(FetchMode::MIXED);
 
-        if (!$cup_result || count($cup_result) < 1) {
+        if (empty($cup_result)) {
             throw new \InvalidArgumentException('unknown_cup');
         }
 
@@ -69,9 +69,7 @@ class CupHandler {
 
         $cup = CupSponsorHandler::getSponsorsOfCup($cup);
         $cup = self::setCupParticipantsOfCup($cup);
-        $cup = self::setAdminsOfCup($cup);
-
-        return $cup;
+        return self::setAdminsOfCup($cup);
 
     }
 
@@ -85,17 +83,24 @@ class CupHandler {
         } else if ($cup_status > 1) {
             $phase = CupEnums::CUP_PHASE_RUNNING;
         } else {
+            $phase = self::getPhaseOfCupWhichIsNotStartedYet($cup);
+        }
 
-            $now = new \DateTime("now");
+        return $phase;
 
-            if (($cup->getMode() == CupEnums::CUP_MODE_1ON1) || TeamHandler::isAnyTeamAdmin()) {
-                $phase = ($now <= $cup->getStartDateTime()) ? CupEnums::CUP_PHASE_ADMIN_REGISTER : CupEnums::CUP_PHASE_ADMIN_CHECKIN;
-            } else if (TeamHandler::isAnyTeamMember()) {
-                $phase = ($now <= $cup->getCheckInDateTime()) ? CupEnums::CUP_PHASE_REGISTER : CupEnums::CUP_PHASE_CHECKIN;
-            } else {
-                $phase = CupEnums::CUP_PHASE_RUNNING;
-            }
+    }
 
+    private static function getPhaseOfCupWhichIsNotStartedYet(Cup $cup): string
+    {
+
+        $now = new \DateTime("now");
+
+        if (($cup->getMode() == CupEnums::CUP_MODE_1ON1) || TeamHandler::isAnyTeamAdmin()) {
+            $phase = ($now <= $cup->getStartDateTime()) ? CupEnums::CUP_PHASE_ADMIN_REGISTER : CupEnums::CUP_PHASE_ADMIN_CHECKIN;
+        } else if (TeamHandler::isAnyTeamMember()) {
+            $phase = ($now <= $cup->getCheckInDateTime()) ? CupEnums::CUP_PHASE_REGISTER : CupEnums::CUP_PHASE_CHECKIN;
+        } else {
+            $phase = CupEnums::CUP_PHASE_RUNNING;
         }
 
         return $phase;
