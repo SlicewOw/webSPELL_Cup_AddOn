@@ -22,7 +22,7 @@ final class CupSponsorHandlerTest extends TestCase
         return bin2hex(random_bytes(10));
     }
 
-    public function testIfAdminHandlerReturnsArrayOfAdminInstances(): void
+    public function testIfCupSponsorHandlerReturnsArrayOfAdminInstances(): void
     {
 
         $game = GameHandler::getGameByGameId(3);
