@@ -9,7 +9,6 @@ use \webspell_ng\Game;
 use \myrisk\Cup\Admin;
 use \myrisk\Cup\CupSponsor;
 use \myrisk\Cup\Participant;
-use \myrisk\Cup\Phase;
 use \myrisk\Cup\Enum\CupEnums;
 
 class Cup {
@@ -252,8 +251,8 @@ class Cup {
 
         $checked_in_participants = array();
 
-        $participants = $this->getCupParticipants();
-        foreach ($participants as $participant) {
+        $tmp_participants = $this->getCupParticipants();
+        foreach ($tmp_participants as $participant) {
             if ($participant->getCheckedIn()) {
                 array_push($checked_in_participants, $participant);
             }

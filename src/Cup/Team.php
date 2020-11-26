@@ -3,6 +3,8 @@
 namespace myrisk\Cup;
 
 use \myrisk\Cup\TeamMember;
+use \myrisk\Cup\Enum\TeamEnums;
+
 
 class Team {
 
@@ -147,9 +149,9 @@ class Team {
     public function getTeamAdmin(): ?TeamMember
     {
 
-        $members = $this->getMembers();
-        foreach ($members as $member) {
-            if ($member->getPosition()->getPosition() == "Admin") {
+        $tmp_members = $this->getMembers();
+        foreach ($tmp_members as $member) {
+            if ($member->getPosition()->getPosition() == TeamEnums::TEAM_MEMBER_POSITION_ADMIN) {
                 return $member;
             }
         }
