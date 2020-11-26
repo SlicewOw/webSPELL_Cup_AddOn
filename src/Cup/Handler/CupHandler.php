@@ -5,20 +5,22 @@ namespace myrisk\Cup\Handler;
 use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
-use webspell_ng\WebSpellDatabaseConnection;
-use webspell_ng\Handler\GameHandler;
-use webspell_ng\Handler\UserHandler;
-use webspell_ng\Utils\DateUtils;
+use \webspell_ng\WebSpellDatabaseConnection;
+use \webspell_ng\Handler\GameHandler;
+use \webspell_ng\Handler\UserHandler;
+use \webspell_ng\Utils\DateUtils;
 
-use myrisk\Cup\Admin;
-use myrisk\Cup\Cup;
-use myrisk\Cup\TeamParticipant;
-use myrisk\Cup\UserParticipant;
-use myrisk\Cup\Enum\CupEnums;
-use myrisk\Cup\Handler\CupSponsorHandler;
-use myrisk\Cup\Handler\TeamHandler;
+use \myrisk\Cup\Cup;
+use \myrisk\Cup\TeamParticipant;
+use \myrisk\Cup\UserParticipant;
+use \myrisk\Cup\Enum\CupEnums;
+use \myrisk\Cup\Handler\AdminHandler;
+use \myrisk\Cup\Handler\CupSponsorHandler;
+use \myrisk\Cup\Handler\TeamHandler;
 
 class CupHandler {
+
+    private const DB_TABLE_NAME_CUPS = "cups";
 
     public static function getCupByCupId(int $cup_id): Cup
     {
@@ -30,7 +32,7 @@ class CupHandler {
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->select('*')
-            ->from(WebSpellDatabaseConnection::getTablePrefix() . 'cups')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS)
             ->where('cupID = ?')
             ->setParameter(0, $cup_id);
 
@@ -47,9 +49,6 @@ class CupHandler {
         $cup->setMode($cup_result['mode']);
         $cup->setSize($cup_result['max_size']);
         $cup->setStatus($cup_result['status']);
-        $cup->setPhase(
-            self::getPhaseOfCup($cup)
-        );
         $cup->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['checkin_date']));
         $cup->setStartDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['start_date']));
 
@@ -70,40 +69,6 @@ class CupHandler {
         $cup = CupSponsorHandler::getSponsorsOfCup($cup);
         $cup = self::setCupParticipantsOfCup($cup);
         return self::setAdminsOfCup($cup);
-
-    }
-
-    private static function getPhaseOfCup(Cup $cup): string
-    {
-
-        $cup_status = $cup->getStatus();
-
-        if ($cup_status == 4) {
-            $phase = CupEnums::CUP_PHASE_FINISHED;
-        } else if ($cup_status > 1) {
-            $phase = CupEnums::CUP_PHASE_RUNNING;
-        } else {
-            $phase = self::getPhaseOfCupWhichIsNotStartedYet($cup);
-        }
-
-        return $phase;
-
-    }
-
-    private static function getPhaseOfCupWhichIsNotStartedYet(Cup $cup): string
-    {
-
-        $now = new \DateTime("now");
-
-        if (($cup->getMode() == CupEnums::CUP_MODE_1ON1) || TeamHandler::isAnyTeamAdmin()) {
-            $phase = ($now <= $cup->getStartDateTime()) ? CupEnums::CUP_PHASE_ADMIN_REGISTER : CupEnums::CUP_PHASE_ADMIN_CHECKIN;
-        } else if (TeamHandler::isAnyTeamMember()) {
-            $phase = ($now <= $cup->getCheckInDateTime()) ? CupEnums::CUP_PHASE_REGISTER : CupEnums::CUP_PHASE_CHECKIN;
-        } else {
-            $phase = CupEnums::CUP_PHASE_RUNNING;
-        }
-
-        return $phase;
 
     }
 
@@ -202,7 +167,7 @@ class CupHandler {
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
-            ->insert(WebSpellDatabaseConnection::getTablePrefix() . 'cups')
+            ->insert(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS)
             ->values(
                     [
                         'name' => '?',
@@ -237,6 +202,28 @@ class CupHandler {
         );
 
         return $cup;
+
+    }
+
+    public static function updateCup(Cup $cup): Cup
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->update(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS)
+            ->set("name", $cup->getName())
+            ->set("checkin_date", $cup->getCheckInDateTime()->getTimestamp())
+            ->set("start_date", $cup->getStartDateTime()->getTimestamp())
+            ->set("mode", $cup->getMode())
+            ->set("max_size", $cup->getSize())
+            ->set("status", $cup->getStatus())
+            ->set("game", $cup->getGame()->getTag())
+            ->set("gameID", $cup->getGame()->getGameId())
+            ->set("ruleID", $cup->getRule()->getRuleId())
+            ->where('cupID = ?')
+            ->setParameter(0, $cup->getCupId());
+
+        return self::getCupByCupId($cup->getCupId());
 
     }
 

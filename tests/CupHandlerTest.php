@@ -19,7 +19,7 @@ final class CupHandlerTest extends TestCase
         return bin2hex(random_bytes(10));
     }
 
-    public function testIfCupHandlerReturnsCupInstance(): void
+    public function testIfCupCanBeSavedAndUpdated(): void
     {
 
         $datetime_now = new DateTime('now');
@@ -53,6 +53,17 @@ final class CupHandlerTest extends TestCase
         $this->assertEquals(CupEnums::CUP_SIZE_8, $cup->getSize(), "Cup size is set correctly.");
         $this->assertEquals(CupEnums::CUP_PHASE_RUNNING, $cup->getPhase(), "Cup phase is set correctly.");
         $this->assertGreaterThan(0, $cup->getRule()->getRuleId(), "Rule is set.");
+
+        $changed_cup = $cup;
+        $changed_cup->setStatus(CupEnums::CUP_STATUS_FINISHED);
+
+        $updated_cup = CupHandler::saveCup($changed_cup);
+
+        $this->assertInstanceOf(Cup::class, $updated_cup);
+        $this->assertEquals(CupEnums::CUP_SIZE_8, $updated_cup->getSize(), "Cup size is set correctly.");
+        $this->assertEquals(CupEnums::CUP_STATUS_FINISHED, $updated_cup->getStatus(), "Cup status is set correctly.");
+        $this->assertEquals(CupEnums::CUP_PHASE_FINISHED, $updated_cup->getPhase(), "Cup phase is set correctly.");
+        $this->assertEquals($cup->getRule()->getRuleId(), $updated_cup->getRule()->getRuleId(), "Rule is set.");
 
     }
 
