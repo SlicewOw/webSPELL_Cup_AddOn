@@ -211,17 +211,26 @@ class CupHandler {
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->update(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS)
-            ->set("name", $cup->getName())
-            ->set("checkin_date", $cup->getCheckInDateTime()->getTimestamp())
-            ->set("start_date", $cup->getStartDateTime()->getTimestamp())
-            ->set("mode", $cup->getMode())
-            ->set("max_size", $cup->getSize())
-            ->set("status", $cup->getStatus())
-            ->set("game", $cup->getGame()->getTag())
-            ->set("gameID", $cup->getGame()->getGameId())
-            ->set("ruleID", $cup->getRule()->getRuleId())
+            ->set("name", "?")
+            ->set("checkin_date", "?")
+            ->set("start_date", "?")
+            ->set("mode", "?")
+            ->set("max_size", "?")
+            ->set("status", "?")
+            ->set("game", "?")
+            ->set("gameID", "?")
+            ->set("ruleID", "?")
             ->where('cupID = ?')
-            ->setParameter(0, $cup->getCupId());
+            ->setParameter(0, $cup->getName())
+            ->setParameter(1, $cup->getCheckInDateTime()->getTimestamp())
+            ->setParameter(2, $cup->getStartDateTime()->getTimestamp())
+            ->setParameter(3, $cup->getMode())
+            ->setParameter(4, $cup->getSize())
+            ->setParameter(5, $cup->getStatus())
+            ->setParameter(6, $cup->getGame()->getTag())
+            ->setParameter(7, $cup->getGame()->getGameId())
+            ->setParameter(8, $cup->getRule()->getRuleId())
+            ->setParameter(9, $cup->getCupId());
 
         return self::getCupByCupId($cup->getCupId());
 

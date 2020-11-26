@@ -197,7 +197,7 @@ class Cup {
         $this->checkin_datetime = $datetime;
     }
 
-    public function getCheckInDateTime(): ?\DateTime
+    public function getCheckInDateTime(): \DateTime
     {
         return $this->checkin_datetime;
     }
@@ -207,7 +207,7 @@ class Cup {
         $this->start_datetime = $datetime;
     }
 
-    public function getStartDateTime(): ?\DateTime
+    public function getStartDateTime(): \DateTime
     {
         return $this->start_datetime;
     }
