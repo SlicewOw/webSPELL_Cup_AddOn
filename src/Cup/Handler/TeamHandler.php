@@ -5,6 +5,7 @@ namespace myrisk\Cup\Handler;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
+use webspell_ng\Handler\CountryHandler;
 use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Team;
@@ -37,15 +38,17 @@ class TeamHandler {
 
         $team = new Team();
         $team->setTeamId($team_result['teamID']);
-        $team->setCreationDate(
-            DateUtils::getDateTimeByMktimeValue($team_result['date'])
-        );
         $team->setName($team_result['name']);
         $team->setTag($team_result['tag']);
-        $team->setCountry($team_result['country']);
         $team->setHomepage($team_result['hp']);
         $team->setLogotype($team_result['logotype']);
         $team->setIsDeleted($team_result['deleted']);
+        $team->setCreationDate(
+            DateUtils::getDateTimeByMktimeValue($team_result['date'])
+        );
+        $team->setCountry(
+            CountryHandler::getCountryByCountryShortcut($team_result['country'])
+        );
         $team->addMember(
             TeamMemberHandler::getMemberByUserIdAndTeam($admin_id, $team)
         );

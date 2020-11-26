@@ -7,6 +7,8 @@ use \myrisk\Cup\TeamMember;
 use \myrisk\Cup\TeamMemberPosition;
 
 use \webspell_ng\User;
+use \webspell_ng\Handler\CountryHandler;
+
 
 final class TeamTest extends TestCase
 {
@@ -35,17 +37,20 @@ final class TeamTest extends TestCase
         $team->setName("Test Cup Team Name");
         $team->setTag("Test Team Tag");
         $team->setCreationDate($now);
-        $team->setCountry("de");
         $team->setHomepage("https://gaming.myrisk-ev.de");
         $team->setLogotype("logotype");
         $team->setIsDeleted(true);
+        $team->setCountry(
+            CountryHandler::getCountryByCountryShortcut("de")
+        );
 
         $this->assertInstanceOf(Team::class, $team);
         $this->assertEquals(1337, $team->getTeamId(), "Cup team ID is set.");
         $this->assertEquals("Test Cup Team Name", $team->getName(), "Cup team name is set.");
         $this->assertEquals("Test Team Tag", $team->getTag(), "Cup team tag is set.");
         $this->assertEquals($now, $team->getCreationDate(), "Cup team creation date is set.");
-        $this->assertEquals("de", $team->getCountry(), "Cup team country is set.");
+        $this->assertEquals("Germany", $team->getCountry()->getName(), "Cup team country is set.");
+        $this->assertEquals("de", $team->getCountry()->getShortcut(), "Cup team country is set.");
         $this->assertEquals("https://gaming.myrisk-ev.de", $team->getHomepage(), "Cup team homepage is set.");
         $this->assertEquals("logotype", $team->getLogotype(), "Cup team logogtype is set.");
         $this->assertTrue($team->isDeleted(), "Cup team is deleted.");

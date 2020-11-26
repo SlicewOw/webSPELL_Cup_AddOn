@@ -2,9 +2,11 @@
 
 namespace myrisk\Cup;
 
+use \webspell_ng\Country;
+use \webspell_ng\Handler\CountryHandler;
+
 use \myrisk\Cup\TeamMember;
 use \myrisk\Cup\Enum\TeamEnums;
-
 
 class Team {
 
@@ -29,9 +31,9 @@ class Team {
     private $team_tag;
 
     /**
-     * @var string $country
+     * @var Country $country
      */
-    private $country = "de";
+    private $country;
 
     /**
      * @var ?string $homepage
@@ -93,13 +95,16 @@ class Team {
         return $this->team_tag;
     }
 
-    public function setCountry(string $country): void
+    public function setCountry(Country $country): void
     {
         $this->country = $country;
     }
 
-    public function getCountry(): ?string
+    public function getCountry(): Country
     {
+        if (is_null($this->country)) {
+            return CountryHandler::getCountryByCountryShortcut("eu");
+        }
         return $this->country;
     }
 
