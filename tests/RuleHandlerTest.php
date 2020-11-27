@@ -3,17 +3,13 @@
 use PHPUnit\Framework\TestCase;
 
 use \webspell_ng\Handler\GameHandler;
+use \webspell_ng\Utils\StringFormatterUtils;
 
 use \myrisk\Cup\Rule;
 use \myrisk\Cup\Handler\RuleHandler;
 
 final class RuleHandlerTest extends TestCase
 {
-
-    private function getRandomString(): string
-    {
-        return bin2hex(random_bytes(10));
-    }
 
     public function testIfRuleHandlerReturnsRuleInstance(): void
     {
@@ -24,8 +20,8 @@ final class RuleHandlerTest extends TestCase
         $game = GameHandler::getGameByGameId(1);
 
         $new_rule = new Rule();
-        $new_rule->setName("Test Rule " . $this->getRandomString());
-        $new_rule->setText($this->getRandomString());
+        $new_rule->setName("Test Rule " . StringFormatterUtils::getRandomString(10));
+        $new_rule->setText(StringFormatterUtils::getRandomString(10));
         $new_rule->setGame($game);
         $new_rule->setLastChangeOn($datetime_now);
 

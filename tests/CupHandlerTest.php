@@ -2,8 +2,8 @@
 
 use PHPUnit\Framework\TestCase;
 
-use \webspell_ng\Game;
 use \webspell_ng\Handler\GameHandler;
+use \webspell_ng\Utils\StringFormatterUtils;
 
 use \myrisk\Cup\Cup;
 use \myrisk\Cup\Rule;
@@ -13,11 +13,6 @@ use \myrisk\Cup\Handler\RuleHandler;
 
 final class CupHandlerTest extends TestCase
 {
-
-    private function getRandomString(): string
-    {
-        return bin2hex(random_bytes(10));
-    }
 
     public function testIfCupCanBeSavedAndUpdated(): void
     {
@@ -29,8 +24,8 @@ final class CupHandlerTest extends TestCase
 
         $rule = new Rule();
         $rule->setGame($game);
-        $rule->setName("Test Rule " . $this->getRandomString());
-        $rule->setText($this->getRandomString());
+        $rule->setName("Test Rule " . StringFormatterUtils::getRandomString(10));
+        $rule->setText(StringFormatterUtils::getRandomString(10));
         $rule->setLastChangeOn($datetime_now);
 
         $rule = RuleHandler::saveRule($rule);

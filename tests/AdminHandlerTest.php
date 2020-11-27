@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 
 use \webspell_ng\Handler\GameHandler;
 use \webspell_ng\Handler\UserHandler;
+use \webspell_ng\Utils\StringFormatterUtils;
 
 use \myrisk\Cup\Admin;
 use \myrisk\Cup\Cup;
@@ -16,11 +17,6 @@ use \myrisk\Cup\Handler\RuleHandler;
 final class AdminHandlerTest extends TestCase
 {
 
-    private function getRandomString(): string
-    {
-        return bin2hex(random_bytes(10));
-    }
-
     public function testIfAdminHandlerReturnsArrayOfAdminInstances(): void
     {
 
@@ -28,14 +24,14 @@ final class AdminHandlerTest extends TestCase
 
         $rule = new Rule();
         $rule->setGame($game);
-        $rule->setName("Test Rule " . $this->getRandomString());
-        $rule->setText($this->getRandomString());
+        $rule->setName("Test Rule " . StringFormatterUtils::getRandomString(10));
+        $rule->setText(StringFormatterUtils::getRandomString(10));
         $rule->setLastChangeOn(new \DateTime("2020-01-01 23:59:59"));
 
         $rule = RuleHandler::saveRule($rule);
 
         $new_cup = new Cup();
-        $new_cup->setName("Test Cup Name " . $this->getRandomString());
+        $new_cup->setName("Test Cup Name " . StringFormatterUtils::getRandomString(10));
         $new_cup->setMode(CupEnums::CUP_MODE_5ON5);
         $new_cup->setSize(CupEnums::CUP_SIZE_8);
         $new_cup->setStatus(CupEnums::CUP_STATUS_RUNNING);

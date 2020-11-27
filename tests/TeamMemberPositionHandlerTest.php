@@ -2,16 +2,13 @@
 
 use PHPUnit\Framework\TestCase;
 
+use \webspell_ng\Utils\StringFormatterUtils;
+
 use \myrisk\Cup\TeamMemberPosition;
 use \myrisk\Cup\Handler\TeamMemberPositionHandler;
 
 final class TeamMemberPositionHandlerTest extends TestCase
 {
-
-    private function getRandomString(): string
-    {
-        return bin2hex(random_bytes(10));
-    }
 
     public function testIfCupHandlerReturnsCupInstance(): void
     {
@@ -19,7 +16,7 @@ final class TeamMemberPositionHandlerTest extends TestCase
         $sort = rand(1, 999);
 
         $new_position = new TeamMemberPosition();
-        $new_position->setPosition("Test Position " . $this->getRandomString());
+        $new_position->setPosition("Test Position " . StringFormatterUtils::getRandomString(10));
         $new_position->setSort($sort);
 
         $saved_position = TeamMemberPositionHandler::saveTeamMemberPosition($new_position);

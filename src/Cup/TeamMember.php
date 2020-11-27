@@ -48,7 +48,7 @@ class TeamMember {
         $this->member_id = $member_id;
     }
 
-    public function getMemberId(): int
+    public function getMemberId(): ?int
     {
         return $this->member_id;
     }

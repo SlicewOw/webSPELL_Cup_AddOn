@@ -10,8 +10,11 @@ use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Team;
 use myrisk\Cup\Handler\TeamMemberHandler;
+use webspell_ng\Utils\StringFormatterUtils;
 
 class TeamHandler {
+
+    private const DB_TABLE_NAME_TEAMS = "cups_teams";
 
     public static function getTeamByTeamId(int $team_id): Team
     {
@@ -23,7 +26,7 @@ class TeamHandler {
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->select('*')
-            ->from(WebSpellDatabaseConnection::getTablePrefix() . 'cups_teams')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_TEAMS)
             ->where('teamID = ?')
             ->setParameter(0, $team_id);
 
@@ -31,10 +34,8 @@ class TeamHandler {
         $team_result = $team_query->fetch();
 
         if (empty($team_result)) {
-            throw new \InvalidArgumentException('unknown_cup_team');
+            throw new \UnexpectedValueException('unknown_cup_team');
         }
-
-        $admin_id = $team_result['userID'];
 
         $team = new Team();
         $team->setTeamId($team_result['teamID']);
@@ -49,9 +50,11 @@ class TeamHandler {
         $team->setCountry(
             CountryHandler::getCountryByCountryShortcut($team_result['country'])
         );
-        $team->addMember(
-            TeamMemberHandler::getMemberByUserIdAndTeam($admin_id, $team)
-        );
+
+        $team_members = TeamMemberHandler::getMembersOfTeam($team);
+        foreach ($team_members as $team_member) {
+            $team->addMember($team_member);
+        }
 
         return $team;
 
@@ -67,6 +70,93 @@ class TeamHandler {
     public static function isAnyTeamMember(): bool
     {
         return false;
+    }
+
+    public static function saveTeam(Team $team): Team
+    {
+
+        if (is_null($team->getTeamId())) {
+            $team = self::insertTeam($team);
+            TeamMemberHandler::saveTeamMembers($team);
+        } else {
+            self::updateTeam($team);
+        }
+
+        return TeamHandler::getTeamByTeamId($team->getTeamId());
+
+    }
+
+    private static function insertTeam(Team $team): Team
+    {
+
+        $team_admin = $team->getTeamAdmin();
+        if (is_null($team_admin)) {
+            throw new \InvalidArgumentException("every_cup_team_needs_an_admin");
+        }
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->insert(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_TEAMS)
+            ->values(
+                    [
+                        'date' => '?',
+                        'name' => '?',
+                        'tag' => '?',
+                        'userID' => '?',
+                        'country' => '?',
+                        'hp' => '?',
+                        'logotype' => '?',
+                        'password' => '?'
+                    ]
+                )
+            ->setParameters(
+                    [
+                        0 => $team->getCreationDate()->getTimestamp(),
+                        1 => $team->getName(),
+                        2 => $team->getTag(),
+                        3 => $team_admin->getUser()->getUserId(),
+                        4 => $team->getCountry()->getShortcut(),
+                        5 => $team->getHomepage(),
+                        6 => $team->getLogotype(),
+                        7 => StringFormatterUtils::getRandomString(20)
+                    ]
+                );
+
+        $queryBuilder->execute();
+
+        $team->setTeamId(
+            (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
+        );
+
+        return $team;
+
+    }
+
+    private static function updateTeam(Team $team): void
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->update(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_TEAMS)
+            ->set("date", "?")
+            ->set("name", "?")
+            ->set("tag", "?")
+            ->set("country", "?")
+            ->set("hp", "?")
+            ->set("logotype", "?")
+            ->set("password", "?")
+            ->where('teamID = ?')
+            ->setParameter(0, $team->getCreationDate()->getTimestamp())
+            ->setParameter(1, $team->getName())
+            ->setParameter(2, $team->getTag())
+            ->setParameter(3, $team->getCountry()->getShortcut())
+            ->setParameter(4, $team->getHomepage())
+            ->setParameter(5, $team->getLogotype())
+            ->setParameter(6, StringFormatterUtils::getRandomString(20))
+            ->setParameter(7, $team->getTeamId());
+
+        $queryBuilder->execute();
+
     }
 
 }
