@@ -49,8 +49,9 @@ jobs:
       run: sudo systemctl start mysql
 
     - name: Create MySQL tables
-      run: mysql --host=127.0.0.1 --port=8888 --user=root --password=webspell --protocol=tcp webspell_ng < vendor/webspell_ng/data_structures/sql/install.sql
-      run: mysql --host=127.0.0.1 --port=8888 --user=root --password=webspell --protocol=tcp webspell_ng < sql/install.sql
+      run: |
+        mysql --host=127.0.0.1 --port=8888 --user=root --password=webspell --protocol=tcp webspell_ng < vendor/webspell_ng/data_structures/sql/install.sql
+        mysql --host=127.0.0.1 --port=8888 --user=root --password=webspell --protocol=tcp webspell_ng < sql/install.sql
 
     - name: Run test suite
       env:
