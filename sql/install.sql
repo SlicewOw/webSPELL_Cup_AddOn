@@ -343,6 +343,12 @@ CREATE TABLE `ws_p40_cups_teams_position` (
   `sort` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
+INSERT INTO `ws_p40_cups_teams_position` (`name`, `sort`) VALUES
+("Admin", 1),
+("Captain", 2),
+("Coach", 3),
+("Player", 4);
+
 CREATE TABLE `ws_p40_cups_teams_social` (
   `teamID` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
