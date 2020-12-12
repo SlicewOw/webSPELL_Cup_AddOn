@@ -328,7 +328,7 @@ CREATE TABLE `ws_p40_cups_teams_member` (
   `teamID` int(11) NOT NULL,
   `position` int(11) NOT NULL,
   `join_date` int(11) NOT NULL,
-  `left_date` int(11) NOT NULL,
+  `left_date` int(11) DEFAULT NULL,
   `kickID` int(11) NOT NULL DEFAULT 0,
   `active` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
