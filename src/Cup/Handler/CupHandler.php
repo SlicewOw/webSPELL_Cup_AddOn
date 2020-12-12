@@ -176,7 +176,6 @@ class CupHandler {
                         'mode' => '?',
                         'max_size' => '?',
                         'status' => '?',
-                        'game' => '?',
                         'gameID' => '?',
                         'ruleID' => '?'
                     ]
@@ -189,9 +188,8 @@ class CupHandler {
                         3 => $cup->getMode(),
                         4 => $cup->getSize(),
                         5 => $cup->getStatus(),
-                        6 => $cup->getGame()->getTag(),
-                        7 => $cup->getGame()->getGameId(),
-                        8 => (!is_null($cup->getRule())) ? $cup->getRule()->getRuleId() : null
+                        6 => $cup->getGame()->getGameId(),
+                        7 => (!is_null($cup->getRule())) ? $cup->getRule()->getRuleId() : null
                     ]
                 );
 

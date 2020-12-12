@@ -25,5 +25,8 @@
         "psr-4": {
             "myrisk\\": "src/"
         }
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }

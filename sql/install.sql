@@ -10,13 +10,11 @@ CREATE TABLE `ws_p40_cups` (
   `elimination` varchar(20) COLLATE latin1_german1_ci NOT NULL DEFAULT 'single',
   `checkin_date` int(11) NOT NULL,
   `start_date` int(11) NOT NULL,
-  `game` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `gameID` int(11) NOT NULL DEFAULT 0,
   `server` int(11) NOT NULL DEFAULT 0,
-  `bot` int(11) NOT NULL DEFAULT 0,
   `mapvote_enable` int(11) NOT NULL DEFAULT 0,
   `mappool` int(11) NOT NULL DEFAULT 0,
-  `mode` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `mode` varchar(255) COLLATE latin1_german1_ci NOT NULL DEFAULT '5on5',
   `ruleID` int(11) NOT NULL,
   `max_size` int(11) NOT NULL,
   `max_penalty` int(11) NOT NULL DEFAULT 12,
@@ -27,7 +25,7 @@ CREATE TABLE `ws_p40_cups` (
   `hits_groups` int(11) NOT NULL DEFAULT 0,
   `hits_bracket` int(11) NOT NULL DEFAULT 0,
   `hits_rules` int(11) NOT NULL DEFAULT 0,
-  `description` text COLLATE latin1_german1_ci NOT NULL,
+  `description` text COLLATE latin1_german1_ci DEFAULT NULL,
   `saved` int(11) NOT NULL DEFAULT 0,
   `admin_visible` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
@@ -330,10 +328,14 @@ CREATE TABLE `ws_p40_cups_teams_member` (
   `teamID` int(11) NOT NULL,
   `position` int(11) NOT NULL,
   `join_date` int(11) NOT NULL,
-  `left_date` int(11) NOT NULL,
+  `left_date` int(11) DEFAULT NULL,
   `kickID` int(11) NOT NULL DEFAULT 0,
   `active` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+--
+-- Cup Team Member Position
+--
 
 CREATE TABLE `ws_p40_cups_teams_position` (
   `positionID` int(11) NOT NULL,
@@ -342,6 +344,19 @@ CREATE TABLE `ws_p40_cups_teams_position` (
   `level_id` int(11) DEFAULT NULL,
   `sort` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+ALTER TABLE `ws_p40_cups_teams_position` ADD PRIMARY KEY (`positionID`), ADD UNIQUE KEY `name` (`name`);
+ALTER TABLE `ws_p40_cups_teams_position` MODIFY `positionID` int(11) NOT NULL AUTO_INCREMENT;
+
+INSERT INTO `ws_p40_cups_teams_position` (`name`, `sort`) VALUES
+("Admin", 1),
+("Captain", 2),
+("Coach", 3),
+("Player", 4);
+
+--
+-- Other tables
+--
 
 CREATE TABLE `ws_p40_cups_teams_social` (
   `teamID` int(11) NOT NULL,
@@ -470,10 +485,6 @@ ALTER TABLE `ws_p40_cups_teams_member`
   ADD PRIMARY KEY (`memberID`),
   ADD UNIQUE KEY `memberID` (`memberID`);
 
-ALTER TABLE `ws_p40_cups_teams_position`
-  ADD PRIMARY KEY (`positionID`),
-  ADD UNIQUE KEY `name` (`name`);
-
 ALTER TABLE `ws_p40_cups_teams_social`
   ADD PRIMARY KEY (`teamID`,`category_id`);
 
@@ -555,9 +566,6 @@ ALTER TABLE `ws_p40_cups_teams`
 
 ALTER TABLE `ws_p40_cups_teams_member`
   MODIFY `memberID` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `ws_p40_cups_teams_position`
-  MODIFY `positionID` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `ws_p40_cups_participants`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;

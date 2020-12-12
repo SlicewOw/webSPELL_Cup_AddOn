@@ -1,0 +1,64 @@
+name: PHP Composer
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      mysql-service:
+        image: mysql:5.7
+        env:
+            MYSQL_DATABASE: webspell_ng
+            MYSQL_ROOT_PASSWORD: webspell
+        ports:
+            - '8888:3306'
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v2
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Install dependencies
+      if: steps.composer-cache.outputs.cache-hit != 'true'
+      run: composer install --prefer-dist --no-progress
+
+    - name: Start MySQL service
+      run: sudo systemctl start mysql
+
+    - name: Create MySQL tables
+      run: |
+        mysql --host=127.0.0.1 --port=8888 --user=root --password=webspell --protocol=tcp webspell_ng < vendor/webspell_ng/data_structures/sql/install.sql
+        mysql --host=127.0.0.1 --port=8888 --user=root --password=webspell --protocol=tcp webspell_ng < sql/install.sql
+
+    - name: Run test suite
+      env:
+        DB_HOST: 127.0.0.1
+        DB_PORT: 8888
+        DB_NAME: webspell_ng
+        DB_USER: root
+        DB_PASS: webspell
+        DB_PREFIX: ws_p40_
+      run: composer run-script test
