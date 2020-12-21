@@ -239,25 +239,32 @@ CREATE TABLE `ws_p40_cups_streams` (
   `livID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
+--
+-- Support Tickets
+--
+
 CREATE TABLE `ws_p40_cups_supporttickets` (
   `ticketID` int(11) NOT NULL,
   `start_date` int(11) NOT NULL,
   `take_date` int(11) DEFAULT NULL,
-  `closed_date` int(11) NOT NULL,
-  `closed_by_id` int(11) NOT NULL DEFAULT 0,
+  `closed_date` int(11) DEFAULT NULL,
+  `closed_by_id` int(11) DEFAULT NULL,
   `userID` int(11) NOT NULL,
-  `opponent_adminID` int(11) NOT NULL DEFAULT 0,
-  `adminID` int(11) NOT NULL DEFAULT 0,
+  `opponent_adminID` int(11) DEFAULT NULL,
+  `adminID` int(11) DEFAULT NULL,
   `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `screenshot` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `categoryID` int(11) NOT NULL DEFAULT 0,
-  `cupID` int(11) NOT NULL DEFAULT 0,
-  `teamID` int(11) NOT NULL DEFAULT 0,
-  `opponentID` int(11) NOT NULL DEFAULT 0,
-  `matchID` int(11) NOT NULL DEFAULT 0,
+  `cupID` int(11) DEFAULT NULL,
+  `teamID` int(11) DEFAULT NULL,
+  `opponentID` int(11) DEFAULT NULL,
+  `matchID` int(11) DEFAULT NULL,
   `text` text COLLATE latin1_german1_ci NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+ALTER TABLE `ws_p40_cups_supporttickets` ADD PRIMARY KEY (`ticketID`), ADD UNIQUE KEY `ticketID` (`ticketID`);
+ALTER TABLE `ws_p40_cups_supporttickets` MODIFY `ticketID` int(11) NOT NULL AUTO_INCREMENT;
 
 CREATE TABLE `ws_p40_cups_supporttickets_category` (
   `categoryID` int(11) NOT NULL,
@@ -457,10 +464,6 @@ ALTER TABLE `ws_p40_cups_sponsors`
 ALTER TABLE `ws_p40_cups_streams`
   ADD UNIQUE KEY `streamID` (`streamID`);
 
-ALTER TABLE `ws_p40_cups_supporttickets`
-  ADD PRIMARY KEY (`ticketID`),
-  ADD UNIQUE KEY `ticketID` (`ticketID`);
-
 ALTER TABLE `ws_p40_cups_supporttickets_category`
   ADD PRIMARY KEY (`categoryID`),
   ADD UNIQUE KEY `categoryID` (`categoryID`);
@@ -551,9 +554,6 @@ ALTER TABLE `ws_p40_cups_sponsors`
 
 ALTER TABLE `ws_p40_cups_streams`
   MODIFY `streamID` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `ws_p40_cups_supporttickets`
-  MODIFY `ticketID` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `ws_p40_cups_supporttickets_category`
   MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT;
