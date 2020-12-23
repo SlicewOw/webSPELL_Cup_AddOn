@@ -71,6 +71,10 @@ class SupportTicketHandler {
             );
         }
 
+        $ticket->setContent(
+            SupportTicketContentHandler::getTicketContentByTicketId($ticket_id)
+        );
+
         return $ticket;
 
     }

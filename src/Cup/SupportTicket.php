@@ -24,6 +24,11 @@ class SupportTicket {
     private $text;
 
     /**
+     * @var array<SupportTicketContent> $content
+     */
+    private $content = array();
+
+    /**
      * @var \DateTime $start_date
      */
     private $start_date;
@@ -91,6 +96,22 @@ class SupportTicket {
     public function getText(): string
     {
         return $this->text;
+    }
+
+    /**
+     * @param array<SupportTicketContent> $content
+     */
+    public function setContent(array $content): void
+    {
+        $this->content = $content;
+    }
+
+    /**
+     * @return array<SupportTicketContent>
+     */
+    public function getContent(): array
+    {
+        return $this->content;
     }
 
     public function setStartDate(\DateTime $start_date): void

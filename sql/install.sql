@@ -266,6 +266,10 @@ CREATE TABLE `ws_p40_cups_supporttickets` (
 ALTER TABLE `ws_p40_cups_supporttickets` ADD PRIMARY KEY (`ticketID`), ADD UNIQUE KEY `ticketID` (`ticketID`);
 ALTER TABLE `ws_p40_cups_supporttickets` MODIFY `ticketID` int(11) NOT NULL AUTO_INCREMENT;
 
+--
+-- Support Tickets Category
+--
+
 CREATE TABLE `ws_p40_cups_supporttickets_category` (
   `categoryID` int(11) NOT NULL,
   `name_de` varchar(255) COLLATE latin1_german1_ci NOT NULL,
@@ -273,22 +277,38 @@ CREATE TABLE `ws_p40_cups_supporttickets_category` (
   `template` varchar(255) COLLATE latin1_german1_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
+ALTER TABLE `ws_p40_cups_supporttickets_category` ADD PRIMARY KEY (`categoryID`), ADD UNIQUE KEY `categoryID` (`categoryID`);
+ALTER TABLE `ws_p40_cups_supporttickets_category` MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Support Tickets content
+--
+
 CREATE TABLE `ws_p40_cups_supporttickets_content` (
   `contentID` int(11) NOT NULL,
   `ticketID` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   `userID` int(11) NOT NULL,
   `text` text COLLATE latin1_german1_ci NOT NULL,
-  `new` int(11) NOT NULL DEFAULT 1,
-  `new_admin` int(11) NOT NULL DEFAULT 1
+  `new` int(1) NOT NULL DEFAULT 1,
+  `new_admin` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+ALTER TABLE `ws_p40_cups_supporttickets_content` ADD PRIMARY KEY (`contentID`), ADD UNIQUE KEY `contentID` (`contentID`);
+ALTER TABLE `ws_p40_cups_supporttickets_content` MODIFY `contentID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Support Tickets history
+--
 
 CREATE TABLE `ws_p40_cups_supporttickets_status` (
   `ticket_id` int(11) NOT NULL,
   `primary_id` int(11) NOT NULL,
-  `admin` int(11) NOT NULL DEFAULT 0,
+  `admin` int(11) DEFAULT NULL,
   `ticket_seen_date` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+ALTER TABLE `ws_p40_cups_supporttickets_status` ADD UNIQUE KEY `ticket_id` (`ticket_id`,`primary_id`,`admin`);
 
 CREATE TABLE `ws_p40_cups_team` (
   `userID` int(11) NOT NULL,
@@ -464,17 +484,6 @@ ALTER TABLE `ws_p40_cups_sponsors`
 ALTER TABLE `ws_p40_cups_streams`
   ADD UNIQUE KEY `streamID` (`streamID`);
 
-ALTER TABLE `ws_p40_cups_supporttickets_category`
-  ADD PRIMARY KEY (`categoryID`),
-  ADD UNIQUE KEY `categoryID` (`categoryID`);
-
-ALTER TABLE `ws_p40_cups_supporttickets_content`
-  ADD PRIMARY KEY (`contentID`),
-  ADD UNIQUE KEY `contentID` (`contentID`);
-
-ALTER TABLE `ws_p40_cups_supporttickets_status`
-  ADD UNIQUE KEY `ticket_id` (`ticket_id`,`primary_id`,`admin`);
-
 ALTER TABLE `ws_p40_cups_team`
   ADD PRIMARY KEY (`userID`);
 
@@ -554,12 +563,6 @@ ALTER TABLE `ws_p40_cups_sponsors`
 
 ALTER TABLE `ws_p40_cups_streams`
   MODIFY `streamID` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `ws_p40_cups_supporttickets_category`
-  MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `ws_p40_cups_supporttickets_content`
-  MODIFY `contentID` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `ws_p40_cups_teams`
   MODIFY `teamID` int(11) NOT NULL AUTO_INCREMENT;
