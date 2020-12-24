@@ -280,6 +280,11 @@ CREATE TABLE `ws_p40_cups_supporttickets_category` (
 ALTER TABLE `ws_p40_cups_supporttickets_category` ADD PRIMARY KEY (`categoryID`), ADD UNIQUE KEY `categoryID` (`categoryID`);
 ALTER TABLE `ws_p40_cups_supporttickets_category` MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT;
 
+INSERT INTO `ws_p40_cups_supporttickets_category`
+(`name_de`, `name_uk`, `template`)
+VALUES
+('Normale Support Anfrage', 'Normal support ticket', 'default');
+
 --
 -- Support Tickets content
 --

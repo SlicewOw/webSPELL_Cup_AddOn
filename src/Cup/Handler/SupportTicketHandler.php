@@ -60,6 +60,11 @@ class SupportTicketHandler {
                 DateUtils::getDateTimeByMktimeValue($ticket_result['closed_date'])
             );
         }
+        if (!is_null($ticket_result['categoryID'])) {
+            $ticket->setCategory(
+                SupportTicketCategoryHandler::getTicketCategoryByCategoryId($ticket_result['categoryID'])
+            );
+        }
         if (!is_null($ticket_result['adminID'])) {
             $ticket->setAdmin(
                 UserHandler::getUserByUserId($ticket_result['adminID'])
@@ -95,6 +100,8 @@ class SupportTicketHandler {
     private static function insertTicket(SupportTicket $ticket): SupportTicket
     {
 
+        $category_id = !is_null($ticket->getCategory()) ? $ticket->getCategory()->getCategoryId() : null;
+
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->insert(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_SUPPORT_TICKETS)
@@ -103,7 +110,8 @@ class SupportTicketHandler {
                         'name' => '?',
                         'text' => '?',
                         'start_date' => '?',
-                        'userID' => '?'
+                        'userID' => '?',
+                        'categoryID' => '?'
                     ]
                 )
             ->setParameters(
@@ -111,7 +119,8 @@ class SupportTicketHandler {
                         0 => $ticket->getSubject(),
                         1 => $ticket->getText(),
                         2 => $ticket->getStartDate()->getTimestamp(),
-                        3 => $ticket->getOpener()->getUserId()
+                        3 => $ticket->getOpener()->getUserId(),
+                        4 => $category_id
                     ]
                 );
 
@@ -132,6 +141,7 @@ class SupportTicketHandler {
         $close_timestamp = (!is_null($ticket->getCloseDate())) ? $ticket->getCloseDate()->getTimestamp() : null;
 
         $admin_id = (!is_null($ticket->getAdmin())) ? $ticket->getAdmin()->getUserId() : null;
+        $category_id = !is_null($ticket->getCategory()) ? $ticket->getCategory()->getCategoryId() : null;
         $closed_by_id = (!is_null($ticket->getCloser())) ? $ticket->getCloser()->getUserId() : null;
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
@@ -144,6 +154,7 @@ class SupportTicketHandler {
             ->set("closed_date", "?")
             ->set("userID", "?")
             ->set("adminID", "?")
+            ->set("categoryID", "?")
             ->set("closed_by_id", "?")
             ->set("status", "?")
             ->where("ticketID", "?")
@@ -154,9 +165,10 @@ class SupportTicketHandler {
             ->setParameter(4, $close_timestamp)
             ->setParameter(5, $ticket->getOpener()->getUserId())
             ->setParameter(6, $admin_id)
-            ->setParameter(7, $closed_by_id)
-            ->setParameter(8, $ticket->getStatus())
-            ->setParameter(9, $ticket->getTicketId());
+            ->setParameter(7, $category_id)
+            ->setParameter(8, $closed_by_id)
+            ->setParameter(9, $ticket->getStatus())
+            ->setParameter(10, $ticket->getTicketId());
 
         $queryBuilder->execute();
 

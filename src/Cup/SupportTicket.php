@@ -3,6 +3,7 @@
 namespace myrisk\Cup;
 
 use webspell_ng\User;
+
 use myrisk\Cup\Enum\SupportTicketEnums;
 
 
@@ -32,6 +33,11 @@ class SupportTicket {
      * @var \DateTime $start_date
      */
     private $start_date;
+
+    /**
+     * @var ?SupportTicketCategory $category
+     */
+    private $category = null;
 
     /**
      * @var ?\DateTime $take_date
@@ -98,6 +104,16 @@ class SupportTicket {
         return $this->text;
     }
 
+    public function setCategory(SupportTicketCategory $category): void
+    {
+        $this->category = $category;
+    }
+
+    public function getCategory(): ?SupportTicketCategory
+    {
+        return $this->category;
+    }
+
     /**
      * @param array<SupportTicketContent> $content
      */
@@ -122,6 +138,26 @@ class SupportTicket {
     public function getStartDate(): \DateTime
     {
         return $this->start_date;
+    }
+
+    public function isOpenSince(): string
+    {
+
+        $ticket_is_open_since = (time() - $this->getStartDate()->getTimestamp());
+
+        if (($ticket_is_open_since / 60) < 60) {
+            $timer = (int)($ticket_is_open_since / 60);
+            $ticket_is_open_since = ($timer > 0) ? $timer . 'min' : 'now';
+        } else if (($ticket_is_open_since / 60 / 60) < 24) {
+            $timer = (int)($ticket_is_open_since / 60 / 60);
+            $ticket_is_open_since = $timer . 'h';
+        } else {
+            $timer = (int)($ticket_is_open_since / 60 / 60 / 24);
+            $ticket_is_open_since = $timer . 'd';
+        }
+
+        return $ticket_is_open_since;
+
     }
 
     public function setTakeDate(\DateTime $take_date): void
@@ -188,6 +224,20 @@ class SupportTicket {
     public function getStatus(): int
     {
         return $this->ticket_status;
+    }
+
+    public function hasUnreadContent(): bool
+    {
+
+        $content_array = $this->getContent();
+        foreach ($content_array as $content) {
+            if (!$content->getSeenByUser() || !$content->getSeenByAdmin()) {
+                return true;
+            }
+        }
+
+        return false;
+
     }
 
 }
