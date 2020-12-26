@@ -49,6 +49,8 @@ final class SupportTicketHandlerTest extends TestCase
     public function testIfSupportTicketCanBeSavedAndUpdated(): void
     {
 
+        $count_of_open_tickets = count(SupportTicketHandler::getOpenSupportTickets());
+
         $ticket_subject = "Test Ticket " . StringFormatterUtils::getRandomString(10, 2);
         $ticket_text = "Test Content \n " . StringFormatterUtils::getRandomString(10, 2) . " \n " . StringFormatterUtils::getRandomString(10, 2);
 
@@ -59,6 +61,7 @@ final class SupportTicketHandlerTest extends TestCase
 
         $ticket = SupportTicketHandler::saveTicket($new_ticket);
 
+        $this->assertEquals($count_of_open_tickets + 1, count(SupportTicketHandler::getOpenSupportTickets()), "Ticket is saved as open ticket.");
         $this->assertGreaterThan(0, $ticket->getTicketId(), "Ticket ID is set.");
         $this->assertEquals($ticket_subject, $ticket->getSubject(), "Subject is set.");
         $this->assertEquals($ticket_text, $ticket->getText(), "Text is set.");
@@ -78,6 +81,7 @@ final class SupportTicketHandlerTest extends TestCase
 
         $changed_ticket = SupportTicketHandler::getTicketByTicketId($ticket->getTicketId());
 
+        $this->assertEquals($count_of_open_tickets, count(SupportTicketHandler::getOpenSupportTickets()), "Ticket is not counted as open ticket.");
         $this->assertEquals($ticket->getTicketId(), $changed_ticket->getTicketId(), "Ticket ID is set.");
         $this->assertEquals($changed_ticket_subject, $changed_ticket->getSubject(), "Subject is set.");
         $this->assertEquals($changed_ticket_text, $changed_ticket->getText(), "Text is set.");

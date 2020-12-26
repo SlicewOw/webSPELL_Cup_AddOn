@@ -230,6 +230,8 @@ class CupHandler {
             ->setParameter(8, $cup->getRule()->getRuleId())
             ->setParameter(9, $cup->getCupId());
 
+        $queryBuilder->execute();
+
         return self::getCupByCupId($cup->getCupId());
 
     }

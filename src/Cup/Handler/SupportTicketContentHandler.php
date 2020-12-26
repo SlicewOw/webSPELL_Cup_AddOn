@@ -118,7 +118,7 @@ class SupportTicketContentHandler {
             ->set("text", "?")
             ->set("new", "?")
             ->set("new_admin", "?")
-            ->where("contentID", "?")
+            ->where("contentID = ?")
             ->setParameter(0, $content->getDate()->getTimestamp())
             ->setParameter(1, $content->getPoster()->getUserId())
             ->setParameter(2, $content->getText())

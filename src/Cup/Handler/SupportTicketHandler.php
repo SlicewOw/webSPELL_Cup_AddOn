@@ -12,6 +12,7 @@ use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\SupportTicket;
 use myrisk\Cup\Enum\SupportTicketEnums;
+use myrisk\Cup\Handler\SupportTicketCategoryHandler;
 
 
 class SupportTicketHandler {
@@ -84,6 +85,35 @@ class SupportTicketHandler {
 
     }
 
+    /**
+     * @return array<SupportTicket>
+     */
+    public static function getOpenSupportTickets(): array
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->select('ticketID')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_SUPPORT_TICKETS)
+            ->where('status = ?')
+            ->setParameter(0, SupportTicketEnums::TICKET_STATUS_OPEN);
+
+        $ticket_query = $queryBuilder->execute();
+
+        $ticket_array = array();
+
+        while ($ticket_result = $ticket_query->fetch(FetchMode::MIXED))
+        {
+            array_push(
+                $ticket_array,
+                self::getTicketByTicketId($ticket_result['ticketID'])
+            );
+        }
+
+        return $ticket_array;
+
+    }
+
     public static function saveTicket(SupportTicket $ticket): SupportTicket
     {
 
@@ -93,7 +123,7 @@ class SupportTicketHandler {
             self::updateTicket($ticket);
         }
 
-        return $ticket;
+        return self::getTicketByTicketId($ticket->getTicketId());
 
     }
 
@@ -149,26 +179,22 @@ class SupportTicketHandler {
             ->update(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_SUPPORT_TICKETS)
             ->set("name", "?")
             ->set("text", "?")
-            ->set("start_date", "?")
             ->set("take_date", "?")
             ->set("closed_date", "?")
-            ->set("userID", "?")
             ->set("adminID", "?")
             ->set("categoryID", "?")
             ->set("closed_by_id", "?")
-            ->set("status", "?")
-            ->where("ticketID", "?")
+            ->set("start_date", $ticket->getStartDate()->getTimestamp())
+            ->set("status", $ticket->getStatus())
+            ->set("userID", $ticket->getOpener()->getUserId())
+            ->where("ticketID = " . $ticket->getTicketId())
             ->setParameter(0, $ticket->getSubject())
             ->setParameter(1, $ticket->getText())
-            ->setParameter(2, $ticket->getStartDate()->getTimestamp())
-            ->setParameter(3, $take_timestamp)
-            ->setParameter(4, $close_timestamp)
-            ->setParameter(5, $ticket->getOpener()->getUserId())
-            ->setParameter(6, $admin_id)
-            ->setParameter(7, $category_id)
-            ->setParameter(8, $closed_by_id)
-            ->setParameter(9, $ticket->getStatus())
-            ->setParameter(10, $ticket->getTicketId());
+            ->setParameter(2, $take_timestamp)
+            ->setParameter(3, $close_timestamp)
+            ->setParameter(4, $admin_id)
+            ->setParameter(5, $category_id)
+            ->setParameter(6, $closed_by_id);
 
         $queryBuilder->execute();
 

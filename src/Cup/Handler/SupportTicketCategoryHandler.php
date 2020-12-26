@@ -98,7 +98,7 @@ class SupportTicketCategoryHandler {
             ->set("name_de", "?")
             ->set("name_uk", "?")
             ->set("template", "?")
-            ->where("categoryID", "?")
+            ->where("categoryID = ?")
             ->setParameter(0, $category->getGermanName())
             ->setParameter(1, $category->getEnglishName())
             ->setParameter(2, $category->getTemplate())

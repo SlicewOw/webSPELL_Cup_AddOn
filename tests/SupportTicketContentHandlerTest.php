@@ -63,6 +63,10 @@ final class SupportTicketContentHandlerTest extends TestCase
     public function testIfSupportTicketContentCanBeSavedAndUpdated(): void
     {
 
+        $ticket_without_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId());
+
+        $this->assertEquals(0, count($ticket_without_content->getContent()), "Ticket content is not set yet.");
+
         $content_text = "Test Content " . StringFormatterUtils::getRandomString(10, 2);
         $content_date = new \DateTime("2020-12-24 17:00:01");
 
