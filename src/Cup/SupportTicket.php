@@ -4,6 +4,8 @@ namespace myrisk\Cup;
 
 use webspell_ng\User;
 
+use myrisk\Cup\SupportTicketContent;
+use myrisk\Cup\SupportTicketStatus;
 use myrisk\Cup\Enum\SupportTicketEnums;
 
 
@@ -48,6 +50,11 @@ class SupportTicket {
      * @var ?\DateTime $close_date
      */
     private $close_date = null;
+
+    /**
+     * @var SupportTicketStatus $user_status
+     */
+    private $user_status;
 
     /**
      * @var User $opened_by_user
@@ -186,6 +193,16 @@ class SupportTicket {
         return $this->close_date;
     }
 
+    public function setUserStatus(SupportTicketStatus $user_status): void
+    {
+        $this->user_status = $user_status;
+    }
+
+    public function getUserStatus(): SupportTicketStatus
+    {
+        return $this->user_status;
+    }
+
     public function setOpener(User $opener): void
     {
         $this->opened_by_user = $opener;
@@ -231,7 +248,7 @@ class SupportTicket {
 
         $content_array = $this->getContent();
         foreach ($content_array as $content) {
-            if (!$content->getSeenByUser() || !$content->getSeenByAdmin()) {
+            if ($content->getDate() > $this->getUserStatus()->getDate()) {
                 return true;
             }
         }

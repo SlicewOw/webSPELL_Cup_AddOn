@@ -13,11 +13,6 @@ class SupportTicketStatus {
     private $user;
 
     /**
-     * @var User $admin
-     */
-    private $admin;
-
-    /**
      * @var ?\DateTime $date
      */
     private $date = null;
@@ -30,16 +25,6 @@ class SupportTicketStatus {
     public function getUser(): User
     {
         return $this->user;
-    }
-
-    public function setAdmin(User $admin): void
-    {
-        $this->admin = $admin;
-    }
-
-    public function getAdmin(): User
-    {
-        return $this->admin;
     }
 
     public function setDate(\DateTime $date): void

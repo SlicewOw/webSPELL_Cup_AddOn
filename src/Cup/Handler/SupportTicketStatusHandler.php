@@ -9,7 +9,6 @@ use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\DateUtils;
 
-use myrisk\Cup\SupportTicket;
 use myrisk\Cup\SupportTicketStatus;
 
 
@@ -17,10 +16,7 @@ class SupportTicketStatusHandler {
 
     private const DB_TABLE_NAME_SUPPORT_TICKETS_STATUS = "cups_supporttickets_status";
 
-    /**
-     * @return array<SupportTicketStatus>
-     */
-    public static function getTicketStatusByTicketId(int $ticket_id): array
+    public static function getTicketStatusByTicketId(int $ticket_id, int $user_id): SupportTicketStatus
     {
 
         if (!Validator::numericVal()->min(1)->validate($ticket_id)) {
@@ -31,37 +27,30 @@ class SupportTicketStatusHandler {
         $queryBuilder
             ->select('*')
             ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_SUPPORT_TICKETS_STATUS)
-            ->where('ticketID = ?')
+            ->where('ticketID = ?', 'userID = ?')
             ->setParameter(0, $ticket_id)
-            ->orderBy("date", "ASC");
+            ->setParameter(1, $user_id);
 
-        $content_query = $queryBuilder->execute();
+        $status_query = $queryBuilder->execute();
+        $status_result = $status_query->fetch(FetchMode::MIXED);
 
-        $content_array = array();
-
-        while ($content_result = $content_query->fetch(FetchMode::MIXED))
-        {
-
-            $content = new SupportTicketStatus();
-            $content->setDate(
-                DateUtils::getDateTimeByMktimeValue($content_result['ticket_seen_date'])
-            );
-            $content->setUser(
-                UserHandler::getUserByUserId($content_result['primary_id'])
-            );
-            $content->setAdmin(
-                UserHandler::getUserByUserId($content_result['admin'])
-            );
-
-            array_push($content_array, $content);
-
+        if (empty($status_result)) {
+            return self::insertStatus($ticket_id, $user_id);
         }
 
-        return $content_array;
+        $status = new SupportTicketStatus();
+        $status->setUser(
+            UserHandler::getUserByUserId($status_result['userID'])
+        );
+        $status->setDate(
+            DateUtils::getDateTimeByMktimeValue($status_result['date'])
+        );
+
+        return $status;
 
     }
 
-    public static function saveStatus(SupportTicket $ticket, SupportTicketStatus $status): void
+    public static function saveStatus(int $ticket_id, SupportTicketStatus $status): void
     {
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
@@ -69,20 +58,54 @@ class SupportTicketStatusHandler {
             ->insert(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_SUPPORT_TICKETS_STATUS)
             ->values(
                     [
-                        'ticket_id' => '?',
-                        'primary_id' => '?',
-                        'admin' => '?',
-                        'ticket_seen_date' => '?'
+                        'ticketID' => '?',
+                        'userID' => '?',
+                        'date' => '?'
                     ]
                 )
             ->setParameters(
                     [
-                        0 => $ticket->getTicketId(),
+                        0 => $ticket_id,
                         1 => $status->getUser()->getUserId(),
-                        2 => $status->getAdmin()->getUserId(),
-                        3 => $status->getDate()->getTimestamp()
+                        2 => $status->getDate()->getTimestamp()
                     ]
                 );
+
+        $queryBuilder->execute();
+
+    }
+
+    private static function insertStatus(int $ticket_id, int $user_id): SupportTicketStatus
+    {
+
+        $new_status = new SupportTicketStatus();
+        $new_status->setUser(
+            UserHandler::getUserByUserId($user_id)
+        );
+        $new_status->setDate(
+            new \DateTime("now")
+        );
+
+        self::saveStatus(
+            $ticket_id,
+            $new_status
+        );
+
+        return self::getTicketStatusByTicketId($ticket_id, $user_id);
+
+    }
+
+    public static function updateStatus(int $ticket_id, SupportTicketStatus $status): void
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->update(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_SUPPORT_TICKETS_STATUS)
+            ->set("date", "?")
+            ->where("ticketID = ?", "userID = ?")
+            ->setParameter(0, $status->getDate()->getTimestamp())
+            ->setParameter(1, $ticket_id)
+            ->setParameter(2, $status->getUser()->getUserId());
 
         $queryBuilder->execute();
 

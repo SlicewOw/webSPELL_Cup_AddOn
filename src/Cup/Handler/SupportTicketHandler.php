@@ -13,13 +13,14 @@ use webspell_ng\Utils\DateUtils;
 use myrisk\Cup\SupportTicket;
 use myrisk\Cup\Enum\SupportTicketEnums;
 use myrisk\Cup\Handler\SupportTicketCategoryHandler;
+use myrisk\Cup\Handler\SupportTicketStatusHandler;
 
 
 class SupportTicketHandler {
 
     private const DB_TABLE_NAME_SUPPORT_TICKETS = "cups_supporttickets";
 
-    public static function getTicketByTicketId(int $ticket_id): SupportTicket
+    public static function getTicketByTicketId(int $ticket_id, int $user_id): SupportTicket
     {
 
         if (!Validator::numericVal()->min(1)->validate($ticket_id)) {
@@ -77,6 +78,11 @@ class SupportTicketHandler {
             );
         }
 
+        $ticket->setUserStatus(
+            // TODO: Use UserSession if exists in webSPELL NG
+            SupportTicketStatusHandler::getTicketStatusByTicketId($ticket_id, $user_id)
+        );
+
         $ticket->setContent(
             SupportTicketContentHandler::getTicketContentByTicketId($ticket_id)
         );
@@ -88,7 +94,7 @@ class SupportTicketHandler {
     /**
      * @return array<SupportTicket>
      */
-    public static function getOpenSupportTickets(): array
+    public static function getOpenSupportTickets(int $user_id): array
     {
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
@@ -106,7 +112,7 @@ class SupportTicketHandler {
         {
             array_push(
                 $ticket_array,
-                self::getTicketByTicketId($ticket_result['ticketID'])
+                self::getTicketByTicketId($ticket_result['ticketID'], $user_id)
             );
         }
 
@@ -114,7 +120,7 @@ class SupportTicketHandler {
 
     }
 
-    public static function saveTicket(SupportTicket $ticket): SupportTicket
+    public static function saveTicket(SupportTicket $ticket, int $user_id): SupportTicket
     {
 
         if (is_null($ticket->getTicketId())) {
@@ -123,7 +129,7 @@ class SupportTicketHandler {
             self::updateTicket($ticket);
         }
 
-        return self::getTicketByTicketId($ticket->getTicketId());
+        return self::getTicketByTicketId($ticket->getTicketId(), $user_id);
 
     }
 
@@ -203,7 +209,7 @@ class SupportTicketHandler {
     public static function takeTicket(int $ticket_id, User $admin): void
     {
 
-        $ticket = self::getTicketByTicketId($ticket_id);
+        $ticket = self::getTicketByTicketId($ticket_id, $admin->getUserId());
 
         $ticket->setAdmin($admin);
         $ticket->setStatus(SupportTicketEnums::TICKET_STATUS_IN_PROGRESS);
@@ -213,12 +219,12 @@ class SupportTicketHandler {
 
     }
 
-    public static function closeTicket(int $ticket_id, User $admin): void
+    public static function closeTicket(int $ticket_id, User $user): void
     {
 
-        $ticket = self::getTicketByTicketId($ticket_id);
+        $ticket = self::getTicketByTicketId($ticket_id, $user->getUserId());
 
-        $ticket->setCloser($admin);
+        $ticket->setCloser($user);
         $ticket->setStatus(SupportTicketEnums::TICKET_STATUS_DONE);
         $ticket->setCloseDate(new \DateTime("now"));
 

@@ -45,8 +45,6 @@ class SupportTicketContentHandler {
             $content = new SupportTicketContent();
             $content->setContentId($content_result['contentID']);
             $content->setText($content_result['text']);
-            $content->setSeenByUser($content_result['new'] == 0);
-            $content->setSeenByAdmin($content_result['new_admin'] == 0);
             $content->setDate(
                 DateUtils::getDateTimeByMktimeValue($content_result['date'])
             );
@@ -107,24 +105,17 @@ class SupportTicketContentHandler {
     private static function updateContent(SupportTicketContent $content): void
     {
 
-        $new_to_user = $content->getSeenByUser() ? 0 : 1;
-        $new_to_admin = $content->getSeenByAdmin() ? 0 : 1;
-
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->update(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_SUPPORT_TICKETS_CONTENT)
             ->set("date", "?")
             ->set("userID", "?")
             ->set("text", "?")
-            ->set("new", "?")
-            ->set("new_admin", "?")
             ->where("contentID = ?")
             ->setParameter(0, $content->getDate()->getTimestamp())
             ->setParameter(1, $content->getPoster()->getUserId())
             ->setParameter(2, $content->getText())
-            ->setParameter(3, $new_to_user)
-            ->setParameter(4, $new_to_admin)
-            ->setParameter(5, $content->getContentId());
+            ->setParameter(3, $content->getContentId());
 
         $queryBuilder->execute();
 
