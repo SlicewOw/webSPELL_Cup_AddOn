@@ -307,13 +307,12 @@ ALTER TABLE `ws_p40_cups_supporttickets_content` MODIFY `contentID` int(11) NOT 
 --
 
 CREATE TABLE `ws_p40_cups_supporttickets_status` (
-  `ticket_id` int(11) NOT NULL,
-  `primary_id` int(11) NOT NULL,
-  `admin` int(11) DEFAULT NULL,
-  `ticket_seen_date` int(11) DEFAULT NULL
+  `ticketID` int(11) NOT NULL,
+  `userID` int(11) NOT NULL,
+  `date` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
-ALTER TABLE `ws_p40_cups_supporttickets_status` ADD UNIQUE KEY `ticket_id` (`ticket_id`,`primary_id`,`admin`);
+ALTER TABLE `ws_p40_cups_supporttickets_status` ADD UNIQUE KEY `ticketID` (`ticketID`,`userID`);
 
 CREATE TABLE `ws_p40_cups_team` (
   `userID` int(11) NOT NULL,

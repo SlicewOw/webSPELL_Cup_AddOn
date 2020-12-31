@@ -27,16 +27,6 @@ class SupportTicketContent {
      */
     private $text;
 
-    /**
-     * @var bool $seen_by_user
-     */
-    private $seen_by_user = false;
-
-    /**
-     * @var bool $seen_by_admin
-     */
-    private $seen_by_admin = false;
-
     public function setContentId(int $content_id): void
     {
         $this->content_id = $content_id;
@@ -78,26 +68,6 @@ class SupportTicketContent {
     public function getText(): string
     {
         return $this->text;
-    }
-
-    public function setSeenByUser(bool $seen_by_user): void
-    {
-        $this->seen_by_user = $seen_by_user;
-    }
-
-    public function getSeenByUser(): bool
-    {
-        return $this->seen_by_user;
-    }
-
-    public function setSeenByAdmin(bool $seen_by_admin): void
-    {
-        $this->seen_by_admin = $seen_by_admin;
-    }
-
-    public function getSeenByAdmin(): bool
-    {
-        return $this->seen_by_admin;
     }
 
 }

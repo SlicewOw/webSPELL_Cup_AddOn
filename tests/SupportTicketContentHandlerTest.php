@@ -54,7 +54,7 @@ final class SupportTicketContentHandlerTest extends TestCase
         $new_ticket->setSubject("Test Ticket " . StringFormatterUtils::getRandomString(10, 2));
         $new_ticket->setText("Test Content \n " . StringFormatterUtils::getRandomString(10, 2) . " \n " . StringFormatterUtils::getRandomString(10, 2));
 
-        self::$ticket = SupportTicketHandler::saveTicket($new_ticket);
+        self::$ticket = SupportTicketHandler::saveTicket($new_ticket, self::$user->getUserId());
 
         SupportTicketHandler::takeTicket(self::$ticket->getTicketId(), self::$admin);
 
@@ -63,7 +63,7 @@ final class SupportTicketContentHandlerTest extends TestCase
     public function testIfSupportTicketContentCanBeSavedAndUpdated(): void
     {
 
-        $ticket_without_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId());
+        $ticket_without_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId(), self::$user->getUserId());
 
         $this->assertEquals(0, count($ticket_without_content->getContent()), "Ticket content is not set yet.");
 
@@ -77,7 +77,7 @@ final class SupportTicketContentHandlerTest extends TestCase
 
         SupportTicketContentHandler::saveContent(self::$ticket, $new_content);
 
-        $ticket_with_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId());
+        $ticket_with_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId(), self::$user->getUserId());
 
         $ticket_content_array = $ticket_with_content->getContent();
 
@@ -88,17 +88,14 @@ final class SupportTicketContentHandlerTest extends TestCase
         $this->assertGreaterThan(0, $ticket_content->getContentId(), "Content ID is set.");
         $this->assertEquals($content_text, $ticket_content->getText(), "Content text is set.");
         $this->assertEquals($content_date, $ticket_content->getDate(), "Content date is set.");
-        $this->assertFalse($ticket_content->getSeenByUser(), "Content is not seen by user yet.");
-        $this->assertFalse($ticket_content->getSeenByAdmin(), "Content is not seen by admin yet.");
 
         $changed_content_date = new \DateTime("2019-12-24 17:00:01");
 
-        $ticket_content->setSeenByAdmin(True);
         $ticket_content->setDate($changed_content_date);
 
         SupportTicketContentHandler::saveContent(self::$ticket, $ticket_content);
 
-        $ticket_with_changed_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId());
+        $ticket_with_changed_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId(), self::$user->getUserId());
 
         $ticket_changed_content_array = $ticket_with_changed_content->getContent();
 
@@ -109,8 +106,6 @@ final class SupportTicketContentHandlerTest extends TestCase
         $this->assertGreaterThan(0, $changed_ticket_content->getContentId(), "Content ID is set.");
         $this->assertEquals($content_text, $changed_ticket_content->getText(), "Content text is set.");
         $this->assertEquals($changed_content_date, $changed_ticket_content->getDate(), "Content date is set.");
-        $this->assertFalse($changed_ticket_content->getSeenByUser(), "Content is not seen by user yet.");
-        $this->assertTrue($changed_ticket_content->getSeenByAdmin(), "Content is not seen by admin yet.");
 
     }
 
@@ -125,7 +120,7 @@ final class SupportTicketContentHandlerTest extends TestCase
 
         SupportTicketContentHandler::saveContent(self::$ticket, $new_content);
 
-        $ticket_with_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId());
+        $ticket_with_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId(), self::$user->getUserId());
 
         $ticket_content_array = $ticket_with_content->getContent();
 
@@ -140,8 +135,6 @@ final class SupportTicketContentHandlerTest extends TestCase
         $this->assertGreaterThan(0, $ticket_content_02->getContentId(), "Content ID is set.");
         $this->assertEquals($content_text, $ticket_content_02->getText(), "Content text is set.");
         $this->assertGreaterThan(0, $ticket_content_02->getDate()->getTimestamp(), "Content date is set.");
-        $this->assertFalse($ticket_content_02->getSeenByUser(), "Content is not seen by user yet.");
-        $this->assertFalse($ticket_content_02->getSeenByAdmin(), "Content is not seen by admin yet.");
 
     }
 
