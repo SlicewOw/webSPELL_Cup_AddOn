@@ -9,8 +9,9 @@ use webspell_ng\Utils\StringFormatterUtils;
 
 use myrisk\Cup\SupportTicket;
 use myrisk\Cup\Enum\SupportTicketEnums;
+use myrisk\Cup\Handler\SupportTicketCategoryHandler;
 use myrisk\Cup\Handler\SupportTicketHandler;
-
+use myrisk\Cup\SupportTicketCategory;
 
 final class SupportTicketHandlerTest extends TestCase
 {
@@ -24,6 +25,11 @@ final class SupportTicketHandlerTest extends TestCase
      * @var User $admin
      */
     private static $admin;
+
+    /**
+     * @var SupportTicketCategory $category
+     */
+    private static $category;
 
     public static function setUpBeforeClass(): void
     {
@@ -44,6 +50,12 @@ final class SupportTicketHandlerTest extends TestCase
 
         self::$admin = UserHandler::getUserByUserId(1);
 
+        $new_ticket_category = new SupportTicketCategory();
+        $new_ticket_category->setGermanName("Test Kategorie " . StringFormatterUtils::getRandomString(10));
+        $new_ticket_category->setEnglishName("Test category " . StringFormatterUtils::getRandomString(10));
+
+        self::$category = SupportTicketCategoryHandler::saveCategory($new_ticket_category);
+
     }
 
     public function testIfSupportTicketCanBeSavedAndUpdated(): void
@@ -58,6 +70,7 @@ final class SupportTicketHandlerTest extends TestCase
         $new_ticket->setOpener(self::$user);
         $new_ticket->setSubject($ticket_subject);
         $new_ticket->setText($ticket_text);
+        $new_ticket->setCategory(self::$category);
 
         $ticket = SupportTicketHandler::saveTicket($new_ticket, self::$user->getUserId());
 
@@ -100,6 +113,8 @@ final class SupportTicketHandlerTest extends TestCase
         $this->assertEquals(self::$user->getUserId(), $closed_ticket->getOpener()->getUserId(), "Opener is set.");
         $this->assertEquals(self::$admin->getUserId(), $closed_ticket->getAdmin()->getUserId(), "Admin is set.");
         $this->assertEquals(self::$admin->getUserId(), $closed_ticket->getCloser()->getUserId(), "Closer is set.");
+
+        $this->assertGreaterThan(0, count(SupportTicketHandler::getSupportTicketsOfUser(self::$user)), "Count of Support Tickets is expected.");
 
     }
 

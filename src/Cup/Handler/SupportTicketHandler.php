@@ -120,6 +120,41 @@ class SupportTicketHandler {
 
     }
 
+    /**
+     * @return array<SupportTicket>
+     */
+    public static function getSupportTicketsOfUser(User $user): array
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->select('ticketID')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_SUPPORT_TICKETS)
+            ->where(
+                $queryBuilder->expr()->or(
+                    $queryBuilder->expr()->eq('adminID', '?'),
+                    $queryBuilder->expr()->eq('userID', '?')
+                )
+            )
+            ->setParameter(0, $user->getUserId())
+            ->setParameter(1, $user->getUserId());
+
+        $ticket_query = $queryBuilder->execute();
+
+        $ticket_array = array();
+
+        while ($ticket_result = $ticket_query->fetch(FetchMode::MIXED))
+        {
+            array_push(
+                $ticket_array,
+                self::getTicketByTicketId((int) $ticket_result['ticketID'], $user->getUserId())
+            );
+        }
+
+        return $ticket_array;
+
+    }
+
     public static function saveTicket(SupportTicket $ticket, int $user_id): SupportTicket
     {
 
