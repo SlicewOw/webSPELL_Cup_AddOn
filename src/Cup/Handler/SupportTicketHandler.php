@@ -77,6 +77,24 @@ class SupportTicketHandler {
                 UserHandler::getUserByUserId($ticket_result['closed_by_id'])
             );
         }
+        if (!is_null($ticket_result['cupID'])) {
+            $ticket->setCup(
+                CupHandler::getCupByCupId((int) $ticket_result['cupID'])
+            );
+        }
+
+        // TODO: Add CupMatch to Support Ticket if related handler is implemented
+
+        if (!is_null($ticket_result['teamID'])) {
+            $ticket->setTeam(
+                TeamHandler::getTeamByTeamId($ticket_result['teamID'])
+            );
+        }
+        if (!is_null($ticket_result['opponentID'])) {
+            $ticket->setOpponent(
+                TeamHandler::getTeamByTeamId($ticket_result['opponentID'])
+            );
+        }
 
         $ticket->setUserStatus(
             // TODO: Use UserSession if exists in webSPELL NG
@@ -173,6 +191,11 @@ class SupportTicketHandler {
 
         $category_id = !is_null($ticket->getCategory()) ? $ticket->getCategory()->getCategoryId() : null;
 
+        $cup_id = (!is_null($ticket->getCup())) ? $ticket->getCup()->getCupId() : null;
+        $match_id = (!is_null($ticket->getMatch())) ? $ticket->getMatch()->getMatchId() : null;
+        $team_id = (!is_null($ticket->getTeam())) ? $ticket->getTeam()->getTeamId() : null;
+        $opponent_id = (!is_null($ticket->getOpponent())) ? $ticket->getOpponent()->getTeamId() : null;
+
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->insert(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_SUPPORT_TICKETS)
@@ -182,7 +205,11 @@ class SupportTicketHandler {
                         'text' => '?',
                         'start_date' => '?',
                         'userID' => '?',
-                        'categoryID' => '?'
+                        'categoryID' => '?',
+                        'cupID' => '?',
+                        'matchID' => '?',
+                        'teamID' => '?',
+                        'opponentID' => '?'
                     ]
                 )
             ->setParameters(
@@ -191,7 +218,11 @@ class SupportTicketHandler {
                         1 => $ticket->getText(),
                         2 => $ticket->getStartDate()->getTimestamp(),
                         3 => $ticket->getOpener()->getUserId(),
-                        4 => $category_id
+                        4 => $category_id,
+                        5 => $cup_id,
+                        6 => $match_id,
+                        7 => $team_id,
+                        8 => $opponent_id
                     ]
                 );
 
@@ -215,6 +246,11 @@ class SupportTicketHandler {
         $category_id = !is_null($ticket->getCategory()) ? $ticket->getCategory()->getCategoryId() : null;
         $closed_by_id = (!is_null($ticket->getCloser())) ? $ticket->getCloser()->getUserId() : null;
 
+        $cup_id = (!is_null($ticket->getCup())) ? $ticket->getCup()->getCupId() : null;
+        $match_id = (!is_null($ticket->getMatch())) ? $ticket->getMatch()->getMatchId() : null;
+        $team_id = (!is_null($ticket->getTeam())) ? $ticket->getTeam()->getTeamId() : null;
+        $opponent_id = (!is_null($ticket->getOpponent())) ? $ticket->getOpponent()->getTeamId() : null;
+
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->update(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_SUPPORT_TICKETS)
@@ -225,6 +261,10 @@ class SupportTicketHandler {
             ->set("adminID", "?")
             ->set("categoryID", "?")
             ->set("closed_by_id", "?")
+            ->set("cupID", "?")
+            ->set("matchID", "?")
+            ->set("teamID", "?")
+            ->set("opponentID", "?")
             ->set("start_date", $ticket->getStartDate()->getTimestamp())
             ->set("status", $ticket->getStatus())
             ->set("userID", $ticket->getOpener()->getUserId())
@@ -235,7 +275,11 @@ class SupportTicketHandler {
             ->setParameter(3, $close_timestamp)
             ->setParameter(4, $admin_id)
             ->setParameter(5, $category_id)
-            ->setParameter(6, $closed_by_id);
+            ->setParameter(6, $closed_by_id)
+            ->setParameter(7, $cup_id)
+            ->setParameter(8, $match_id)
+            ->setParameter(9, $team_id)
+            ->setParameter(10, $opponent_id);
 
         $queryBuilder->execute();
 

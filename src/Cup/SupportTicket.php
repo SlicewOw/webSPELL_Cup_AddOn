@@ -4,8 +4,11 @@ namespace myrisk\Cup;
 
 use webspell_ng\User;
 
+use myrisk\Cup\Cup;
+use myrisk\Cup\CupMatch;
 use myrisk\Cup\SupportTicketContent;
 use myrisk\Cup\SupportTicketStatus;
+use myrisk\Cup\Team;
 use myrisk\Cup\Enum\SupportTicketEnums;
 
 
@@ -75,6 +78,26 @@ class SupportTicket {
      * @var int $ticket_status
      */
     private $ticket_status = SupportTicketEnums::TICKET_STATUS_OPEN;
+
+    /**
+     * @var ?Cup $cup
+     */
+    private $cup = null;
+
+    /**
+     * @var ?CupMatch $match
+     */
+    private $match = null;
+
+    /**
+     * @var ?Team $team
+     */
+    private $team = null;
+
+    /**
+     * @var ?Team $opponent
+     */
+    private $opponent = null;
 
     public function __construct()
     {
@@ -255,6 +278,46 @@ class SupportTicket {
 
         return false;
 
+    }
+
+    public function setCup(Cup $cup): void
+    {
+        $this->cup = $cup;
+    }
+
+    public function getCup(): ?Cup
+    {
+        return $this->cup;
+    }
+
+    public function setMatch(CupMatch $match): void
+    {
+        $this->match = $match;
+    }
+
+    public function getMatch(): ?CupMatch
+    {
+        return $this->match;
+    }
+
+    public function setTeam(Team $team): void
+    {
+        $this->team = $team;
+    }
+
+    public function getTeam(): ?Team
+    {
+        return $this->team;
+    }
+
+    public function setOpponent(Team $opponent): void
+    {
+        $this->opponent = $opponent;
+    }
+
+    public function getOpponent(): ?Team
+    {
+        return $this->opponent;
     }
 
 }
