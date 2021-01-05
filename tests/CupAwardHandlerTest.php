@@ -151,6 +151,30 @@ final class CupAwardHandlerTest extends TestCase
 
     }
 
+    public function testIfCupAwardsAreReturnedBasedOnAwardCategory(): void
+    {
+
+        $new_category = new CupAwardCategory();
+        $new_category->setName("Test category " . StringFormatterUtils::getRandomString(10));
+        $new_category->setIcon("icon_" . StringFormatterUtils::getRandomString(10) . ".jpg");
+        $new_category->setActiveColumn("cups_placements");
+        $new_category->setSort(rand(1, 99999));
+        $new_category->setRequiredCupRanking(rand(1, 64));
+
+        $award_category = CupAwardCategoryHandler::saveCategory($new_category);
+
+        $this->assertEquals(0, count(CupAwardHandler::getCupAwardsOfAwardCategory($award_category)), "New award category does not have a award yet.");
+
+        $new_award = new CupAward();
+        $new_award->setCategory($award_category);
+        $new_award->setUser(self::$user);
+
+        CupAwardHandler::saveAward($new_award);
+
+        $this->assertEquals(1, count(CupAwardHandler::getCupAwardsOfAwardCategory($award_category)), "Award category does have one award.");
+
+    }
+
     public function testIfInvalidArgumentExceptionIsThrownIfAwardIdIsInvalid(): void
     {
 

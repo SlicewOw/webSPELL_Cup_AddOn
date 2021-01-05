@@ -11,6 +11,7 @@ use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\CupAward;
+use myrisk\Cup\CupAwardCategory;
 use myrisk\Cup\Team;
 
 class CupAwardHandler {
@@ -83,6 +84,14 @@ class CupAwardHandler {
     public static function getCupAwardsOfTeam(Team $team): array
     {
         return self::getAwardsByParameters("teamID", $team->getTeamId());
+    }
+
+    /**
+     * @return array<CupAward>
+     */
+    public static function getCupAwardsOfAwardCategory(CupAwardCategory $category): array
+    {
+        return self::getAwardsByParameters("categoryID", $category->getCategoryId());
     }
 
     /**
