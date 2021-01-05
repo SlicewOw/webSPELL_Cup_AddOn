@@ -8,6 +8,8 @@ use Respect\Validation\Validator;
 use webspell_ng\WebSpellDatabaseConnection;
 
 use myrisk\Cup\CupAwardCategory;
+use myrisk\Cup\Enum\CupAwardEnums;
+
 
 class CupAwardCategoryHandler {
 
@@ -43,15 +45,15 @@ class CupAwardCategoryHandler {
         $category->setSort((int) $category_result['sort']);
 
         if (!is_null($category_result['cup_ranking'])) {
-            $category->setRequiredCupRanking((int) $category_result['cup_ranking']);
+            $category->setRequiredValue((int) $category_result['cup_ranking']);
         }
 
         if (!is_null($category_result['count_of_cups'])) {
-            $category->setRequiredCountOfCups((int) $category_result['count_of_cups']);
+            $category->setRequiredValue((int) $category_result['count_of_cups']);
         }
 
         if (!is_null($category_result['count_of_matches'])) {
-            $category->setRequiredCountOfMatches((int) $category_result['count_of_matches']);
+            $category->setRequiredValue((int) $category_result['count_of_matches']);
         }
 
         return $category;
@@ -102,6 +104,18 @@ class CupAwardCategoryHandler {
     private static function insertCategory(CupAwardCategory $category): CupAwardCategory
     {
 
+        $required_cup_ranking = null;
+        $required_count_of_cups = null;
+        $required_count_of_matches = null;
+
+        if ($category->getActiveColumn() == CupAwardEnums::ACTIVE_COLUMN_NAME_CUP_RANKING) {
+            $required_cup_ranking = $category->getRequiredValue();
+        } else if ($category->getActiveColumn() == CupAwardEnums::ACTIVE_COLUMN_NAME_COUNT_OF_CUPS) {
+            $required_count_of_cups = $category->getRequiredValue();
+        } else if ($category->getActiveColumn() == CupAwardEnums::ACTIVE_COLUMN_NAME_COUNT_OF_MATCHES) {
+            $required_count_of_matches = $category->getRequiredValue();
+        }
+
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->insert(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS_AWARDS_CATEGORY)
@@ -122,9 +136,9 @@ class CupAwardCategoryHandler {
                         0 => $category->getName(),
                         1 => $category->getIcon(),
                         2 => $category->getActiveColumn(),
-                        3 => $category->getRequiredCupRanking(),
-                        4 => $category->getRequiredCountOfCups(),
-                        5 => $category->getRequiredCountOfMatches(),
+                        3 => $required_cup_ranking,
+                        4 => $required_count_of_cups,
+                        5 => $required_count_of_matches,
                         6 => $category->getSort(),
                         7 => $category->getInfo()
                     ]
@@ -143,6 +157,18 @@ class CupAwardCategoryHandler {
     private static function updateCategory(CupAwardCategory $category): void
     {
 
+        $required_cup_ranking = null;
+        $required_count_of_cups = null;
+        $required_count_of_matches = null;
+
+        if ($category->getActiveColumn() == CupAwardEnums::ACTIVE_COLUMN_NAME_CUP_RANKING) {
+            $required_cup_ranking = $category->getRequiredValue();
+        } else if ($category->getActiveColumn() == CupAwardEnums::ACTIVE_COLUMN_NAME_COUNT_OF_CUPS) {
+            $required_count_of_cups = $category->getRequiredValue();
+        } else if ($category->getActiveColumn() == CupAwardEnums::ACTIVE_COLUMN_NAME_COUNT_OF_MATCHES) {
+            $required_count_of_matches = $category->getRequiredValue();
+        }
+
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->update(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS_AWARDS_CATEGORY)
@@ -158,9 +184,9 @@ class CupAwardCategoryHandler {
             ->setParameter(0, $category->getName())
             ->setParameter(1, $category->getIcon())
             ->setParameter(2, $category->getActiveColumn())
-            ->setParameter(3, $category->getRequiredCupRanking())
-            ->setParameter(4, $category->getRequiredCountOfCups())
-            ->setParameter(5, $category->getRequiredCountOfMatches())
+            ->setParameter(3, $required_cup_ranking)
+            ->setParameter(4, $required_count_of_cups)
+            ->setParameter(5, $required_count_of_matches)
             ->setParameter(6, $category->getSort())
             ->setParameter(7, $category->getInfo())
             ->setParameter(8, $category->getCategoryId());

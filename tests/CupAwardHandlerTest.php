@@ -9,6 +9,7 @@ use webspell_ng\Utils\StringFormatterUtils;
 
 use myrisk\Cup\CupAward;
 use myrisk\Cup\CupAwardCategory;
+use myrisk\Cup\Enum\CupAwardEnums;
 use myrisk\Cup\Team;
 use myrisk\Cup\TeamMember;
 use myrisk\Cup\Handler\CupAwardCategoryHandler;
@@ -45,9 +46,9 @@ final class CupAwardHandlerTest extends TestCase
         $new_category = new CupAwardCategory();
         $new_category->setName($category_name);
         $new_category->setIcon($category_icon);
-        $new_category->setActiveColumn("cups_placements");
+        $new_category->setActiveColumn(CupAwardEnums::ACTIVE_COLUMN_NAME_CUP_RANKING);
         $new_category->setSort($sort);
-        $new_category->setRequiredCupRanking($required_ranking);
+        $new_category->setRequiredValue($required_ranking);
 
         self::$category = CupAwardCategoryHandler::saveCategory($new_category);
 
@@ -157,9 +158,9 @@ final class CupAwardHandlerTest extends TestCase
         $new_category = new CupAwardCategory();
         $new_category->setName("Test category " . StringFormatterUtils::getRandomString(10));
         $new_category->setIcon("icon_" . StringFormatterUtils::getRandomString(10) . ".jpg");
-        $new_category->setActiveColumn("cups_placements");
+        $new_category->setActiveColumn(CupAwardEnums::ACTIVE_COLUMN_NAME_CUP_RANKING);
         $new_category->setSort(rand(1, 99999));
-        $new_category->setRequiredCupRanking(rand(1, 64));
+        $new_category->setRequiredValue(rand(1, 64));
 
         $award_category = CupAwardCategoryHandler::saveCategory($new_category);
 

@@ -5,6 +5,7 @@ use PHPUnit\Framework\TestCase;
 use webspell_ng\Utils\StringFormatterUtils;
 
 use myrisk\Cup\CupAwardCategory;
+use myrisk\Cup\Enum\CupAwardEnums;
 use myrisk\Cup\Handler\CupAwardCategoryHandler;
 
 final class CupAwardCategoryHandlerTest extends TestCase
@@ -21,10 +22,10 @@ final class CupAwardCategoryHandlerTest extends TestCase
         $new_category = new CupAwardCategory();
         $new_category->setName($category_name);
         $new_category->setIcon($category_icon);
-        $new_category->setActiveColumn("cups_placements");
+        $new_category->setActiveColumn(CupAwardEnums::ACTIVE_COLUMN_NAME_CUP_RANKING);
         $new_category->setInfo("Test information");
         $new_category->setSort($sort);
-        $new_category->setRequiredCupRanking($required_ranking);
+        $new_category->setRequiredValue($required_ranking);
 
         $category = CupAwardCategoryHandler::saveCategory($new_category);
 
@@ -34,12 +35,10 @@ final class CupAwardCategoryHandlerTest extends TestCase
 
         $this->assertEquals($category_name, $saved_category->getName(), "Name is set.");
         $this->assertEquals($category_icon, $saved_category->getIcon(), "Icon is set.");
-        $this->assertEquals("cups_placements", $saved_category->getActiveColumn(), "Active column is set.");
+        $this->assertEquals(CupAwardEnums::ACTIVE_COLUMN_NAME_CUP_RANKING, $saved_category->getActiveColumn(), "Active column is set.");
         $this->assertEquals("Test information", $saved_category->getInfo(), "Info is set.");
         $this->assertEquals($sort, $saved_category->getSort(), "Sort is set.");
-        $this->assertEquals($required_ranking, $saved_category->getRequiredCupRanking(), "Ranking is required to get this award.");
-        $this->assertNull($saved_category->getRequiredCountOfCups(), "Cups are not required to get this award.");
-        $this->assertNull($saved_category->getRequiredCountOfMatches(), "Matches are not required to get this award.");
+        $this->assertEquals($required_ranking, $saved_category->getRequiredValue(), "Ranking is required to get this award.");
 
         $changed_category_name = "Test category " . StringFormatterUtils::getRandomString(10);
         $changed_category_icon = "icon_" . StringFormatterUtils::getRandomString(10) . ".jpg";
@@ -56,12 +55,10 @@ final class CupAwardCategoryHandlerTest extends TestCase
         $this->assertEquals($category->getCategoryId(), $updated_category->getCategoryId(), "Category ID is set.");
         $this->assertEquals($changed_category_name, $updated_category->getName(), "Name is set.");
         $this->assertEquals($changed_category_icon, $updated_category->getIcon(), "Icon is set.");
-        $this->assertEquals("cups_placements", $updated_category->getActiveColumn(), "Active column is set.");
+        $this->assertEquals(CupAwardEnums::ACTIVE_COLUMN_NAME_CUP_RANKING, $updated_category->getActiveColumn(), "Active column is set.");
         $this->assertEquals("Test information", $updated_category->getInfo(), "Info is set.");
         $this->assertEquals($changed_sort, $updated_category->getSort(), "Sort is set.");
-        $this->assertEquals($required_ranking, $updated_category->getRequiredCupRanking(), "Ranking 3 is required to get this award.");
-        $this->assertNull($updated_category->getRequiredCountOfCups(), "Cups are not required to get this award.");
-        $this->assertNull($updated_category->getRequiredCountOfMatches(), "Matches are not required to get this award.");
+        $this->assertEquals($required_ranking, $updated_category->getRequiredValue(), "Ranking 3 is required to get this award.");
 
     }
 
@@ -76,10 +73,10 @@ final class CupAwardCategoryHandlerTest extends TestCase
         $new_category = new CupAwardCategory();
         $new_category->setName($category_name);
         $new_category->setIcon($category_icon);
-        $new_category->setActiveColumn("cups");
+        $new_category->setActiveColumn(CupAwardEnums::ACTIVE_COLUMN_NAME_COUNT_OF_CUPS);
         $new_category->setInfo("Test information");
         $new_category->setSort($sort);
-        $new_category->setRequiredCountOfCups($required_cups);
+        $new_category->setRequiredValue($required_cups);
 
         $category = CupAwardCategoryHandler::saveCategory($new_category);
 
@@ -89,12 +86,10 @@ final class CupAwardCategoryHandlerTest extends TestCase
 
         $this->assertEquals($category_name, $saved_category->getName(), "Name is set.");
         $this->assertEquals($category_icon, $saved_category->getIcon(), "Icon is set.");
-        $this->assertEquals("cups", $saved_category->getActiveColumn(), "Active column is set.");
+        $this->assertEquals(CupAwardEnums::ACTIVE_COLUMN_NAME_COUNT_OF_CUPS, $saved_category->getActiveColumn(), "Active column is set.");
         $this->assertEquals("Test information", $saved_category->getInfo(), "Info is set.");
         $this->assertEquals($sort, $saved_category->getSort(), "Sort is set.");
-        $this->assertEquals($required_cups, $saved_category->getRequiredCountOfCups(), "Count of cups is required to get this award.");
-        $this->assertNull($saved_category->getRequiredCupRanking(), "Ranking is not required to get this award.");
-        $this->assertNull($saved_category->getRequiredCountOfMatches(), "Matches are not required to get this award.");
+        $this->assertEquals($required_cups, $saved_category->getRequiredValue(), "Count of cups is required to get this award.");
 
     }
 
@@ -109,10 +104,10 @@ final class CupAwardCategoryHandlerTest extends TestCase
         $new_category = new CupAwardCategory();
         $new_category->setName($category_name);
         $new_category->setIcon($category_icon);
-        $new_category->setActiveColumn("cups_matches_playoff");
+        $new_category->setActiveColumn(CupAwardEnums::ACTIVE_COLUMN_NAME_COUNT_OF_MATCHES);
         $new_category->setInfo("Test information");
         $new_category->setSort($sort);
-        $new_category->setRequiredCountOfMatches($required_matches);
+        $new_category->setRequiredValue($required_matches);
 
         $category = CupAwardCategoryHandler::saveCategory($new_category);
 
@@ -122,12 +117,10 @@ final class CupAwardCategoryHandlerTest extends TestCase
 
         $this->assertEquals($category_name, $saved_category->getName(), "Name is set.");
         $this->assertEquals($category_icon, $saved_category->getIcon(), "Icon is set.");
-        $this->assertEquals("cups_matches_playoff", $saved_category->getActiveColumn(), "Active column is set.");
+        $this->assertEquals(CupAwardEnums::ACTIVE_COLUMN_NAME_COUNT_OF_MATCHES, $saved_category->getActiveColumn(), "Active column is set.");
         $this->assertEquals("Test information", $saved_category->getInfo(), "Info is set.");
         $this->assertEquals($sort, $saved_category->getSort(), "Sort is set.");
-        $this->assertEquals($required_matches, $saved_category->getRequiredCountOfMatches(), "Count of matches is required to get this award.");
-        $this->assertNull($saved_category->getRequiredCupRanking(), "Ranking is not required to get this award.");
-        $this->assertNull($saved_category->getRequiredCountOfCups(), "Cups are not required to get this award.");
+        $this->assertEquals($required_matches, $saved_category->getRequiredValue(), "Count of matches is required to get this award.");
 
     }
 

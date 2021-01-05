@@ -26,19 +26,9 @@ class CupAwardCategory {
     private $active_column;
 
     /**
-     * @var ?int $required_cup_ranking
+     * @var int $required_value
      */
-    private $required_cup_ranking = null;
-
-    /**
-     * @var ?int $required_count_of_cups
-     */
-    private $required_count_of_cups = null;
-
-    /**
-     * @var ?int $required_count_of_matches
-     */
-    private $required_count_of_matches = null;
+    private $required_value = 1;
 
     /**
      * @var int $sort
@@ -90,34 +80,14 @@ class CupAwardCategory {
         return $this->active_column;
     }
 
-    public function setRequiredCupRanking(int $required_cup_ranking): void
+    public function setRequiredValue(int $required_value): void
     {
-        $this->required_cup_ranking = $required_cup_ranking;
+        $this->required_value = $required_value;
     }
 
-    public function getRequiredCupRanking(): ?int
+    public function getRequiredValue(): int
     {
-        return $this->required_cup_ranking;
-    }
-
-    public function setRequiredCountOfCups(int $required_count_of_cups): void
-    {
-        $this->required_count_of_cups = $required_count_of_cups;
-    }
-
-    public function getRequiredCountOfCups(): ?int
-    {
-        return $this->required_count_of_cups;
-    }
-
-    public function setRequiredCountOfMatches(int $required_count_of_matches): void
-    {
-        $this->required_count_of_matches = $required_count_of_matches;
-    }
-
-    public function getRequiredCountOfMatches(): ?int
-    {
-        return $this->required_count_of_matches;
+        return $this->required_value;
     }
 
     public function setSort(int $sort): void
