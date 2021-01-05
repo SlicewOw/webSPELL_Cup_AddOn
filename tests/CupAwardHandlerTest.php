@@ -48,18 +48,19 @@ final class CupAwardHandlerTest extends TestCase
     public function testIfCupAwardCanBeSavedAndUpdated(): void
     {
 
-        $date = new \DateTime("now");
+        $old_count_of_awards = count(CupAwardHandler::getCupAwardsOfUser(self::$user));
+
+        $old_date = new \DateTime("1 minute ago");
 
         $new_award = new CupAward();
         $new_award->setCategory(self::$category);
-        $new_award->setDate($date);
         $new_award->setUser(self::$user);
 
         $award = CupAwardHandler::saveAward($new_award);
 
         $this->assertGreaterThan(0, $award->getAwardId(), "Award ID is set.");
         $this->assertEquals(self::$category, $award->getCategory(), "Category is set.");
-        $this->assertEquals($date->getTimestamp(), $award->getDate()->getTimestamp(), "Date is set.");
+        $this->assertGreaterThan($old_date->getTimestamp(), $award->getDate()->getTimestamp(), "Date is set.");
 
         $changed_date = new \DateTime("5 days ago");
 
@@ -70,6 +71,10 @@ final class CupAwardHandlerTest extends TestCase
         $this->assertEquals($award->getAwardId(), $updated_award->getAwardId(), "Award ID is set.");
         $this->assertEquals(self::$category, $updated_award->getCategory(), "Category is set.");
         $this->assertEquals($changed_date->getTimestamp(), $updated_award->getDate()->getTimestamp(), "Date is set.");
+
+        $new_count_of_awards = count(CupAwardHandler::getCupAwardsOfUser(self::$user));
+
+        $this->assertGreaterThan($old_count_of_awards, $new_count_of_awards, "User has a new cup award.");
 
     }
 

@@ -5,6 +5,7 @@ namespace myrisk\Cup\Handler;
 use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
+use webspell_ng\User;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\DateUtils;
@@ -64,6 +65,35 @@ class CupAwardHandler {
         }
 
         return $award;
+
+    }
+
+    /**
+     * @return array<CupAward>
+     */
+    public static function getCupAwardsOfUser(User $user): array
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->select('awardID')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS_AWARDS)
+            ->where('userID = ?')
+            ->setParameter(0, $user->getUserId());
+
+        $award_query = $queryBuilder->execute();
+
+        $awards_of_user = array();
+
+        while ($award_result = $award_query->fetch(FetchMode::MIXED))
+        {
+            array_push(
+                $awards_of_user,
+                self::getAwardByAwardId((int) $award_result['awardID'])
+            );
+        }
+
+        return $awards_of_user;
 
     }
 
