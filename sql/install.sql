@@ -44,11 +44,11 @@ CREATE TABLE `ws_p40_cups_admin` (
 
 CREATE TABLE `ws_p40_cups_awards` (
   `awardID` int(11) NOT NULL,
-  `teamID` int(11) NOT NULL,
-  `userID` int(11) NOT NULL,
-  `cupID` int(11) NOT NULL,
   `categoryID` int(11) NOT NULL,
-  `date` int(11) NOT NULL DEFAULT 0
+  `teamID` int(11) DEFAULT NULL,
+  `userID` int(11) DEFAULT NULL,
+  `cupID` int(11) DEFAULT NULL,
+  `date` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 ALTER TABLE `ws_p40_cups_awards` ADD PRIMARY KEY (`awardID`), ADD UNIQUE KEY `awardID` (`awardID`), ADD UNIQUE KEY `teamID` (`teamID`,`categoryID`);
