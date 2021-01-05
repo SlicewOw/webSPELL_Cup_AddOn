@@ -38,26 +38,40 @@ CREATE TABLE `ws_p40_cups_admin` (
   `rights` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
+--
+-- Cup awards
+--
+
 CREATE TABLE `ws_p40_cups_awards` (
   `awardID` int(11) NOT NULL,
   `teamID` int(11) NOT NULL,
   `userID` int(11) NOT NULL,
   `cupID` int(11) NOT NULL,
-  `award` int(11) NOT NULL,
+  `categoryID` int(11) NOT NULL,
   `date` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
+ALTER TABLE `ws_p40_cups_awards` ADD PRIMARY KEY (`awardID`), ADD UNIQUE KEY `awardID` (`awardID`), ADD UNIQUE KEY `teamID` (`teamID`,`categoryID`);
+ALTER TABLE `ws_p40_cups_awards` MODIFY `awardID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Cup award categories
+--
+
 CREATE TABLE `ws_p40_cups_awards_category` (
-  `awardID` int(11) NOT NULL,
+  `categoryID` int(11) NOT NULL,
   `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `icon` varchar(30) COLLATE latin1_german1_ci NOT NULL,
+  `icon` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `active_column` varchar(50) COLLATE latin1_german1_ci NOT NULL,
-  `platzierung` int(11) DEFAULT NULL,
-  `anz_cups` int(11) DEFAULT NULL,
-  `anz_matches` int(11) DEFAULT NULL,
+  `cup_ranking` int(11) DEFAULT NULL,
+  `count_of_cups` int(11) DEFAULT NULL,
+  `count_of_matches` int(11) DEFAULT NULL,
   `sort` int(11) NOT NULL DEFAULT 1,
   `description` text COLLATE latin1_german1_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+ALTER TABLE `ws_p40_cups_awards_category` ADD PRIMARY KEY (`categoryID`);
+ALTER TABLE `ws_p40_cups_awards_category` MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT;
 
 CREATE TABLE `ws_p40_cups_gameaccounts` (
   `gameaccID` int(11) NOT NULL,
@@ -412,14 +426,6 @@ ALTER TABLE `ws_p40_cups_admin`
   ADD PRIMARY KEY (`adminID`),
   ADD UNIQUE KEY `adminID` (`adminID`);
 
-ALTER TABLE `ws_p40_cups_awards`
-  ADD PRIMARY KEY (`awardID`),
-  ADD UNIQUE KEY `awardID` (`awardID`),
-  ADD UNIQUE KEY `teamID` (`teamID`,`award`);
-
-ALTER TABLE `ws_p40_cups_awards_category`
-  ADD PRIMARY KEY (`awardID`);
-
 ALTER TABLE `ws_p40_cups_gameaccounts`
   ADD PRIMARY KEY (`gameaccID`),
   ADD UNIQUE KEY `gameaccID` (`gameaccID`);
@@ -514,12 +520,6 @@ ALTER TABLE `ws_p40_cups`
 ALTER TABLE `ws_p40_cups_admin`
   MODIFY `adminID` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `ws_p40_cups_awards`
-  MODIFY `awardID` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `ws_p40_cups_awards_category`
-  MODIFY `awardID` int(11) NOT NULL AUTO_INCREMENT;
-
 ALTER TABLE `ws_p40_cups_gameaccounts`
   MODIFY `gameaccID` int(11) NOT NULL AUTO_INCREMENT;
 
@@ -577,7 +577,10 @@ ALTER TABLE `ws_p40_cups_teams_member`
 ALTER TABLE `ws_p40_cups_participants`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `ws_p40_cups_gameaccounts_csgo`
-  ADD CONSTRAINT `FK_CSGO_GammeaccountID` FOREIGN KEY (`gameaccID`) REFERENCES `ws_p40_cups_gameaccounts` (`gameaccID`) ON DELETE CASCADE;
+--
+-- Foreign Keys
+--
+ALTER TABLE `ws_p40_cups_awards` ADD FOREIGN KEY (`categoryID`) REFERENCES `ws_p40_cups_awards_category`(`categoryID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `ws_p40_cups_gameaccounts_csgo` ADD CONSTRAINT `FK_CSGO_GammeaccountID` FOREIGN KEY (`gameaccID`) REFERENCES `ws_p40_cups_gameaccounts` (`gameaccID`) ON DELETE CASCADE;
 
 COMMIT;
