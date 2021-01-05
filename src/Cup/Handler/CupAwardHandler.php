@@ -11,6 +11,7 @@ use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\CupAward;
+use myrisk\Cup\Team;
 
 class CupAwardHandler {
 
@@ -73,27 +74,43 @@ class CupAwardHandler {
      */
     public static function getCupAwardsOfUser(User $user): array
     {
+        return self::getAwardsByParameters("userID", $user->getUserId());
+    }
+
+    /**
+     * @return array<CupAward>
+     */
+    public static function getCupAwardsOfTeam(Team $team): array
+    {
+        return self::getAwardsByParameters("teamID", $team->getTeamId());
+    }
+
+    /**
+     * @return array<CupAward>
+     */
+    private static function getAwardsByParameters(string $column_name, int $parent_id): array
+    {
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->select('awardID')
             ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS_AWARDS)
-            ->where('userID = ?')
-            ->setParameter(0, $user->getUserId());
+            ->where($column_name . ' = ?')
+            ->setParameter(0, $parent_id);
 
         $award_query = $queryBuilder->execute();
 
-        $awards_of_user = array();
+        $awards_of_interest = array();
 
         while ($award_result = $award_query->fetch(FetchMode::MIXED))
         {
             array_push(
-                $awards_of_user,
+                $awards_of_interest,
                 self::getAwardByAwardId((int) $award_result['awardID'])
             );
         }
 
-        return $awards_of_user;
+        return $awards_of_interest;
 
     }
 
