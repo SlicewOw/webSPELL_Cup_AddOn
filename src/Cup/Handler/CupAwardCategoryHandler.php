@@ -58,6 +58,34 @@ class CupAwardCategoryHandler {
 
     }
 
+    /**
+     * @return array<CupAwardCategory>
+     */
+    public static function getAllCupAwardCategories(): array
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->select('categoryID')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS_AWARDS_CATEGORY)
+            ->orderBy("sort", "ASC");
+
+        $category_query = $queryBuilder->execute();
+
+        $award_categories = array();
+
+        while ($category_result = $category_query->fetch(FetchMode::MIXED))
+        {
+            array_push(
+                $award_categories,
+                self::getCategoryByCategoryId((int) $category_result['categoryID'])
+            );
+        }
+
+        return $award_categories;
+
+    }
+
     public static function saveCategory(CupAwardCategory $category): CupAwardCategory
     {
 

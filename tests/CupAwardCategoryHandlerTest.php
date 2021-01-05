@@ -149,4 +149,13 @@ final class CupAwardCategoryHandlerTest extends TestCase
 
     }
 
+    public function testIfAllAwardCategoriesAreReturned(): void
+    {
+
+        $all_award_categories = CupAwardCategoryHandler::getAllCupAwardCategories();
+
+        $this->assertGreaterThan(3, count($all_award_categories), "There are more than 3 categories.");
+
+    }
+
 }
