@@ -361,7 +361,6 @@ CREATE TABLE `ws_p40_cups_teams_log` (
   `teamID` int(11) NOT NULL,
   `teamName` varchar(100) COLLATE latin1_german1_ci NOT NULL,
   `date` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
   `parent_id` int(11) DEFAULT NULL,
   `kicked_id` int(11) DEFAULT NULL,
   `action` varchar(255) COLLATE latin1_german1_ci NOT NULL
