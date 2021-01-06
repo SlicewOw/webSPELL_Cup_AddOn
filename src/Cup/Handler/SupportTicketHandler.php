@@ -141,6 +141,35 @@ class SupportTicketHandler {
     /**
      * @return array<SupportTicket>
      */
+    public static function getCountOfUnreadSupportTickets(User $user): array
+    {
+
+        $tickets_with_new_content = array();
+
+        $support_tickets = self::getSupportTicketsOfUser($user);
+        foreach ($support_tickets as $support_ticket) {
+
+            $ticket_content_array = $support_ticket->getContent();
+            foreach ($ticket_content_array as $ticket_content) {
+
+                if ($ticket_content->getDate() > $support_ticket->getUserStatus()->getDate()) {
+                    array_push(
+                        $tickets_with_new_content,
+                        $support_ticket
+                    );
+                }
+
+            }
+
+        }
+
+        return $tickets_with_new_content;
+
+    }
+
+    /**
+     * @return array<SupportTicket>
+     */
     public static function getSupportTicketsOfUser(User $user): array
     {
 

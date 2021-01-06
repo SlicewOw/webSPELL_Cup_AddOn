@@ -89,7 +89,7 @@ final class SupportTicketContentHandlerTest extends TestCase
         $this->assertEquals($content_text, $ticket_content->getText(), "Content text is set.");
         $this->assertEquals($content_date, $ticket_content->getDate(), "Content date is set.");
 
-        $changed_content_date = new \DateTime("2019-12-24 17:00:01");
+        $changed_content_date = new \DateTime(((int) date("Y") + 1) . "-12-24 17:00:01");
 
         $ticket_content->setDate($changed_content_date);
 
@@ -106,6 +106,8 @@ final class SupportTicketContentHandlerTest extends TestCase
         $this->assertGreaterThan(0, $changed_ticket_content->getContentId(), "Content ID is set.");
         $this->assertEquals($content_text, $changed_ticket_content->getText(), "Content text is set.");
         $this->assertEquals($changed_content_date, $changed_ticket_content->getDate(), "Content date is set.");
+
+        $this->assertGreaterThan(0, count(SupportTicketHandler::getCountOfUnreadSupportTickets(self::$user)), "User has unreaded content.");
 
     }
 
@@ -129,12 +131,12 @@ final class SupportTicketContentHandlerTest extends TestCase
         $ticket_content_01 = $ticket_content_array[0];
 
         $this->assertGreaterThan(0, $ticket_content_01->getContentId(), "Content ID is set.");
+        $this->assertEquals($content_text, $ticket_content_01->getText(), "Content text is set.");
+        $this->assertGreaterThan(0, $ticket_content_01->getDate()->getTimestamp(), "Content date is set.");
 
         $ticket_content_02 = $ticket_content_array[1];
 
         $this->assertGreaterThan(0, $ticket_content_02->getContentId(), "Content ID is set.");
-        $this->assertEquals($content_text, $ticket_content_02->getText(), "Content text is set.");
-        $this->assertGreaterThan(0, $ticket_content_02->getDate()->getTimestamp(), "Content date is set.");
 
     }
 
