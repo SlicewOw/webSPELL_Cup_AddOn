@@ -107,7 +107,7 @@ final class SupportTicketContentHandlerTest extends TestCase
         $this->assertEquals($content_text, $changed_ticket_content->getText(), "Content text is set.");
         $this->assertEquals($changed_content_date, $changed_ticket_content->getDate(), "Content date is set.");
 
-        $this->assertGreaterThan(0, count(SupportTicketHandler::getCountOfUnreadSupportTickets(self::$user)), "User has unreaded content.");
+        $this->assertGreaterThan(0, count(SupportTicketHandler::getSupportTicketsWithNewContent(self::$user)), "User has unreaded content.");
 
     }
 

@@ -141,7 +141,7 @@ class SupportTicketHandler {
     /**
      * @return array<SupportTicket>
      */
-    public static function getCountOfUnreadSupportTickets(User $user): array
+    public static function getSupportTicketsWithNewContent(User $user): array
     {
 
         $tickets_with_new_content = array();
