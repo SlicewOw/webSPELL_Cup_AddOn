@@ -101,7 +101,7 @@ class TeamMemberHandler {
         $tmp_members = $team->getMembers();
         foreach ($tmp_members as $member) {
 
-            if (is_null($member->getUser()) || !is_numeric($member->getUser()->getUserId()) || !ValidationUtils::validateInteger($member->getUser()->getUserId(), true)) {
+            if (is_null($member->getUser()->getUserId())) {
                 throw new \InvalidArgumentException("user_of_team_member_is_not_set_properly");
             }
 

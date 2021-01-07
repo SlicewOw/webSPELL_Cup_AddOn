@@ -31,7 +31,7 @@ class Team {
     private $team_tag;
 
     /**
-     * @var Country $country
+     * @var ?Country $country
      */
     private $country;
 

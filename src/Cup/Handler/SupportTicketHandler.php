@@ -294,10 +294,10 @@ class SupportTicketHandler {
             ->set("matchID", "?")
             ->set("teamID", "?")
             ->set("opponentID", "?")
-            ->set("start_date", $ticket->getStartDate()->getTimestamp())
-            ->set("status", $ticket->getStatus())
-            ->set("userID", $ticket->getOpener()->getUserId())
-            ->where("ticketID = " . $ticket->getTicketId())
+            ->set("start_date", "?")
+            ->set("status", "?")
+            ->set("userID", "?")
+            ->where("ticketID = ?")
             ->setParameter(0, $ticket->getSubject())
             ->setParameter(1, $ticket->getText())
             ->setParameter(2, $take_timestamp)
@@ -308,7 +308,11 @@ class SupportTicketHandler {
             ->setParameter(7, $cup_id)
             ->setParameter(8, $match_id)
             ->setParameter(9, $team_id)
-            ->setParameter(10, $opponent_id);
+            ->setParameter(10, $opponent_id)
+            ->setParameter(11, $ticket->getStartDate()->getTimestamp())
+            ->setParameter(12, $ticket->getStatus())
+            ->setParameter(13, $ticket->getOpener()->getUserId())
+            ->setParameter(14, $ticket->getTicketId());
 
         $queryBuilder->execute();
 
