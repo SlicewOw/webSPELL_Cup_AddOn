@@ -55,11 +55,11 @@ class ParticipantHandler {
         while ($user_participant = $cup_participant_query->fetch(FetchMode::MIXED))
         {
 
-            $checked_in = ($user_participant['checked_in'] == 1) ? true : false;
-
             $particpant = new UserParticipant();
             $particpant->setParticipantId($user_participant['ID']);
-            $particpant->setCheckedIn($checked_in);
+            $particpant->setCheckedIn(
+                ($user_participant['checked_in'] == 1)
+            );
             $particpant->setRegisterDateTime(
                 DateUtils::getDateTimeByMktimeValue($user_participant['date_register'])
             );
@@ -95,11 +95,11 @@ class ParticipantHandler {
         while ($team_participant = $cup_participant_query->fetch(FetchMode::MIXED))
         {
 
-            $checked_in = ($team_participant['checked_in'] == 1) ? true : false;
-
             $particpant = new TeamParticipant();
             $particpant->setParticipantId($team_participant['ID']);
-            $particpant->setCheckedIn($checked_in);
+            $particpant->setCheckedIn(
+                ($team_participant['checked_in'] == 1)
+            );
             $particpant->setRegisterDateTime(
                 DateUtils::getDateTimeByMktimeValue($team_participant['date_register'])
             );
