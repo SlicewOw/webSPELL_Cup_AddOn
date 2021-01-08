@@ -8,10 +8,10 @@ use webspell_ng\User;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\CountryHandler;
 use webspell_ng\Utils\DateUtils;
+use webspell_ng\Utils\StringFormatterUtils;
 
 use myrisk\Cup\Team;
 use myrisk\Cup\Handler\TeamMemberHandler;
-use webspell_ng\Utils\StringFormatterUtils;
 
 class TeamHandler {
 

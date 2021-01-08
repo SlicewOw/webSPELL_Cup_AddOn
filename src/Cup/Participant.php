@@ -2,6 +2,9 @@
 
 namespace myrisk\Cup;
 
+use myrisk\Cup\CupPlacement;
+
+
 class Participant {
 
     /**
@@ -23,6 +26,11 @@ class Participant {
      * @var ?\DateTime $checkin_datetime
      */
     private $checkin_datetime;
+
+    /**
+     * @var ?CupPlacement $placement
+     */
+    private $placement;
 
     public function setParticipantId(int $participant_id): void
     {
@@ -65,6 +73,16 @@ class Participant {
     public function getCheckInDateTime(): ?\DateTime
     {
         return $this->checkin_datetime;
+    }
+
+    public function setPlacement(CupPlacement $placement): void
+    {
+        $this->placement = $placement;
+    }
+
+    public function getPlacement(): ?CupPlacement
+    {
+        return $this->placement;
     }
 
 }

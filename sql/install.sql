@@ -203,12 +203,20 @@ CREATE TABLE `ws_p40_cups_penalty_category` (
   `lifetime` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
+--
+-- Cups placements
+--
+
 CREATE TABLE `ws_p40_cups_placements` (
   `pID` int(11) NOT NULL,
   `cupID` int(11) NOT NULL,
   `teamID` int(11) NOT NULL,
-  `platzierung` varchar(255) COLLATE latin1_german1_ci NOT NULL
+  `ranking` varchar(20) COLLATE latin1_german1_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+ALTER TABLE `ws_p40_cups_placements` ADD PRIMARY KEY (`pID`),  ADD UNIQUE KEY `unique_placements` (`cupID`,`teamID`);
+ALTER TABLE `ws_p40_cups_placements` MODIFY `pID` int(11) NOT NULL AUTO_INCREMENT;
+
 
 CREATE TABLE `ws_p40_cups_policy` (
   `id` int(11) NOT NULL,
@@ -476,9 +484,6 @@ ALTER TABLE `ws_p40_cups_penalty_category`
   ADD PRIMARY KEY (`reasonID`),
   ADD UNIQUE KEY `reasonID` (`reasonID`);
 
-ALTER TABLE `ws_p40_cups_placements`
-  ADD PRIMARY KEY (`pID`);
-
 ALTER TABLE `ws_p40_cups_policy`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`);
@@ -550,9 +555,6 @@ ALTER TABLE `ws_p40_cups_penalty`
 
 ALTER TABLE `ws_p40_cups_penalty_category`
   MODIFY `reasonID` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `ws_p40_cups_placements`
-  MODIFY `pID` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `ws_p40_cups_policy`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
