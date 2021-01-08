@@ -71,7 +71,7 @@ class Cup {
     private $start_datetime;
 
     /**
-     * @var array<UserParticipant|TeamParticipant> $participants
+     * @var array<mixed> $participants
      */
     private $participants = array();
 

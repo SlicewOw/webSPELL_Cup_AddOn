@@ -41,4 +41,11 @@ abstract class CupEnums
     const CUP_SIZE_32 = 32;
     const CUP_SIZE_64 = 64;
 
+    /**
+     * Logs
+     */
+    const CUP_PARTICIPANT_JOINED = "cup_joined";
+    const CUP_PARTICIPANT_CHECKED_IN = "cup_checked_in";
+    const CUP_PARTICIPANT_LEFT = "cup_left";
+
 }
