@@ -52,16 +52,13 @@ class TeamMemberHandler {
             );
 
             if (!is_null($member_result['left_date'])) {
-
                 $member->setLeftDate(
                     DateUtils::getDateTimeByMktimeValue($member_result['left_date'])
                 );
+            }
 
-                $kick_id = $member_result['kickID'];
-                if ($kick_id > 0) {
-                    $member->setKickId($kick_id);
-                }
-
+            if (!is_null($member_result['kickID'])) {
+                $member->setKickId($member_result['kickID']);
             }
 
             array_push($members, $member);
