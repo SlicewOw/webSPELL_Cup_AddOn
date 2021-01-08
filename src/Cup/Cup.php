@@ -2,21 +2,21 @@
 
 namespace myrisk\Cup;
 
-use \Respect\Validation\Validator;
+use Respect\Validation\Validator;
 
-use \webspell_ng\Game;
+use webspell_ng\Game;
 
-use \myrisk\Cup\Admin;
-use \myrisk\Cup\CupSponsor;
-use \myrisk\Cup\Participant;
-use \myrisk\Cup\Enum\CupEnums;
-use \myrisk\Cup\Utils\CupUtils;
+use myrisk\Cup\Admin;
+use myrisk\Cup\CupSponsor;
+use myrisk\Cup\Participant;
+use myrisk\Cup\Enum\CupEnums;
+use myrisk\Cup\Utils\CupUtils;
 
 
 class Cup {
 
     /**
-     * @var int $cup_id
+     * @var ?int $cup_id
      */
     private $cup_id;
 
@@ -83,7 +83,7 @@ class Cup {
         $this->cup_id = $cup_id;
     }
 
-    public function getCupId(): int
+    public function getCupId(): ?int
     {
         return $this->cup_id;
     }
@@ -212,9 +212,12 @@ class Cup {
         return $this->start_datetime;
     }
 
-    public function addCupParticipant(Participant $participant): void
+    /**
+     * @param array<Participant> $participants
+     */
+    public function setCupParticipants(array $participants): void
     {
-        array_push($this->participants, $participant);
+        $this->participants = $participants;
     }
 
     /**

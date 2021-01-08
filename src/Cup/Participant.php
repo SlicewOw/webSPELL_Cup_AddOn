@@ -10,22 +10,17 @@ class Participant {
     private $participant_id;
 
     /**
-     * @var int $team_id
-     */
-    private $team_id;
-
-    /**
      * @var bool $is_checked_in
      */
     private $is_checked_in = false;
 
     /**
-     * @var \DateTime $register_datetime
+     * @var ?\DateTime $register_datetime
      */
     private $register_datetime;
 
     /**
-     * @var \DateTime $checkin_datetime
+     * @var ?\DateTime $checkin_datetime
      */
     private $checkin_datetime;
 
@@ -37,16 +32,6 @@ class Participant {
     public function getParticipantId(): ?int
     {
         return $this->participant_id;
-    }
-
-    public function setTeamId(int $team_id): void
-    {
-        $this->team_id = $team_id;
-    }
-
-    public function getTeamId(): ?int
-    {
-        return $this->team_id;
     }
 
     public function setCheckedIn(bool $is_checked_in): void
@@ -64,12 +49,15 @@ class Participant {
         $this->register_datetime = $datetime;
     }
 
-    public function getRegisterDateTime(): ?\DateTime
+    public function getRegisterDateTime(): \DateTime
     {
+        if (is_null($this->register_datetime)) {
+            return new \DateTime("now");
+        }
         return $this->register_datetime;
     }
 
-    public function setCheckInDateTime(\DateTime $datetime): void
+    public function setCheckInDateTime(?\DateTime $datetime): void
     {
         $this->checkin_datetime = $datetime;
     }
