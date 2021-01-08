@@ -21,6 +21,8 @@ final class TeamHandlerTest extends TestCase
     public function testIfTeamCanBeSavedAndUpdated(): void
     {
 
+        $user = UserHandler::getUserByUserId(1);
+
         $year = rand(1990, 2036);
 
         $team_name = "Test Cup Team " . StringFormatterUtils::getRandomString(10);
@@ -30,9 +32,7 @@ final class TeamHandlerTest extends TestCase
         $position = TeamMemberPositionHandler::getAdminPosition();
 
         $team_member = new TeamMember();
-        $team_member->setUser(
-            UserHandler::getUserByUserId(1)
-        );
+        $team_member->setUser($user);
         $team_member->setPosition($position);
         $team_member->setJoinDate($now);
         $team_member->setIsActive(true);
@@ -98,6 +98,8 @@ final class TeamHandlerTest extends TestCase
         $this->assertEquals("https://gaming.myrisk-ev.de", $updated_team->getHomepage(), "Cup team homepage is set.");
         $this->assertEquals("logotype", $updated_team->getLogotype(), "Cup team logogtype is set.");
         $this->assertFalse($updated_team->isDeleted(), "Cup team is deleted.");
+
+        $this->assertGreaterThan(0, count(TeamHandler::getTeamsOfUser($user)), "User is member of team/s.");
 
     }
 

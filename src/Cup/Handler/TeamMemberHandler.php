@@ -17,7 +17,7 @@ use myrisk\Cup\TeamMember;
 
 class TeamMemberHandler {
 
-    private const DB_TABLE_NAME_TEAM_MEMBERS = "cups_teams_member";
+    public const DB_TABLE_NAME_TEAM_MEMBERS = "cups_teams_member";
 
     /**
      * @return array<TeamMember>

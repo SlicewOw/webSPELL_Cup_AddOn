@@ -4,6 +4,7 @@ namespace myrisk\Cup\Handler;
 
 use Respect\Validation\Validator;
 
+use webspell_ng\User;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\CountryHandler;
 use webspell_ng\Utils\DateUtils;
@@ -57,6 +58,36 @@ class TeamHandler {
         }
 
         return $team;
+
+    }
+
+    /**
+     * @return array<Team>
+     */
+    public static function getTeamsOfUser(User $user): array
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->select('t.teamID')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_TEAMS, "t")
+            ->innerJoin('t', WebSpellDatabaseConnection::getTablePrefix() . TeamMemberHandler::DB_TABLE_NAME_TEAM_MEMBERS, 'tm', 't.teamID = tm.teamID')
+            ->where('tm.userID = ?', 'tm.active = 1')
+            ->setParameter(0, $user->getUserId());
+
+        $team_query = $queryBuilder->execute();
+
+        $teams = array();
+
+        while ($team_result = $team_query->fetch())
+        {
+            array_push(
+                $teams,
+                self::getTeamByTeamId((int) $team_result['teamID'])
+            );
+        }
+
+        return $teams;
 
     }
 
