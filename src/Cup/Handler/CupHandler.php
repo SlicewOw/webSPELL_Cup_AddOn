@@ -47,19 +47,12 @@ class CupHandler {
         $cup->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['checkin_date']));
         $cup->setStartDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['start_date']));
 
-        $rule_id = $cup_result['ruleID'];
-        if ($rule_id > 0) {
-            $cup->setRule(
-                RuleHandler::getRuleByRuleId($rule_id)
-            );
-        }
-
-        $game_id = $cup_result['gameID'];
-        if ($game_id > 0) {
-            $cup->setGame(
-                GameHandler::getGameByGameId((int) $game_id)
-            );
-        }
+        $cup->setRule(
+            RuleHandler::getRuleByRuleId((int) $cup_result['ruleID'])
+        );
+        $cup->setGame(
+            GameHandler::getGameByGameId((int) $cup_result['gameID'])
+        );
 
         $cup = CupSponsorHandler::getSponsorsOfCup($cup);
 

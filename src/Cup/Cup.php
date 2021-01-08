@@ -71,7 +71,7 @@ class Cup {
     private $start_datetime;
 
     /**
-     * @var array<mixed> $participants
+     * @var array<UserParticipant|TeamParticipant> $participants
      */
     private $participants = array();
 
@@ -213,7 +213,7 @@ class Cup {
     }
 
     /**
-     * @param array<Participant> $participants
+     * @param array<UserParticipant|TeamParticipant> $participants
      */
     public function setCupParticipants(array $participants): void
     {
@@ -221,7 +221,7 @@ class Cup {
     }
 
     /**
-     * @return array<Participant>
+     * @return array<UserParticipant|TeamParticipant>
      */
     public function getCupParticipants(): array
     {
@@ -229,7 +229,7 @@ class Cup {
     }
 
     /**
-     * @return array<Participant>
+     * @return array<UserParticipant|TeamParticipant>
      */
     public function getCheckedInCupParticipants(): array
     {

@@ -399,6 +399,22 @@ INSERT INTO `ws_p40_cups_teams_position` (`name`, `sort`) VALUES
 ("Player", 4);
 
 --
+-- Cup Team Member Position
+--
+
+CREATE TABLE `ws_p40_cups_participants` (
+  `ID` int(11) NOT NULL,
+  `cupID` int(11) NOT NULL,
+  `teamID` int(11) NOT NULL,
+  `checked_in` int(1) NOT NULL DEFAULT 0,
+  `date_register` int(11) NOT NULL DEFAULT 0,
+  `date_checkin` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+ALTER TABLE `ws_p40_cups_participants` ADD PRIMARY KEY (`ID`), ADD UNIQUE KEY `unique_participants` (`cupID`,`teamID`);
+ALTER TABLE `ws_p40_cups_participants` MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Other tables
 --
 
@@ -409,14 +425,6 @@ CREATE TABLE `ws_p40_cups_teams_social` (
   `date` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
-CREATE TABLE `ws_p40_cups_participants` (
-  `ID` int(11) NOT NULL,
-  `cupID` int(11) NOT NULL,
-  `teamID` int(11) NOT NULL,
-  `checked_in` int(11) NOT NULL DEFAULT 0,
-  `date_register` int(11) NOT NULL DEFAULT 0,
-  `date_checkin` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 ALTER TABLE `ws_p40_cups`
   ADD PRIMARY KEY (`cupID`);
@@ -509,9 +517,6 @@ ALTER TABLE `ws_p40_cups_teams_member`
 ALTER TABLE `ws_p40_cups_teams_social`
   ADD PRIMARY KEY (`teamID`,`category_id`);
 
-ALTER TABLE `ws_p40_cups_participants`
-  ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `check_teilnehmer` (`cupID`,`teamID`);
 
 ALTER TABLE `ws_p40_cups`
   MODIFY `cupID` int(11) NOT NULL AUTO_INCREMENT;
@@ -572,9 +577,6 @@ ALTER TABLE `ws_p40_cups_teams`
 
 ALTER TABLE `ws_p40_cups_teams_member`
   MODIFY `memberID` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `ws_p40_cups_participants`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Foreign Keys

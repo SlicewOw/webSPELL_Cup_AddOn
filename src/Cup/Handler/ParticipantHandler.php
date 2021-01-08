@@ -55,21 +55,27 @@ class ParticipantHandler {
         while ($user_participant = $cup_participant_query->fetch(FetchMode::MIXED))
         {
 
-            $user_particpant = new UserParticipant();
-            $user_particpant->setParticipantId($user_participant['ID']);
-            $user_particpant->setCheckedIn($user_participant['checked_in']);
-            $user_particpant->setRegisterDateTime(DateUtils::getDateTimeByMktimeValue($user_participant['date_register']));
+            $checked_in = ($user_participant['checked_in'] == 1) ? true : false;
 
-            $date_checking = $user_participant['date_checkin'];
-            if (Validator::numericVal()->min(1)->validate($date_checking)) {
-                $user_particpant->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($date_checking));
+            $particpant = new UserParticipant();
+            $particpant->setParticipantId($user_participant['ID']);
+            $particpant->setCheckedIn($checked_in);
+            $particpant->setRegisterDateTime(
+                DateUtils::getDateTimeByMktimeValue($user_participant['date_register'])
+            );
+            $particpant->setUser(
+                UserHandler::getUserByUserId((int) $user_participant['teamID'])
+            );
+
+            if (!is_null($user_participant['date_checkin'])) {
+                $particpant->setCheckInDateTime(
+                    DateUtils::getDateTimeByMktimeValue($user_participant['date_checkin'])
+                );
             }
-
-            $user_particpant->setUser(UserHandler::getUserByUserId($user_participant['teamID']));
 
             array_push(
                 $user_participants,
-                $user_particpant
+                $particpant
             );
 
         }
@@ -89,21 +95,27 @@ class ParticipantHandler {
         while ($team_participant = $cup_participant_query->fetch(FetchMode::MIXED))
         {
 
-            $team_particpant = new TeamParticipant();
-            $team_particpant->setParticipantId($team_participant['ID']);
-            $team_particpant->setCheckedIn($team_participant['checked_in']);
-            $team_particpant->setRegisterDateTime(DateUtils::getDateTimeByMktimeValue($team_participant['date_register']));
+            $checked_in = ($team_participant['checked_in'] == 1) ? true : false;
 
-            $date_checking = $team_participant['date_checkin'];
-            if (Validator::numericVal()->min(1)->validate($date_checking)) {
-                $team_particpant->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($date_checking));
+            $particpant = new TeamParticipant();
+            $particpant->setParticipantId($team_participant['ID']);
+            $particpant->setCheckedIn($checked_in);
+            $particpant->setRegisterDateTime(
+                DateUtils::getDateTimeByMktimeValue($team_participant['date_register'])
+            );
+            $particpant->setTeam(
+                TeamHandler::getTeamByTeamId((int) $team_participant['teamID'])
+            );
+
+            if (!is_null($team_participant['date_checkin'])) {
+                $particpant->setCheckInDateTime(
+                    DateUtils::getDateTimeByMktimeValue($team_participant['date_checkin'])
+                );
             }
-
-            $team_particpant->setTeam(TeamHandler::getTeamByTeamId($team_participant['teamID']));
 
             array_push(
                 $team_participants,
-                $team_participants
+                $particpant
             );
 
         }
@@ -140,7 +152,7 @@ class ParticipantHandler {
 
         $checked_in = $participant->getCheckedIn() ? 1 : 0;
 
-        $date_checkin = is_null($participant->getCheckInDateTime()) ? $participant->getCheckInDateTime()->getTimestamp() : null;
+        $date_checkin = (!is_null($participant->getCheckInDateTime())) ? $participant->getCheckInDateTime()->getTimestamp() : null;
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
@@ -182,7 +194,7 @@ class ParticipantHandler {
 
         $checked_in = $participant->getCheckedIn() ? 1 : 0;
 
-        $date_checkin = is_null($participant->getCheckInDateTime()) ? $participant->getCheckInDateTime()->getTimestamp() : null;
+        $date_checkin = (!is_null($participant->getCheckInDateTime())) ? $participant->getCheckInDateTime()->getTimestamp() : null;
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
@@ -192,7 +204,7 @@ class ParticipantHandler {
             ->set("checked_in", "?")
             ->set("date_register", "?")
             ->set("date_checkin", "?")
-            ->where('cupID = ?')
+            ->where('ID = ?')
             ->setParameter(0, $cup->getCupId())
             ->setParameter(1, $team_id)
             ->setParameter(2, $checked_in)
