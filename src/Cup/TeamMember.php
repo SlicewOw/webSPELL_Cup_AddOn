@@ -83,7 +83,7 @@ class TeamMember {
         return $this->join_date;
     }
 
-    public function setLeftDate(\DateTime $left_date): void
+    public function setLeftDate(?\DateTime $left_date): void
     {
         $this->left_date = $left_date;
     }

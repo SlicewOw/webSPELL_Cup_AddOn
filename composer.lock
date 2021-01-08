@@ -1681,12 +1681,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SlicewOw/webSPELL_NG_DataStructures.git",
-                "reference": "75e4c3acfbe0122dcafb5f226f3a8d589808a41b"
+                "reference": "e940f4cfd0651a871375960909bf6f6d9c5b906d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SlicewOw/webSPELL_NG_DataStructures/zipball/75e4c3acfbe0122dcafb5f226f3a8d589808a41b",
-                "reference": "75e4c3acfbe0122dcafb5f226f3a8d589808a41b",
+                "url": "https://api.github.com/repos/SlicewOw/webSPELL_NG_DataStructures/zipball/e940f4cfd0651a871375960909bf6f6d9c5b906d",
+                "reference": "e940f4cfd0651a871375960909bf6f6d9c5b906d",
                 "shasum": ""
             },
             "require": {
@@ -1721,7 +1721,7 @@
                 "issues": "https://github.com/SlicewOw/webSPELL_NG_DataStructures/issues",
                 "source": "https://github.com/SlicewOw/webSPELL_NG_DataStructures/tree/master"
             },
-            "time": "2021-01-07T07:22:43+00:00"
+            "time": "2021-01-07T12:20:59+00:00"
         },
         {
             "name": "webspell_ng/query_builder",

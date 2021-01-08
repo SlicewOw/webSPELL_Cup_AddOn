@@ -6,14 +6,14 @@ use Doctrine\DBAL\FetchMode;
 
 use Respect\Validation\Validator;
 
+use webspell_ng\UserLog;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
+use webspell_ng\Handler\UserLogHandler;
 use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Team;
 use myrisk\Cup\TeamMember;
-use webspell_ng\Enums\UserEnums;
-use webspell_ng\Utils\ValidationUtils;
 
 class TeamMemberHandler {
 
@@ -31,9 +31,8 @@ class TeamMemberHandler {
         $queryBuilder
             ->select('*')
             ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_TEAM_MEMBERS)
-            ->where('teamID = ? AND active = ?')
-            ->setParameter(0, $team->getTeamId())
-            ->setParameter(1, 1);
+            ->where('teamID = ?')
+            ->setParameter(0, $team->getTeamId());
 
         $member_query = $queryBuilder->execute();
 
@@ -52,8 +51,7 @@ class TeamMemberHandler {
                 DateUtils::getDateTimeByMktimeValue($member_result['join_date'])
             );
 
-            $left_date_value = $member_result['left_date'];
-            if ($left_date_value > 0) {
+            if (!is_null($member_result['left_date'])) {
 
                 $member->setLeftDate(
                     DateUtils::getDateTimeByMktimeValue($member_result['left_date'])
@@ -74,6 +72,30 @@ class TeamMemberHandler {
 
     }
 
+    /**
+     * @return array<TeamMember>
+     */
+    public static function getActiveMembersOfTeam(Team $team): array
+    {
+
+        $all_members = self::getMembersOfTeam($team);
+
+        $active_members = array();
+        foreach ($all_members as $member) {
+
+            if ($member->isActive()) {
+                array_push(
+                    $active_members,
+                    $member
+                );
+            }
+
+        }
+
+        return $active_members;
+
+    }
+
     public static function getMemberByUserIdAndTeam(int $user_id, Team $team): TeamMember
     {
 
@@ -81,7 +103,7 @@ class TeamMemberHandler {
             throw new \InvalidArgumentException('member_id_value_is_invalid');
         }
 
-        $team_members = self::getMembersOfTeam($team);
+        $team_members = self::getActiveMembersOfTeam($team);
 
         foreach ($team_members as $member) {
 
@@ -100,16 +122,25 @@ class TeamMemberHandler {
 
         $tmp_members = $team->getMembers();
         foreach ($tmp_members as $member) {
-
-            if (is_null($member->getUser()->getUserId())) {
-                throw new \InvalidArgumentException("user_of_team_member_is_not_set_properly");
-            }
-
-            self::insertTeamMember($team, $member);
-
+            self::saveSingleTeamMember($team, $member);
         }
 
         return TeamHandler::getTeamByTeamId($team->getTeamId());
+
+    }
+
+    public static function saveSingleTeamMember(Team $team, TeamMember $member): void
+    {
+
+        if (is_null($member->getUser()->getUserId())) {
+            throw new \InvalidArgumentException("user_of_team_member_is_not_set_properly");
+        }
+
+        if (is_null($member->getMemberId())) {
+            self::insertTeamMember($team, $member);
+        } else {
+            self::updateTeamMember($team, $member);
+        }
 
     }
 
@@ -140,61 +171,116 @@ class TeamMemberHandler {
 
         $queryBuilder->execute();
 
-    }
-
-    /**
-     * @param array<TeamMember> $members
-     */
-    public static function updateTeamMember(Team $team, array $members): void
-    {
-
-        foreach ($members as $member) {
-
-            $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
-            $queryBuilder
-                ->update(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_TEAM_MEMBERS)
-                ->set("position", "?")
-                ->where(
-                    $queryBuilder->expr()->and(
-                        $queryBuilder->expr()->eq('teamID', '?'),
-                        $queryBuilder->expr()->eq('userID', '?')
-                    )
-                )
-                ->setParameter(0, $member->getPosition()->getPositionId())
-                ->setParameter(1, $team->getTeamId())
-                ->setParameter(2, $member->getUser()->getUserId());
-
-            $queryBuilder->execute();
-
-        }
-
+        $member->setMemberId(
+            (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
+        );
 
     }
 
-    // TODO: Use class 'UserSession' for kickID
-    public static function kickMember(Team $team, TeamMember $member): void
+    private static function updateTeamMember(Team $team, TeamMember $member): void
     {
+
+        $left_date = (!is_null($member->getLeftDate())) ? $member->getLeftDate()->getTimestamp() : null;
+        $kick_id = (!is_null($member->getKickId())) ? $member->getKickId() : null;
+
+        $is_active = ($member->isActive()) ? 1 : 0;
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->update(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_TEAM_MEMBERS)
+            ->set("position", "?")
+            ->set("join_date", "?")
             ->set("left_date", "?")
             ->set("kickID", "?")
             ->set("active", "?")
-            ->where(
-                $queryBuilder->expr()->and(
-                    $queryBuilder->expr()->eq('teamID', '?'),
-                    $queryBuilder->expr()->eq('userID', '?')
-                )
-            )
-            ->setParameter(0, time())
-            ->setParameter(1, 1)
-            ->setParameter(2, 0)
-            ->setParameter(3, $team->getTeamId())
-            ->setParameter(4, $member->getUser()->getUserId());
+            ->where("teamID = ?", "userID = ?")
+            ->setParameter(0, $member->getPosition()->getPositionId())
+            ->setParameter(1, $member->getJoinDate()->getTimestamp())
+            ->setParameter(2, $left_date)
+            ->setParameter(3, $kick_id)
+            ->setParameter(4, $is_active)
+            ->setParameter(5, $team->getTeamId())
+            ->setParameter(6, $member->getUser()->getUserId());
 
         $queryBuilder->execute();
 
+    }
+
+    public static function joinTeam(Team $team, TeamMember $member): void
+    {
+
+        $member->setIsActive(true);
+        $member->setLeftDate(null);
+        $member->setJoinDate(
+            new \DateTime("now")
+        );
+
+        self::saveSingleTeamMember($team, $member);
+
+        self::saveUserLogNewCupTeamMember($team, $member);
+
+    }
+
+    public static function leaveTeam(Team $team, TeamMember $member): void
+    {
+
+        $member->setIsActive(false);
+        $member->setLeftDate(
+            new \DateTime("now")
+        );
+
+        self::saveSingleTeamMember($team, $member);
+
+        self::saveUserLogLeftCupTeamMember($team, $member);
+
+    }
+
+    public static function kickMember(Team $team, TeamMember $member): void
+    {
+
+        // TODO: Use class 'UserSession' for kickID
+        $member->setKickId(1);
+        $member->setIsActive(false);
+        $member->setLeftDate(
+            new \DateTime("now")
+        );
+
+        self::saveSingleTeamMember($team, $member);
+
+        self::saveUserLogKickedCupTeamMember($team, $member);
+
+    }
+
+    private static function saveUserLogLeftCupTeamMember(Team $team, TeamMember $member): void
+    {
+        UserLogHandler::saveUserLog(
+            $member->getUser(),
+            self::getCupTeamMemberUserLog($team, "cup_team_left")
+        );
+    }
+
+    private static function saveUserLogKickedCupTeamMember(Team $team, TeamMember $member): void
+    {
+        UserLogHandler::saveUserLog(
+            $member->getUser(),
+            self::getCupTeamMemberUserLog($team, "cup_team_kicked")
+        );
+    }
+
+    private static function saveUserLogNewCupTeamMember(Team $team, TeamMember $member): void
+    {
+        UserLogHandler::saveUserLog(
+            $member->getUser(),
+            self::getCupTeamMemberUserLog($team, "cup_team_joined")
+        );
+    }
+
+    private static function getCupTeamMemberUserLog(Team $team, string $info): UserLog
+    {
+        $log = new UserLog();
+        $log->setInfo($info);
+        $log->setParentId($team->getTeamId());
+        return $log;
     }
 
 }

@@ -1,11 +1,12 @@
 <?php declare(strict_types=1);
 
+use myrisk\Cup\Enum\TeamEnums;
 use PHPUnit\Framework\TestCase;
 
-use \webspell_ng\Utils\StringFormatterUtils;
+use webspell_ng\Utils\StringFormatterUtils;
 
-use \myrisk\Cup\TeamMemberPosition;
-use \myrisk\Cup\Handler\TeamMemberPositionHandler;
+use myrisk\Cup\TeamMemberPosition;
+use myrisk\Cup\Handler\TeamMemberPositionHandler;
 
 final class TeamMemberPositionHandlerTest extends TestCase
 {
@@ -33,22 +34,55 @@ final class TeamMemberPositionHandlerTest extends TestCase
 
     }
 
+    public function testIfTeamMemberPositionCoachisReturned(): void
+    {
+
+        $coach_position = TeamMemberPositionHandler::getCoachPosition();
+
+        $this->assertInstanceOf(TeamMemberPosition::class, $coach_position);
+        $this->assertGreaterThan(0, $coach_position->getPositionId(), "Position ID is the same.");
+        $this->assertEquals(TeamEnums::TEAM_MEMBER_POSITION_COACH, $coach_position->getPosition(), "Position name is the same.");
+        $this->assertGreaterThan(0, $coach_position->getSort(), "Sort value is the correct.");
+
+    }
+
+    public function testIfTeamMemberPositionCaptainisReturned(): void
+    {
+
+        $captain_position = TeamMemberPositionHandler::getCaptainPosition();
+
+        $this->assertInstanceOf(TeamMemberPosition::class, $captain_position);
+        $this->assertGreaterThan(0, $captain_position->getPositionId(), "Position ID is the same.");
+        $this->assertEquals(TeamEnums::TEAM_MEMBER_POSITION_CAPTAIN, $captain_position->getPosition(), "Position name is the same.");
+        $this->assertGreaterThan(0, $captain_position->getSort(), "Sort value is the correct.");
+
+    }
+
+    public function testIfTeamMemberPositionPlayerisReturned(): void
+    {
+
+        $player_position = TeamMemberPositionHandler::getPlayerPosition();
+
+        $this->assertInstanceOf(TeamMemberPosition::class, $player_position);
+        $this->assertGreaterThan(0, $player_position->getPositionId(), "Position ID is the same.");
+        $this->assertEquals(TeamEnums::TEAM_MEMBER_POSITION_PLAYER, $player_position->getPosition(), "Position name is the same.");
+        $this->assertGreaterThan(0, $player_position->getSort(), "Sort value is the correct.");
+
+    }
+
     public function testIfInvalidArgumentExceptionIsThrownIfPositionIdIsInvalid(): void
     {
 
         $this->expectException(InvalidArgumentException::class);
 
-        $position = TeamMemberPositionHandler::getPositionByPositionId(-1);
-
-        // This line is hopefully never be reached
-        $this->assertLessThan(1, $position->getPositionId());
+        TeamMemberPositionHandler::getPositionByPositionId(-1);
 
     }
 
-    public function testIfInvalidArgumentExceptionIsThrownIfPositionDoesNotExist(): void
+    public function testIfUnexpectedValueExceptionIsThrownIfPositionDoesNotExist(): void
     {
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(UnexpectedValueException::class);
 
         TeamMemberPositionHandler::getPositionByPositionId(99999999);
 

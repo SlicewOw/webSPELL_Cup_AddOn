@@ -5,6 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 use \myrisk\Cup\Team;
 use \myrisk\Cup\TeamMember;
+use \myrisk\Cup\TeamMemberPosition;
 use \myrisk\Cup\Handler\TeamHandler;
 use \myrisk\Cup\Handler\TeamMemberHandler;
 use \myrisk\Cup\Handler\TeamMemberPositionHandler;
@@ -23,9 +24,19 @@ final class TeamMemberHandlerTest extends TestCase
     private static $user;
 
     /**
+     * @var User $new_user
+     */
+    private static $new_user;
+
+    /**
      * @var Team $team
      */
     private static $team;
+
+    /**
+     * @var TeamMemberPosition $player_position
+     */
+    private static $player_position;
 
     /**
      * @var \DateTime $creation_date
@@ -36,18 +47,35 @@ final class TeamMemberHandlerTest extends TestCase
     {
 
         self::$user = UserHandler::getUserByUserId(1);
+
+        $tmp_new_user = new User();
+        $tmp_new_user->setUsername("Test User " . StringFormatterUtils::getRandomString(10));
+        $tmp_new_user->setFirstname("Test User " . StringFormatterUtils::getRandomString(10));
+        $tmp_new_user->setEmail(StringFormatterUtils::getRandomString(10) . "@webspell-ng.de");
+        $tmp_new_user->setTown("Berlin");
+        $tmp_new_user->setBirthday(
+            new \DateTime(rand(1992, 2020) . "-" . rand(1, 12) . "-" . rand(1, 28) . " 00:00:00")
+        );
+        $tmp_new_user->setCountry(
+            CountryHandler::getCountryByCountryShortcut("de")
+        );
+
+        self::$new_user = UserHandler::saveUser($tmp_new_user);
+
         self::$creation_date = new \DateTime(rand(1990, 2036) . "-01-05 12:34:56");
 
         $team_name = "Test Cup Team " . StringFormatterUtils::getRandomString(10);
         $team_tag = StringFormatterUtils::getRandomString(10);
 
-        $position = TeamMemberPositionHandler::getAdminPosition();
+        self::$player_position = TeamMemberPositionHandler::getPlayerPosition();
 
         $team_member = new TeamMember();
         $team_member->setUser(self::$user);
-        $team_member->setPosition($position);
         $team_member->setJoinDate(self::$creation_date);
         $team_member->setIsActive(true);
+        $team_member->setPosition(
+            TeamMemberPositionHandler::getAdminPosition()
+        );
 
         $new_team = new Team();
         $new_team->setName($team_name);
@@ -73,7 +101,7 @@ final class TeamMemberHandlerTest extends TestCase
         $team_admin = TeamMemberHandler::getMemberByUserIdAndTeam(self::$user->getUserId(), self::$team);
         $team_admin->setPosition($position);
 
-        TeamMemberHandler::updateTeamMember(self::$team, array($team_admin));
+        TeamMemberHandler::saveSingleTeamMember(self::$team, $team_admin);
 
         $updated_team = TeamHandler::getTeamByTeamId(self::$team->getTeamId());
 
@@ -86,20 +114,56 @@ final class TeamMemberHandlerTest extends TestCase
 
     }
 
+    public function testIfMemberCanLeaveTeam(): void
+    {
+
+        $team_member = new TeamMember();
+        $team_member->setUser(self::$new_user);
+        $team_member->setPosition(self::$player_position);
+        $team_member->setJoinDate(
+            new \DateTime("10 minutes ago")
+        );
+
+        TeamMemberHandler::joinTeam(self::$team, $team_member);
+
+        $saved_team_member = TeamMemberHandler::getMemberByUserIdAndTeam(self::$new_user->getUserId(), self::$team);
+
+        $this->assertEquals(self::$new_user->getUserId(), $saved_team_member->getUser()->getUserId(), "User ID is set.");
+        $this->assertTrue($saved_team_member->isActive(), "Member is active.");
+        $this->assertNull($saved_team_member->getLeftDate(), "Left date is not set.");
+
+        $team_before_member_left = TeamHandler::getTeamByTeamId(self::$team->getTeamId());
+
+        TeamMemberHandler::leaveTeam(self::$team, $saved_team_member);
+
+        $team_after_member_left = TeamHandler::getTeamByTeamId(self::$team->getTeamId());
+
+        $this->assertLessThan(count($team_before_member_left->getMembers()), count($team_after_member_left->getMembers()), "Member left the team successfully.");
+
+    }
+
     public function testIfMemberCanBeKicked(): void
     {
 
-        $saved_team_member = TeamMemberHandler::getMemberByUserIdAndTeam(self::$user->getUserId(), self::$team);
+        $team_member = new TeamMember();
+        $team_member->setUser(self::$new_user);
+        $team_member->setPosition(self::$player_position);
 
-        $this->assertEquals(self::$user->getUserId(), $saved_team_member->getUser()->getUserId(), "User ID is set.");
-        $this->assertEquals(self::$creation_date, $saved_team_member->getJoinDate(), "Join date is set.");
+        TeamMemberHandler::joinTeam(self::$team, $team_member);
 
-        TeamMemberHandler::kickMember(self::$team, self::$team->getTeamAdmin());
+        $saved_team_member = TeamMemberHandler::getMemberByUserIdAndTeam(self::$new_user->getUserId(), self::$team);
 
-        $team_without_admin = TeamHandler::getTeamByTeamId(self::$team->getTeamId());
+        $this->assertEquals(self::$new_user->getUserId(), $saved_team_member->getUser()->getUserId(), "User ID is set.");
+        $this->assertTrue($saved_team_member->isActive(), "Member is active.");
+        $this->assertNull($saved_team_member->getLeftDate(), "Left date is not set.");
 
-        $this->assertNull($team_without_admin->getTeamAdmin(), "No team admin anymore.");
-        $this->assertEquals(0, count($team_without_admin->getMembers()), "No member anymore.");
+        $team_before_member_left = TeamHandler::getTeamByTeamId(self::$team->getTeamId());
+
+        TeamMemberHandler::kickMember(self::$team, $saved_team_member);
+
+        $team_after_member_left = TeamHandler::getTeamByTeamId(self::$team->getTeamId());
+
+        $this->assertLessThan(count($team_before_member_left->getMembers()), count($team_after_member_left->getMembers()), "Member kicked successfully.");
 
     }
 

@@ -51,7 +51,7 @@ class TeamHandler {
             CountryHandler::getCountryByCountryShortcut($team_result['country'])
         );
 
-        $team_members = TeamMemberHandler::getMembersOfTeam($team);
+        $team_members = TeamMemberHandler::getActiveMembersOfTeam($team);
         foreach ($team_members as $team_member) {
             $team->addMember($team_member);
         }

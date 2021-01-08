@@ -3,7 +3,6 @@
 namespace myrisk\Cup\Handler;
 
 use myrisk\Cup\Enum\TeamEnums;
-use myrisk\Cup\TeamMember;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
@@ -32,7 +31,7 @@ class TeamMemberPositionHandler {
         $position_result = $position_query->fetch();
 
         if (empty($position_result)) {
-            throw new \InvalidArgumentException('unknown_cup_team_member_position');
+            throw new \UnexpectedValueException('unknown_cup_team_member_position');
         }
 
         $position = new TeamMemberPosition();
@@ -52,6 +51,16 @@ class TeamMemberPositionHandler {
     public static function getCoachPosition(): TeamMemberPosition
     {
         return self::getPositionByName(TeamEnums::TEAM_MEMBER_POSITION_COACH);
+    }
+
+    public static function getCaptainPosition(): TeamMemberPosition
+    {
+        return self::getPositionByName(TeamEnums::TEAM_MEMBER_POSITION_CAPTAIN);
+    }
+
+    public static function getPlayerPosition(): TeamMemberPosition
+    {
+        return self::getPositionByName(TeamEnums::TEAM_MEMBER_POSITION_PLAYER);
     }
 
     private static function getPositionByName(string $position_name): TeamMemberPosition
