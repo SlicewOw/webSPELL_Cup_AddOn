@@ -93,4 +93,10 @@ class CupPlacementHandler {
 
     }
 
+    // TODO: Implement function
+    public static function saveCupPlacements(Cup $cup): void
+    {
+        return;
+    }
+
 }

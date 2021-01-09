@@ -34,7 +34,7 @@ final class CupHandlerTest extends TestCase
         $new_cup->setName("Test Cup Name");
         $new_cup->setMode(CupEnums::CUP_MODE_5ON5);
         $new_cup->setSize(CupEnums::CUP_SIZE_8);
-        $new_cup->setStatus(CupEnums::CUP_STATUS_RUNNING);
+        $new_cup->setStatus(CupEnums::CUP_STATUS_PLAYOFFS);
         $new_cup->setCheckInDateTime($datetime_now);
         $new_cup->setStartDateTime($datetime_later);
         $new_cup->setGame($game);
@@ -92,7 +92,7 @@ final class CupHandlerTest extends TestCase
         $cup->setName("Test Cup Name");
         $cup->setMode(CupEnums::CUP_MODE_5ON5);
         $cup->setSize(CupEnums::CUP_SIZE_4);
-        $cup->setStatus(CupEnums::CUP_STATUS_RUNNING);
+        $cup->setStatus(CupEnums::CUP_STATUS_PLAYOFFS);
         $cup->setCheckInDateTime(new \DateTime("now"));
         $cup->setStartDateTime(new \DateTime("now"));
         $cup->setRule(new Rule());

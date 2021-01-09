@@ -10,8 +10,11 @@ use webspell_ng\Handler\GameHandler;
 use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Cup;
+use myrisk\Cup\Enum\CupEnums;
 use myrisk\Cup\Handler\AdminHandler;
+use myrisk\Cup\Handler\BracketHandler;
 use myrisk\Cup\Handler\CupSponsorHandler;
+use myrisk\Cup\Handler\GroupstageHandler;
 
 class CupHandler {
 
@@ -160,6 +163,39 @@ class CupHandler {
             ->setParameter(8, $cup->getCupId());
 
         $queryBuilder->execute();
+
+    }
+
+    public static function startCupGroupstage(Cup $cup): void
+    {
+
+        $cup->setStatus(CupEnums::CUP_STATUS_GROUPSTAGE);
+
+        self::saveCup($cup);
+
+        GroupstageHandler::createGroups($cup);
+
+    }
+
+    public static function startCupPlayoffs(Cup $cup): void
+    {
+
+        $cup->setStatus(CupEnums::CUP_STATUS_PLAYOFFS);
+
+        self::saveCup($cup);
+
+        BracketHandler::createBracket($cup);
+
+    }
+
+    public static function finishCup(Cup $cup): void
+    {
+
+        $cup->setStatus(CupEnums::CUP_STATUS_FINISHED);
+
+        self::saveCup($cup);
+
+        CupPlacementHandler::saveCupPlacements($cup);
 
     }
 

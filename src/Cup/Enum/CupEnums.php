@@ -9,8 +9,8 @@ abstract class CupEnums
      * Cup status
      */
     const CUP_STATUS_REGISTRATION = 1;
-    const CUP_STATUS_CHECKIN = 2;
-    const CUP_STATUS_RUNNING = 3;
+    const CUP_STATUS_GROUPSTAGE = 2;
+    const CUP_STATUS_PLAYOFFS = 3;
     const CUP_STATUS_FINISHED = 4;
 
     /**
@@ -47,5 +47,18 @@ abstract class CupEnums
     const CUP_PARTICIPANT_JOINED = "cup_joined";
     const CUP_PARTICIPANT_CHECKED_IN = "cup_checked_in";
     const CUP_PARTICIPANT_LEFT = "cup_left";
+
+    /**
+     * Cup placements
+     */
+    const CUP_PLACEMENT_1 = "1";
+    const CUP_PLACEMENT_2 = "2";
+    const CUP_PLACEMENT_3 = "3";
+    const CUP_PLACEMENT_4 = "4";
+    const CUP_PLACEMENT_3_4 = "3-4";
+    const CUP_PLACEMENT_5_8 = "5-8";
+    const CUP_PLACEMENT_9_16 = "9-16";
+    const CUP_PLACEMENT_17_32 = "17-32";
+    const CUP_PLACEMENT_33_64 = "33-64";
 
 }

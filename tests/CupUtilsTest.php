@@ -32,7 +32,7 @@ final class CupUtilsTest extends TestCase
         $cup->setMode(CupEnums::CUP_MODE_1ON1);
         $cup->setCheckInDateTime(new \DateTime("2010-01-01 12:00:00"));
         $cup->setStartDateTime(new \DateTime("2040-01-01 12:00:00"));
-        $cup->setStatus(CupEnums::CUP_STATUS_CHECKIN);
+        $cup->setStatus(CupEnums::CUP_STATUS_GROUPSTAGE);
 
         $this->assertEquals(CupEnums::CUP_PHASE_ADMIN_CHECKIN, $cup->getPhase(), "Cup phase is running.");
 

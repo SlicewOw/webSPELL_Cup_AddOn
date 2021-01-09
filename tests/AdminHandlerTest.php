@@ -34,7 +34,7 @@ final class AdminHandlerTest extends TestCase
         $new_cup->setName("Test Cup Name " . StringFormatterUtils::getRandomString(10));
         $new_cup->setMode(CupEnums::CUP_MODE_5ON5);
         $new_cup->setSize(CupEnums::CUP_SIZE_8);
-        $new_cup->setStatus(CupEnums::CUP_STATUS_RUNNING);
+        $new_cup->setStatus(CupEnums::CUP_STATUS_PLAYOFFS);
         $new_cup->setCheckInDateTime(new \DateTime("now"));
         $new_cup->setStartDateTime(new \DateTime("2024-09-04 13:37:11"));
         $new_cup->setGame($game);

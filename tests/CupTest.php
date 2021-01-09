@@ -29,7 +29,7 @@ final class CupTest extends TestCase
         $cup->setCupId(1337);
         $cup->setName("Test Cup Name");
         $cup->setMode(CupEnums::CUP_MODE_5ON5);
-        $cup->setStatus(CupEnums::CUP_STATUS_RUNNING);
+        $cup->setStatus(CupEnums::CUP_STATUS_PLAYOFFS);
         $cup->setCheckInDateTime($datetime_now);
         $cup->setStartDateTime($datetime_later);
         $cup->addSponsor($sponsor);
