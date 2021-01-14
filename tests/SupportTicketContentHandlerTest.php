@@ -3,6 +3,7 @@
 use PHPUnit\Framework\TestCase;
 
 use webspell_ng\User;
+use webspell_ng\UserSession;
 use webspell_ng\Handler\CountryHandler;
 use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\StringFormatterUtils;
@@ -54,16 +55,20 @@ final class SupportTicketContentHandlerTest extends TestCase
         $new_ticket->setSubject("Test Ticket " . StringFormatterUtils::getRandomString(10, 2));
         $new_ticket->setText("Test Content \n " . StringFormatterUtils::getRandomString(10, 2) . " \n " . StringFormatterUtils::getRandomString(10, 2));
 
-        self::$ticket = SupportTicketHandler::saveTicket($new_ticket, self::$user->getUserId());
+        UserSession::setUserSession(
+            self::$admin->getUserId()
+        );
 
-        SupportTicketHandler::takeTicket(self::$ticket->getTicketId(), self::$admin);
+        self::$ticket = SupportTicketHandler::saveTicket($new_ticket);
+
+        SupportTicketHandler::takeTicket(self::$ticket->getTicketId());
 
     }
 
     public function testIfSupportTicketContentCanBeSavedAndUpdated(): void
     {
 
-        $ticket_without_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId(), self::$user->getUserId());
+        $ticket_without_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId());
 
         $this->assertEquals(0, count($ticket_without_content->getContent()), "Ticket content is not set yet.");
 
@@ -77,7 +82,7 @@ final class SupportTicketContentHandlerTest extends TestCase
 
         SupportTicketContentHandler::saveContent(self::$ticket, $new_content);
 
-        $ticket_with_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId(), self::$user->getUserId());
+        $ticket_with_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId());
 
         $ticket_content_array = $ticket_with_content->getContent();
 
@@ -95,7 +100,7 @@ final class SupportTicketContentHandlerTest extends TestCase
 
         SupportTicketContentHandler::saveContent(self::$ticket, $ticket_content);
 
-        $ticket_with_changed_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId(), self::$user->getUserId());
+        $ticket_with_changed_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId());
 
         $ticket_changed_content_array = $ticket_with_changed_content->getContent();
 
@@ -107,7 +112,7 @@ final class SupportTicketContentHandlerTest extends TestCase
         $this->assertEquals($content_text, $changed_ticket_content->getText(), "Content text is set.");
         $this->assertEquals($changed_content_date, $changed_ticket_content->getDate(), "Content date is set.");
 
-        $this->assertGreaterThan(0, count(SupportTicketHandler::getSupportTicketsWithNewContent(self::$user)), "User has unreaded content.");
+        $this->assertGreaterThan(0, count(SupportTicketHandler::getSupportTicketsWithNewContent()), "User has unreaded content.");
 
     }
 
@@ -122,7 +127,7 @@ final class SupportTicketContentHandlerTest extends TestCase
 
         SupportTicketContentHandler::saveContent(self::$ticket, $new_content);
 
-        $ticket_with_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId(), self::$user->getUserId());
+        $ticket_with_content = SupportTicketHandler::getTicketByTicketId(self::$ticket->getTicketId());
 
         $ticket_content_array = $ticket_with_content->getContent();
 

@@ -5,18 +5,18 @@ namespace myrisk\Cup\Handler;
 use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
+use webspell_ng\UserSession;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\SupportTicketStatus;
 
-
 class SupportTicketStatusHandler {
 
     private const DB_TABLE_NAME_SUPPORT_TICKETS_STATUS = "cups_supporttickets_status";
 
-    public static function getTicketStatusByTicketId(int $ticket_id, int $user_id): SupportTicketStatus
+    public static function getTicketStatusByTicketId(int $ticket_id): SupportTicketStatus
     {
 
         if (!Validator::numericVal()->min(1)->validate($ticket_id)) {
@@ -29,13 +29,13 @@ class SupportTicketStatusHandler {
             ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_SUPPORT_TICKETS_STATUS)
             ->where('ticketID = ?', 'userID = ?')
             ->setParameter(0, $ticket_id)
-            ->setParameter(1, $user_id);
+            ->setParameter(1, UserSession::getUserId());
 
         $status_query = $queryBuilder->execute();
         $status_result = $status_query->fetch(FetchMode::MIXED);
 
         if (empty($status_result)) {
-            return self::insertStatus($ticket_id, $user_id);
+            return self::insertStatus($ticket_id, UserSession::getUserId());
         }
 
         $status = new SupportTicketStatus();
@@ -91,7 +91,7 @@ class SupportTicketStatusHandler {
             $new_status
         );
 
-        return self::getTicketStatusByTicketId($ticket_id, $user_id);
+        return self::getTicketStatusByTicketId($ticket_id);
 
     }
 

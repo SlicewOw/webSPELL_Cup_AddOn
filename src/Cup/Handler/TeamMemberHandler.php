@@ -7,6 +7,7 @@ use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\UserLog;
+use webspell_ng\UserSession;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
 use webspell_ng\Handler\UserLogHandler;
@@ -235,8 +236,9 @@ class TeamMemberHandler {
     public static function kickMember(Team $team, TeamMember $member): void
     {
 
-        // TODO: Use class 'UserSession' for kickID
-        $member->setKickId(1);
+        $member->setKickId(
+            UserSession::getUserId()
+        );
         $member->setIsActive(false);
         $member->setLeftDate(
             new \DateTime("now")

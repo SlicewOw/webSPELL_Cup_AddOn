@@ -13,7 +13,7 @@ final class SupportTicketStatusHandlerTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
 
-        SupportTicketStatusHandler::getTicketStatusByTicketId(-1, 1);
+        SupportTicketStatusHandler::getTicketStatusByTicketId(-1);
 
     }
 

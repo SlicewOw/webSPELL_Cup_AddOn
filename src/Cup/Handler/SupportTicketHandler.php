@@ -6,7 +6,9 @@ use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\User;
+use webspell_ng\UserSession;
 use webspell_ng\WebSpellDatabaseConnection;
+use webspell_ng\Exception\AccessDeniedException;
 use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\DateUtils;
 
@@ -15,16 +17,19 @@ use myrisk\Cup\Enum\SupportTicketEnums;
 use myrisk\Cup\Handler\SupportTicketCategoryHandler;
 use myrisk\Cup\Handler\SupportTicketStatusHandler;
 
-
 class SupportTicketHandler {
 
     private const DB_TABLE_NAME_SUPPORT_TICKETS = "cups_supporttickets";
 
-    public static function getTicketByTicketId(int $ticket_id, int $user_id): SupportTicket
+    public static function getTicketByTicketId(int $ticket_id): SupportTicket
     {
 
         if (!Validator::numericVal()->min(1)->validate($ticket_id)) {
             throw new \InvalidArgumentException('ticket_id_value_is_invalid');
+        }
+
+        if (UserSession::getUserId() < 1) {
+            throw new AccessDeniedException();
         }
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
@@ -97,8 +102,7 @@ class SupportTicketHandler {
         }
 
         $ticket->setUserStatus(
-            // TODO: Use UserSession if exists in webSPELL NG
-            SupportTicketStatusHandler::getTicketStatusByTicketId($ticket_id, $user_id)
+            SupportTicketStatusHandler::getTicketStatusByTicketId($ticket_id)
         );
 
         $ticket->setContent(
@@ -112,7 +116,7 @@ class SupportTicketHandler {
     /**
      * @return array<SupportTicket>
      */
-    public static function getOpenSupportTickets(int $user_id): array
+    public static function getOpenSupportTickets(): array
     {
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
@@ -130,7 +134,7 @@ class SupportTicketHandler {
         {
             array_push(
                 $ticket_array,
-                self::getTicketByTicketId($ticket_result['ticketID'], $user_id)
+                self::getTicketByTicketId($ticket_result['ticketID'])
             );
         }
 
@@ -141,12 +145,12 @@ class SupportTicketHandler {
     /**
      * @return array<SupportTicket>
      */
-    public static function getSupportTicketsWithNewContent(User $user): array
+    public static function getSupportTicketsWithNewContent(): array
     {
 
         $tickets_with_new_content = array();
 
-        $support_tickets = self::getSupportTicketsOfUser($user);
+        $support_tickets = self::getSupportTicketsOfUser();
         foreach ($support_tickets as $support_ticket) {
 
             $ticket_content_array = $support_ticket->getContent();
@@ -170,8 +174,12 @@ class SupportTicketHandler {
     /**
      * @return array<SupportTicket>
      */
-    public static function getSupportTicketsOfUser(User $user): array
+    public static function getSupportTicketsOfUser(): array
     {
+
+        if (UserSession::getUserId() < 1) {
+            return array();
+        }
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
@@ -183,8 +191,8 @@ class SupportTicketHandler {
                     $queryBuilder->expr()->eq('userID', '?')
                 )
             )
-            ->setParameter(0, $user->getUserId())
-            ->setParameter(1, $user->getUserId());
+            ->setParameter(0, UserSession::getUserId())
+            ->setParameter(1, UserSession::getUserId());
 
         $ticket_query = $queryBuilder->execute();
 
@@ -194,7 +202,7 @@ class SupportTicketHandler {
         {
             array_push(
                 $ticket_array,
-                self::getTicketByTicketId((int) $ticket_result['ticketID'], $user->getUserId())
+                self::getTicketByTicketId((int) $ticket_result['ticketID'])
             );
         }
 
@@ -202,7 +210,7 @@ class SupportTicketHandler {
 
     }
 
-    public static function saveTicket(SupportTicket $ticket, int $user_id): SupportTicket
+    public static function saveTicket(SupportTicket $ticket): SupportTicket
     {
 
         if (is_null($ticket->getTicketId())) {
@@ -211,7 +219,7 @@ class SupportTicketHandler {
             self::updateTicket($ticket);
         }
 
-        return self::getTicketByTicketId($ticket->getTicketId(), $user_id);
+        return self::getTicketByTicketId($ticket->getTicketId());
 
     }
 
@@ -318,12 +326,18 @@ class SupportTicketHandler {
 
     }
 
-    public static function takeTicket(int $ticket_id, User $admin): void
+    public static function takeTicket(int $ticket_id): void
     {
 
-        $ticket = self::getTicketByTicketId($ticket_id, $admin->getUserId());
+        if (UserSession::getUserId() < 1) {
+            throw new AccessDeniedException();
+        }
 
-        $ticket->setAdmin($admin);
+        $ticket = self::getTicketByTicketId($ticket_id);
+
+        $ticket->setAdmin(
+            UserHandler::getUserByUserId(UserSession::getUserId())
+        );
         $ticket->setStatus(SupportTicketEnums::TICKET_STATUS_IN_PROGRESS);
         $ticket->setTakeDate(new \DateTime("now"));
 
@@ -331,12 +345,18 @@ class SupportTicketHandler {
 
     }
 
-    public static function closeTicket(int $ticket_id, User $user): void
+    public static function closeTicket(int $ticket_id): void
     {
 
-        $ticket = self::getTicketByTicketId($ticket_id, $user->getUserId());
+        if (UserSession::getUserId() < 1) {
+            throw new AccessDeniedException();
+        }
 
-        $ticket->setCloser($user);
+        $ticket = self::getTicketByTicketId($ticket_id);
+
+        $ticket->setCloser(
+            UserHandler::getUserByUserId(UserSession::getUserId())
+        );
         $ticket->setStatus(SupportTicketEnums::TICKET_STATUS_DONE);
         $ticket->setCloseDate(new \DateTime("now"));
 

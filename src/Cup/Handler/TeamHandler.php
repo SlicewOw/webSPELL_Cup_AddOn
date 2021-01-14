@@ -12,6 +12,8 @@ use webspell_ng\Utils\StringFormatterUtils;
 
 use myrisk\Cup\Team;
 use myrisk\Cup\Handler\TeamMemberHandler;
+use webspell_ng\Handler\UserHandler;
+use webspell_ng\UserSession;
 
 class TeamHandler {
 
@@ -91,16 +93,40 @@ class TeamHandler {
 
     }
 
-    // TODO: Implement when class 'UserSession' is moved to project
     public static function isAnyTeamAdmin(): bool
     {
+
+        if (UserSession::getUserId() < 1) {
+            return false;
+        }
+
+        $teams_of_user = self::getTeamsOfUser(
+            UserHandler::getUserByUserId(UserSession::getUserId())
+        );
+
+        foreach ($teams_of_user as $team) {
+            if ($team->getTeamAdmin()->getUser()->getUserId() == UserSession::getUserId()) {
+                return true;
+            }
+        }
+
         return false;
+
     }
 
-    // TODO: Implement when class 'UserSession' is moved to project
     public static function isAnyTeamMember(): bool
     {
-        return false;
+
+        if (UserSession::getUserId() < 1) {
+            return false;
+        }
+
+        $teams_of_user = self::getTeamsOfUser(
+            UserHandler::getUserByUserId(UserSession::getUserId())
+        );
+
+        return !empty($teams_of_user);
+
     }
 
     public static function saveTeam(Team $team): Team
