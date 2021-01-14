@@ -2,9 +2,10 @@
 
 namespace myrisk\Cup\Utils;
 
-use \myrisk\Cup\Cup;
-use \myrisk\Cup\Enum\CupEnums;
-use \myrisk\Cup\Handler\TeamHandler;
+use myrisk\Cup\Cup;
+use myrisk\Cup\Enum\CupEnums;
+use myrisk\Cup\Handler\ParticipantHandler;
+use myrisk\Cup\Handler\TeamHandler;
 
 
 class CupUtils {
@@ -40,6 +41,28 @@ class CupUtils {
         }
 
         return $phase;
+
+    }
+
+    public static function getSizeOfCupByConfirmedParticipants(Cup $cup): int
+    {
+
+        $participants = ParticipantHandler::getConfirmedParticipantsOfCup($cup);
+
+        $count_of_participants = count($participants);
+        if ($count_of_participants < 3) {
+            return CupEnums::CUP_SIZE_2;
+        } else if ($count_of_participants < 5) {
+            return CupEnums::CUP_SIZE_4;
+        } else if ($count_of_participants < 9) {
+            return CupEnums::CUP_SIZE_8;
+        } else if ($count_of_participants < 17) {
+            return CupEnums::CUP_SIZE_16;
+        } else if ($count_of_participants < 33) {
+            return CupEnums::CUP_SIZE_32;
+        }
+
+        return CupEnums::CUP_SIZE_64;
 
     }
 

@@ -4,7 +4,7 @@ namespace myrisk\Cup\Handler;
 
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Driver\ResultStatement;
-
+use Doctrine\DBAL\Query\QueryBuilder;
 use webspell_ng\UserLog;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
@@ -37,7 +37,34 @@ class ParticipantHandler {
             ->where('cupID = ?')
             ->setParameter(0, $cup->getCupId());
 
-        $cup_participant_query = $queryBuilder->execute();
+        return self::getParticipantsOfCupByFilter($queryBuilder, $cup);
+
+    }
+
+    /**
+     * @return array<UserParticipant|TeamParticipant>
+     */
+    public static function getConfirmedParticipantsOfCup(Cup $cup): array
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->select('*')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS_PARTICIPANTS)
+            ->where('cupID = ?', 'checked_in = 1')
+            ->setParameter(0, $cup->getCupId());
+
+        return self::getParticipantsOfCupByFilter($queryBuilder, $cup);
+
+    }
+
+    /**
+     * @return array<UserParticipant|TeamParticipant>
+     */
+    private static function getParticipantsOfCupByFilter(QueryBuilder $query_builder, Cup $cup): array
+    {
+
+        $cup_participant_query = $query_builder->execute();
 
         if ($cup->getMode() == CupEnums::CUP_MODE_1ON1) {
             return self::getUserParticipantsOfCup($cup_participant_query);

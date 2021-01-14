@@ -15,6 +15,7 @@ use myrisk\Cup\Handler\AdminHandler;
 use myrisk\Cup\Handler\BracketHandler;
 use myrisk\Cup\Handler\CupSponsorHandler;
 use myrisk\Cup\Handler\GroupstageHandler;
+use myrisk\Cup\Utils\CupUtils;
 
 class CupHandler {
 
@@ -170,6 +171,9 @@ class CupHandler {
     {
 
         $cup->setStatus(CupEnums::CUP_STATUS_GROUPSTAGE);
+        $cup->setSize(
+            CupUtils::getSizeOfCupByConfirmedParticipants($cup)
+        );
 
         self::saveCup($cup);
 
@@ -181,6 +185,9 @@ class CupHandler {
     {
 
         $cup->setStatus(CupEnums::CUP_STATUS_PLAYOFFS);
+        $cup->setSize(
+            CupUtils::getSizeOfCupByConfirmedParticipants($cup)
+        );
 
         self::saveCup($cup);
 
