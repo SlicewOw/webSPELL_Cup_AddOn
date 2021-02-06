@@ -26,7 +26,7 @@ class CupPlacementHandler {
         $placement_query = $queryBuilder->execute();
         $placement_result = $placement_query->fetch();
 
-        if (empty($team_result)) {
+        if (empty($placement_result)) {
             throw new \UnexpectedValueException('unknown_cup_placement');
         }
 
