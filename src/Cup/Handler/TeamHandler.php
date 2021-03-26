@@ -93,6 +93,20 @@ class TeamHandler {
 
     }
 
+    /**
+     * @return array<Team>
+     */
+    public static function getTeamsOfLoggedInUser(): array
+    {
+        $user_id = UserSession::getUserId();
+        if ($user_id < 1) {
+            return array();
+        }
+        return self::getTeamsOfUser(
+            UserHandler::getUserByUserId($user_id)
+        );
+    }
+
     public static function isAnyTeamAdmin(): bool
     {
 

@@ -3,7 +3,6 @@
 namespace myrisk\Cup\Utils;
 
 use webspell_ng\UserSession;
-use webspell_ng\Handler\UserHandler;
 
 use myrisk\Cup\Team;
 use myrisk\Cup\Handler\TeamHandler;
@@ -13,14 +12,7 @@ class TeamUtils {
     public static function isUserTeamMember(Team $team): bool
     {
 
-        if (UserSession::getUserId() < 1) {
-            return false;
-        }
-
-        $teams_of_user = TeamHandler::getTeamsOfUser(
-            UserHandler::getUserByUserId(UserSession::getUserId())
-        );
-
+        $teams_of_user = TeamHandler::getTeamsOfLoggedInUser();
         foreach ($teams_of_user as $team_of_user) {
 
             if ($team->getTeamId() == $team_of_user->getTeamId()) {
@@ -42,6 +34,26 @@ class TeamUtils {
         }
 
         return $team_admin->getUser()->getUserId() == UserSession::getUserId();
+
+    }
+
+    public static function isUserAnyTeamAdmin(): bool
+    {
+
+        $teams_of_user = TeamHandler::getTeamsOfLoggedInUser();
+        if (empty($teams_of_user)) {
+            return false;
+        }
+
+        foreach ($teams_of_user as $team_of_user) {
+
+            if (self::isUserTeamAdmin($team_of_user)) {
+                return true;
+            }
+
+        }
+
+        return false;
 
     }
 
