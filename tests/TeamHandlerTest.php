@@ -61,6 +61,7 @@ final class TeamHandlerTest extends TestCase
         $this->assertEquals("https://gaming.myrisk-ev.de", $team->getHomepage(), "Cup team homepage is set.");
         $this->assertEquals("logotype", $team->getLogotype(), "Cup team logogtype is set.");
         $this->assertFalse($team->isDeleted(), "Cup team is deleted.");
+        $this->assertNotEmpty($team->getPassword(), "Password is set per default.");
 
         $team_admin = $team->getTeamAdmin();
         $this->assertNotNull($team_admin, "Cup team admin is set.");
@@ -98,6 +99,7 @@ final class TeamHandlerTest extends TestCase
         $this->assertEquals("https://gaming.myrisk-ev.de", $updated_team->getHomepage(), "Cup team homepage is set.");
         $this->assertEquals("logotype", $updated_team->getLogotype(), "Cup team logogtype is set.");
         $this->assertFalse($updated_team->isDeleted(), "Cup team is deleted.");
+        $this->assertNotEmpty($updated_team->getPassword(), "Password is set per default.");
 
         $this->assertGreaterThan(0, count(TeamHandler::getTeamsOfUser($user)), "User is member of team/s.");
 

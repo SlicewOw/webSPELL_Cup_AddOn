@@ -44,6 +44,7 @@ class TeamHandler {
         $team->setTeamId($team_result['teamID']);
         $team->setName($team_result['name']);
         $team->setTag($team_result['tag']);
+        $team->setPassword($team_result['password']);
         $team->setHomepage($team_result['hp']);
         $team->setLogotype($team_result['logotype']);
         $team->setIsDeleted($team_result['deleted']);
@@ -107,7 +108,8 @@ class TeamHandler {
             ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_TEAMS, "t")
             ->innerJoin('t', WebSpellDatabaseConnection::getTablePrefix() . TeamMemberHandler::DB_TABLE_NAME_TEAM_MEMBERS, 'tm', 't.teamID = tm.teamID')
             ->where('tm.userID = ?', 'tm.active = 1')
-            ->setParameter(0, $user->getUserId());
+            ->setParameter(0, $user->getUserId())
+            ->orderBy("t.name", "ASC");
 
         $team_query = $queryBuilder->execute();
 

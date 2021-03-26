@@ -31,6 +31,11 @@ class Team {
     private $team_tag;
 
     /**
+     * @var string $password
+     */
+    private $password;
+
+    /**
      * @var ?Country $country
      */
     private $country;
@@ -98,6 +103,16 @@ class Team {
     public function getTag(): ?string
     {
         return $this->team_tag;
+    }
+
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
     }
 
     public function setCountry(Country $country): void
