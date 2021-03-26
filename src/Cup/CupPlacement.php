@@ -30,7 +30,7 @@ class CupPlacement {
         $this->ranking = $ranking;
     }
 
-    public function getRanking(): ?int
+    public function getRanking(): ?string
     {
         return $this->ranking;
     }
