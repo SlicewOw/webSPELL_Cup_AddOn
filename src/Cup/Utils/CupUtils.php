@@ -2,9 +2,9 @@
 
 namespace myrisk\Cup\Utils;
 
-use \myrisk\Cup\Cup;
-use \myrisk\Cup\Enum\CupEnums;
-use \myrisk\Cup\Handler\TeamHandler;
+use myrisk\Cup\Cup;
+use myrisk\Cup\Enum\CupEnums;
+use myrisk\Cup\Utils\TeamUtils;
 
 
 class CupUtils {
@@ -31,9 +31,9 @@ class CupUtils {
 
         $now = new \DateTime("now");
 
-        if (($cup->getMode() == CupEnums::CUP_MODE_1ON1) || TeamHandler::isAnyTeamAdmin()) {
+        if (($cup->getMode() == CupEnums::CUP_MODE_1ON1) || TeamUtils::isUserAnyTeamAdmin()) {
             $phase = ($now <= $cup->getCheckInDateTime()) ? CupEnums::CUP_PHASE_ADMIN_REGISTER : CupEnums::CUP_PHASE_ADMIN_CHECKIN;
-        } else if (TeamHandler::isAnyTeamMember()) {
+        } else if (TeamUtils::isUserAnyTeamMember()) {
             $phase = ($now <= $cup->getCheckInDateTime()) ? CupEnums::CUP_PHASE_REGISTER : CupEnums::CUP_PHASE_CHECKIN;
         } else {
             $phase = CupEnums::CUP_PHASE_RUNNING;

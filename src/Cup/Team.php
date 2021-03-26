@@ -51,6 +51,11 @@ class Team {
     private $is_deleted = false;
 
     /**
+     * @var bool $is_admin_team
+     */
+    private $is_admin_team = false;
+
+    /**
      * @var array<TeamMember> $members
      */
     private $members = array();
@@ -136,6 +141,16 @@ class Team {
     public function isDeleted(): bool
     {
         return $this->is_deleted;
+    }
+
+    public function setIsAdminTeam(bool $is_admin_team): void
+    {
+        $this->is_admin_team = $is_admin_team;
+    }
+
+    public function isAdminTeam(): bool
+    {
+        return $this->is_admin_team;
     }
 
     public function addMember(TeamMember $members): void

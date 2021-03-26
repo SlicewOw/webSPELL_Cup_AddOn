@@ -37,6 +37,12 @@ class TeamUtils {
 
     }
 
+    public static function isUserAnyTeamMember(): bool
+    {
+        $teams_of_user = TeamHandler::getTeamsOfLoggedInUser();
+        return !empty($teams_of_user);
+    }
+
     public static function isUserAnyTeamAdmin(): bool
     {
 

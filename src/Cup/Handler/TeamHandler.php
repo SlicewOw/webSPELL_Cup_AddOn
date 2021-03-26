@@ -5,15 +5,15 @@ namespace myrisk\Cup\Handler;
 use Respect\Validation\Validator;
 
 use webspell_ng\User;
+use webspell_ng\UserSession;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\CountryHandler;
+use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\DateUtils;
 use webspell_ng\Utils\StringFormatterUtils;
 
 use myrisk\Cup\Team;
 use myrisk\Cup\Handler\TeamMemberHandler;
-use webspell_ng\Handler\UserHandler;
-use webspell_ng\UserSession;
 
 class TeamHandler {
 
@@ -53,6 +53,9 @@ class TeamHandler {
         $team->setCountry(
             CountryHandler::getCountryByCountryShortcut($team_result['country'])
         );
+        $team->setIsAdminTeam(
+            ($team_result['admin'] == 1)
+        );
 
         $team_members = TeamMemberHandler::getActiveMembersOfTeam($team);
         foreach ($team_members as $team_member) {
@@ -60,6 +63,35 @@ class TeamHandler {
         }
 
         return $team;
+
+    }
+
+    /**
+     * @return array<Team>
+     */
+    public static function getAllActiveTeams(): array
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->select('teamID')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_TEAMS)
+            ->where('deleted = 0', 'admin = 0')
+            ->orderBy("name", "ASC");
+
+        $team_query = $queryBuilder->execute();
+
+        $teams = array();
+
+        while ($team_result = $team_query->fetch())
+        {
+            array_push(
+                $teams,
+                self::getTeamByTeamId((int) $team_result['teamID'])
+            );
+        }
+
+        return $teams;
 
     }
 
@@ -107,42 +139,6 @@ class TeamHandler {
         );
     }
 
-    public static function isAnyTeamAdmin(): bool
-    {
-
-        if (UserSession::getUserId() < 1) {
-            return false;
-        }
-
-        $teams_of_user = self::getTeamsOfUser(
-            UserHandler::getUserByUserId(UserSession::getUserId())
-        );
-
-        foreach ($teams_of_user as $team) {
-            if ($team->getTeamAdmin()->getUser()->getUserId() == UserSession::getUserId()) {
-                return true;
-            }
-        }
-
-        return false;
-
-    }
-
-    public static function isAnyTeamMember(): bool
-    {
-
-        if (UserSession::getUserId() < 1) {
-            return false;
-        }
-
-        $teams_of_user = self::getTeamsOfUser(
-            UserHandler::getUserByUserId(UserSession::getUserId())
-        );
-
-        return !empty($teams_of_user);
-
-    }
-
     public static function saveTeam(Team $team): Team
     {
 
@@ -177,7 +173,8 @@ class TeamHandler {
                         'country' => '?',
                         'hp' => '?',
                         'logotype' => '?',
-                        'password' => '?'
+                        'password' => '?',
+                        'admin' => '?'
                     ]
                 )
             ->setParameters(
@@ -189,7 +186,8 @@ class TeamHandler {
                         4 => $team->getCountry()->getShortcut(),
                         5 => $team->getHomepage(),
                         6 => $team->getLogotype(),
-                        7 => StringFormatterUtils::getRandomString(20)
+                        7 => StringFormatterUtils::getRandomString(20),
+                        8 => $team->isAdminTeam() ? 1 : 0
                     ]
                 );
 
@@ -216,6 +214,7 @@ class TeamHandler {
             ->set("hp", "?")
             ->set("logotype", "?")
             ->set("password", "?")
+            ->set("admin", "?")
             ->where('teamID = ?')
             ->setParameter(0, $team->getCreationDate()->getTimestamp())
             ->setParameter(1, $team->getName())
@@ -224,7 +223,8 @@ class TeamHandler {
             ->setParameter(4, $team->getHomepage())
             ->setParameter(5, $team->getLogotype())
             ->setParameter(6, StringFormatterUtils::getRandomString(20))
-            ->setParameter(7, $team->getTeamId());
+            ->setParameter(7, $team->isAdminTeam() ? 1 : 0)
+            ->setParameter(8, $team->getTeamId());
 
         $queryBuilder->execute();
 

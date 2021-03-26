@@ -103,6 +103,31 @@ final class TeamHandlerTest extends TestCase
 
     }
 
+    public function testIfTeamsAreReturned(): void
+    {
+
+        $cup_teams = TeamHandler::getAllActiveTeams();
+
+        $any_team_is_deleted = false;
+        $any_team_is_admin_team = false;
+
+        foreach ($cup_teams as $cup_team) {
+
+            if ($cup_team->isDeleted()) {
+                $any_team_is_deleted = true;
+            }
+
+            if ($cup_team->isAdminTeam()) {
+                $any_team_is_admin_team = true;
+            }
+
+        }
+
+        $this->assertFalse($any_team_is_deleted, "No team of the list of active teams is deleted.");
+        $this->assertFalse($any_team_is_admin_team, "No team of the list of active teams is an admin team.");
+
+    }
+
     public function testIfInvalidArgumentExceptionIsThrownIfTeamIdIsInvalid(): void
     {
 

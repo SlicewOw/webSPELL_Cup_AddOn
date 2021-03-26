@@ -83,6 +83,8 @@ final class TeamUtilsTest extends TestCase
 
         UserSession::setUserSession(self::$user_admin->getUserId());
 
+        $this->assertTrue(TeamUtils::isUserAnyTeamMember(), "User is a team member.");
+        $this->assertTrue(TeamUtils::isUserAnyTeamAdmin(), "User is a team admin.");
         $this->assertTrue(TeamUtils::isUserTeamMember(self::$team), "User is part of the team!");
         $this->assertTrue(TeamUtils::isUserTeamAdmin(self::$team), "User is the team admin!");
 
@@ -93,6 +95,7 @@ final class TeamUtilsTest extends TestCase
 
         UserSession::setUserSession(self::$user_player->getUserId());
 
+        $this->assertTrue(TeamUtils::isUserAnyTeamMember(), "User is a team member.");
         $this->assertFalse(TeamUtils::isUserAnyTeamAdmin(), "User is not a team admin.");
         $this->assertTrue(TeamUtils::isUserTeamMember(self::$team), "User is part of the team!");
         $this->assertFalse(TeamUtils::isUserTeamAdmin(self::$team), "User is not the team admin!");
@@ -104,6 +107,7 @@ final class TeamUtilsTest extends TestCase
 
         UserSession::setUserSession(3);
 
+        $this->assertFalse(TeamUtils::isUserAnyTeamMember(), "User is not a team member.");
         $this->assertFalse(TeamUtils::isUserAnyTeamAdmin(), "User is not a team admin.");
         $this->assertFalse(TeamUtils::isUserTeamMember(self::$team), "User is not part of the team!");
         $this->assertFalse(TeamUtils::isUserTeamAdmin(self::$team), "User is not the team admin!");

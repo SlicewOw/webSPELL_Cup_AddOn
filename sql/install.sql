@@ -354,8 +354,8 @@ CREATE TABLE `ws_p40_cups_teams` (
   `logotype` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `password` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `hits` int(11) NOT NULL DEFAULT 0,
-  `deleted` int(11) NOT NULL DEFAULT 0,
-  `admin` int(11) NOT NULL DEFAULT 0
+  `deleted` int(1) NOT NULL DEFAULT 0,
+  `admin` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 CREATE TABLE `ws_p40_cups_teams_comments` (
