@@ -39,6 +39,8 @@ final class CupHandlerTest extends TestCase
         $new_cup->setStartDateTime($datetime_later);
         $new_cup->setGame($game);
         $new_cup->setRule($rule);
+        $new_cup->setIsSaved(false);
+        $new_cup->setIsAdminCup(true);
 
         $saved_cup = CupHandler::saveCup($new_cup);
 
@@ -48,9 +50,12 @@ final class CupHandlerTest extends TestCase
         $this->assertEquals(CupEnums::CUP_SIZE_8, $cup->getSize(), "Cup size is set correctly.");
         $this->assertEquals(CupEnums::CUP_PHASE_RUNNING, $cup->getPhase(), "Cup phase is set correctly.");
         $this->assertGreaterThan(0, $cup->getRule()->getRuleId(), "Rule is set.");
+        $this->assertFalse($cup->isSaved(), "Cup is not saved yet.");
+        $this->assertTrue($cup->isAdminCup(), "Cup is for admins only.");
 
         $changed_cup = $cup;
         $changed_cup->setStatus(CupEnums::CUP_STATUS_FINISHED);
+        $changed_cup->setIsSaved(true);
 
         $updated_cup = CupHandler::saveCup($changed_cup);
 
@@ -59,6 +64,8 @@ final class CupHandlerTest extends TestCase
         $this->assertEquals(CupEnums::CUP_STATUS_FINISHED, $updated_cup->getStatus(), "Cup status is set correctly.");
         $this->assertEquals(CupEnums::CUP_PHASE_FINISHED, $updated_cup->getPhase(), "Cup phase is set correctly.");
         $this->assertEquals($cup->getRule()->getRuleId(), $updated_cup->getRule()->getRuleId(), "Rule is set.");
+        $this->assertTrue($cup->isSaved(), "Cup is saved.");
+        $this->assertTrue($cup->isAdminCup(), "Cup is for admins only.");
 
     }
 

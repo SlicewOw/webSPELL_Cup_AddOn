@@ -26,8 +26,8 @@ CREATE TABLE `ws_p40_cups` (
   `hits_bracket` int(11) NOT NULL DEFAULT 0,
   `hits_rules` int(11) NOT NULL DEFAULT 0,
   `description` text COLLATE latin1_german1_ci DEFAULT NULL,
-  `saved` int(11) NOT NULL DEFAULT 0,
-  `admin_visible` int(11) NOT NULL DEFAULT 0
+  `saved` int(1) NOT NULL DEFAULT 0,
+  `admin_visible` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 

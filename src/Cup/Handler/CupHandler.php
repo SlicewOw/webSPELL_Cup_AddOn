@@ -46,6 +46,12 @@ class CupHandler {
         $cup->setStatus($cup_result['status']);
         $cup->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['checkin_date']));
         $cup->setStartDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['start_date']));
+        $cup->setIsSaved(
+            ($cup_result['saved'] == 1)
+        );
+        $cup->setIsAdminCup(
+            ($cup_result['admin_visible'] == 1)
+        );
 
         $cup->setRule(
             RuleHandler::getRuleByRuleId((int) $cup_result['ruleID'])
@@ -108,7 +114,9 @@ class CupHandler {
                         'max_size' => '?',
                         'status' => '?',
                         'gameID' => '?',
-                        'ruleID' => '?'
+                        'ruleID' => '?',
+                        'saved' => '?',
+                        'admin_visible' => '?'
                     ]
                 )
             ->setParameters(
@@ -120,7 +128,9 @@ class CupHandler {
                         4 => $cup->getSize(),
                         5 => $cup->getStatus(),
                         6 => $cup->getGame()->getGameId(),
-                        7 => $cup->getRule()->getRuleId()
+                        7 => $cup->getRule()->getRuleId(),
+                        8 => $cup->isSaved() ? 1 : 0,
+                        9 => $cup->isAdminCup() ? 1 : 0
                     ]
                 );
 
@@ -148,6 +158,8 @@ class CupHandler {
             ->set("status", "?")
             ->set("gameID", "?")
             ->set("ruleID", "?")
+            ->set("saved", "?")
+            ->set("admin_visible", "?")
             ->where('cupID = ?')
             ->setParameter(0, $cup->getName())
             ->setParameter(1, $cup->getCheckInDateTime()->getTimestamp())
@@ -157,7 +169,9 @@ class CupHandler {
             ->setParameter(5, $cup->getStatus())
             ->setParameter(6, $cup->getGame()->getGameId())
             ->setParameter(7, $cup->getRule()->getRuleId())
-            ->setParameter(8, $cup->getCupId());
+            ->setParameter(8, $cup->isSaved() ? 1 : 0)
+            ->setParameter(9, $cup->isAdminCup() ? 1 : 0)
+            ->setParameter(10, $cup->getCupId());
 
         $queryBuilder->execute();
 

@@ -75,6 +75,16 @@ class Cup {
      */
     private $participants = array();
 
+    /**
+     * @var bool $is_saved
+     */
+    private $is_saved = false;
+
+    /**
+     * @var bool $is_admin_cup
+     */
+    private $is_admin_cup = false;
+
     public function setCupId(int $cup_id): void
     {
         if (!Validator::numericVal()->positive()->min(1)->validate($cup_id)) {
@@ -245,6 +255,26 @@ class Cup {
 
         return $checked_in_participants;
 
+    }
+
+    public function setIsSaved(bool $is_saved): void
+    {
+        $this->is_saved = $is_saved;
+    }
+
+    public function isSaved(): bool
+    {
+        return $this->is_saved;
+    }
+
+    public function setIsAdminCup(bool $is_admin_cup): void
+    {
+        $this->is_admin_cup = $is_admin_cup;
+    }
+
+    public function isAdminCup(): bool
+    {
+        return $this->is_admin_cup;
     }
 
 }
