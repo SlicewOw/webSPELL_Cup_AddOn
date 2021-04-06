@@ -8,7 +8,6 @@ use webspell_ng\Game;
 
 use myrisk\Cup\Admin;
 use myrisk\Cup\CupSponsor;
-use myrisk\Cup\Participant;
 use myrisk\Cup\Enum\CupEnums;
 use myrisk\Cup\Utils\CupUtils;
 
