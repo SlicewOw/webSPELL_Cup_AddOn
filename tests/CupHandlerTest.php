@@ -2,17 +2,50 @@
 
 use PHPUnit\Framework\TestCase;
 
-use \webspell_ng\Handler\GameHandler;
-use \webspell_ng\Utils\StringFormatterUtils;
+use webspell_ng\Handler\GameHandler;
+use webspell_ng\Utils\StringFormatterUtils;
 
-use \myrisk\Cup\Cup;
-use \myrisk\Cup\Rule;
-use \myrisk\Cup\Enum\CupEnums;
-use \myrisk\Cup\Handler\CupHandler;
-use \myrisk\Cup\Handler\RuleHandler;
+use myrisk\Cup\Cup;
+use myrisk\Cup\Rule;
+use myrisk\Cup\MapPool;
+use myrisk\Cup\Enum\CupEnums;
+use myrisk\Cup\Handler\CupHandler;
+use myrisk\Cup\Handler\MapPoolHandler;
+use myrisk\Cup\Handler\RuleHandler;
 
 final class CupHandlerTest extends TestCase
 {
+
+    /**
+     * @var MapPool $map_pool
+     */
+    private static $map_pool;
+
+    public static function setUpBeforeClass(): void
+    {
+
+        $all_map_pools = MapPoolHandler::getAllMapPools();
+
+        if (empty($all_map_pools)) {
+
+            $new_map_pool = new MapPool();
+            $new_map_pool->setName("Test Map Pool " . StringFormatterUtils::getRandomString(10));
+            $new_map_pool->setGame(
+                GameHandler::getGameByGameId(1)
+            );
+            $new_map_pool->setMaps(
+                array(
+                    "de_test1"
+                )
+            );
+
+            self::$map_pool = MapPoolHandler::saveMapPool($new_map_pool);
+
+        } else {
+            self::$map_pool = $all_map_pools[0];
+        }
+
+    }
 
     public function testIfCupCanBeSavedAndUpdated(): void
     {
@@ -52,10 +85,12 @@ final class CupHandlerTest extends TestCase
         $this->assertGreaterThan(0, $cup->getRule()->getRuleId(), "Rule is set.");
         $this->assertFalse($cup->isSaved(), "Cup is not saved yet.");
         $this->assertTrue($cup->isAdminCup(), "Cup is for admins only.");
+        $this->assertNull($cup->getMapPool(), "Map Pool is not set yet.");
 
         $changed_cup = $cup;
         $changed_cup->setStatus(CupEnums::CUP_STATUS_FINISHED);
         $changed_cup->setIsSaved(true);
+        $changed_cup->setMapPool(self::$map_pool);
 
         $updated_cup = CupHandler::saveCup($changed_cup);
 
@@ -66,6 +101,7 @@ final class CupHandlerTest extends TestCase
         $this->assertEquals($cup->getRule()->getRuleId(), $updated_cup->getRule()->getRuleId(), "Rule is set.");
         $this->assertTrue($cup->isSaved(), "Cup is saved.");
         $this->assertTrue($cup->isAdminCup(), "Cup is for admins only.");
+        $this->assertEquals(self::$map_pool->getMapPoolId(), $updated_cup->getMapPool()->getMapPoolId(), "Map Pool is set.");
 
     }
 
@@ -74,10 +110,7 @@ final class CupHandlerTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
 
-        $cup = CupHandler::getCupByCupId(-1);
-
-        // This line is hopefully never be reached
-        $this->assertLessThan(1, $cup->getCupId());
+        CupHandler::getCupByCupId(-1);
 
     }
 

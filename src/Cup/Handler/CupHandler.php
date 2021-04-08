@@ -60,6 +60,12 @@ class CupHandler {
             GameHandler::getGameByGameId((int) $cup_result['gameID'])
         );
 
+        if (!is_null($cup_result['mappool'])) {
+            $cup->setMapPool(
+                MapPoolHandler::getMapPoolById((int) $cup_result['mappool'])
+            );
+        }
+
         $cup = CupSponsorHandler::getSponsorsOfCup($cup);
 
         $cup->setCupParticipants(
@@ -102,6 +108,8 @@ class CupHandler {
     private static function insertCup(Cup $cup): Cup
     {
 
+        $map_pool_id = (!is_null($cup->getMapPool())) ? $cup->getMapPool()->getMapPoolId() : null;
+
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->insert(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS)
@@ -115,6 +123,7 @@ class CupHandler {
                         'status' => '?',
                         'gameID' => '?',
                         'ruleID' => '?',
+                        'mappool' => '?',
                         'saved' => '?',
                         'admin_visible' => '?'
                     ]
@@ -129,8 +138,9 @@ class CupHandler {
                         5 => $cup->getStatus(),
                         6 => $cup->getGame()->getGameId(),
                         7 => $cup->getRule()->getRuleId(),
-                        8 => $cup->isSaved() ? 1 : 0,
-                        9 => $cup->isAdminCup() ? 1 : 0
+                        8 => $map_pool_id,
+                        9 => $cup->isSaved() ? 1 : 0,
+                        10 => $cup->isAdminCup() ? 1 : 0
                     ]
                 );
 
@@ -147,6 +157,8 @@ class CupHandler {
     private static function updateCup(Cup $cup): void
     {
 
+        $map_pool_id = (!is_null($cup->getMapPool())) ? $cup->getMapPool()->getMapPoolId() : null;
+
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
             ->update(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS)
@@ -158,6 +170,7 @@ class CupHandler {
             ->set("status", "?")
             ->set("gameID", "?")
             ->set("ruleID", "?")
+            ->set("mappool", "?")
             ->set("saved", "?")
             ->set("admin_visible", "?")
             ->where('cupID = ?')
@@ -169,9 +182,10 @@ class CupHandler {
             ->setParameter(5, $cup->getStatus())
             ->setParameter(6, $cup->getGame()->getGameId())
             ->setParameter(7, $cup->getRule()->getRuleId())
-            ->setParameter(8, $cup->isSaved() ? 1 : 0)
-            ->setParameter(9, $cup->isAdminCup() ? 1 : 0)
-            ->setParameter(10, $cup->getCupId());
+            ->setParameter(8, $map_pool_id)
+            ->setParameter(9, $cup->isSaved() ? 1 : 0)
+            ->setParameter(10, $cup->isAdminCup() ? 1 : 0)
+            ->setParameter(11, $cup->getCupId());
 
         $queryBuilder->execute();
 

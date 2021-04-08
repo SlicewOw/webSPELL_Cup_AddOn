@@ -40,7 +40,10 @@ final class AdminHandlerTest extends TestCase
         $new_cup->setGame($game);
         $new_cup->setRule($rule);
 
-        $new_cup = CupHandler::saveCup($new_cup);
+        $saved_cup = CupHandler::saveCup($new_cup);
+
+        $this->assertGreaterThan(0, $saved_cup->getCupId(), "Cup is saved successfully.");
+        $this->assertEquals(0, count($saved_cup->getAdmins()), "New cup has no admins!");
 
         $new_admin = new Admin();
         $new_admin->setRight(3);
@@ -48,12 +51,12 @@ final class AdminHandlerTest extends TestCase
             UserHandler::getUserByUserId(1)
         );
 
-        $saved_admin = AdminHandler::saveAdminToCup($new_admin, $new_cup);
+        $saved_admin = AdminHandler::saveAdminToCup($new_admin, $saved_cup);
 
         $this->assertInstanceOf(Admin::class, $saved_admin);
         $this->assertGreaterThan(0, $saved_admin->getAdminId(), "Admin ID is set.");
 
-        $cup = CupHandler::getCupByCupId($new_cup->getCupId());
+        $cup = CupHandler::getCupByCupId($saved_cup->getCupId());
 
         $cup_admins = $cup->getAdmins();
         $this->assertEquals(1, count($cup_admins), "Cup admin is set.");
@@ -68,10 +71,7 @@ final class AdminHandlerTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
 
-        $admin = AdminHandler::getAdminByUserId(-1, 1);
-
-        // This line is hopefully never be reached
-        $this->assertLessThan(1, $admin->getAdminId());
+        AdminHandler::getAdminByUserId(-1, 1);
 
     }
 
@@ -80,10 +80,7 @@ final class AdminHandlerTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
 
-        $admin = AdminHandler::getAdminByUserId(1, -1);
-
-        // This line is hopefully never be reached
-        $this->assertLessThan(1, $admin->getAdminId());
+        AdminHandler::getAdminByUserId(1, -1);
 
     }
 

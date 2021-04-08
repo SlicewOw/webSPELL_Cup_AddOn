@@ -14,11 +14,11 @@ class MapPoolHandler {
 
     private const DB_TABLE_NAME_CUPS_MAP_POOL = "cups_mappool";
 
-    public static function getMapPoolById(int $cup_id): MapPool
+    public static function getMapPoolById(int $map_pool_id): MapPool
     {
 
-        if (!Validator::numericVal()->min(1)->validate($cup_id)) {
-            throw new \InvalidArgumentException('cup_id_value_is_invalid');
+        if (!Validator::numericVal()->min(1)->validate($map_pool_id)) {
+            throw new \InvalidArgumentException('map_pool_id_value_is_invalid');
         }
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
@@ -26,13 +26,13 @@ class MapPoolHandler {
             ->select('*')
             ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS_MAP_POOL)
             ->where('mappoolID = ?')
-            ->setParameter(0, $cup_id);
+            ->setParameter(0, $map_pool_id);
 
         $pool_query = $queryBuilder->execute();
         $pool_result = $pool_query->fetch(FetchMode::MIXED);
 
         if (empty($pool_result)) {
-            throw new \InvalidArgumentException('unknown_cup');
+            throw new \UnexpectedValueException('unknown_map_pool');
         }
 
         $map_pool = new MapPool();

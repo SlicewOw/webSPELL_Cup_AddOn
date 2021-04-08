@@ -11,9 +11,9 @@ CREATE TABLE `ws_p40_cups` (
   `checkin_date` int(11) NOT NULL,
   `start_date` int(11) NOT NULL,
   `gameID` int(11) NOT NULL DEFAULT 0,
-  `server` int(11) NOT NULL DEFAULT 0,
-  `mapvote_enable` int(11) NOT NULL DEFAULT 0,
-  `mappool` int(11) NOT NULL DEFAULT 0,
+  `server` int(1) NOT NULL DEFAULT 0,
+  `mapvote_enable` int(1) NOT NULL DEFAULT 0,
+  `mappool` int(11) DEFAULT NULL,
   `mode` varchar(255) COLLATE latin1_german1_ci NOT NULL DEFAULT '5on5',
   `ruleID` int(11) NOT NULL,
   `max_size` int(11) NOT NULL,
@@ -30,6 +30,9 @@ CREATE TABLE `ws_p40_cups` (
   `admin_visible` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
+--
+-- Cup admins
+--
 
 CREATE TABLE `ws_p40_cups_admin` (
   `adminID` int(11) NOT NULL,
@@ -37,6 +40,9 @@ CREATE TABLE `ws_p40_cups_admin` (
   `cupID` int(11) NOT NULL,
   `rights` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+ALTER TABLE `ws_p40_cups_admin` ADD CONSTRAINT `FK_CupAdmins_CupID` FOREIGN KEY (`cupID`) REFERENCES `ws_p40_cups`(`cupID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `ws_p40_cups_admin` ADD CONSTRAINT `FK_CupAdmins_UserID` FOREIGN KEY (`userID`) REFERENCES `ws_p40_user`(`userID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Cup awards
@@ -248,11 +254,22 @@ CREATE TABLE `ws_p40_cups_screenshots` (
   `deleted` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
+--
+-- Cup sponsors
+--
+
 CREATE TABLE `ws_p40_cups_sponsors` (
   `id` int(11) NOT NULL,
   `cupID` int(11) NOT NULL,
   `sponsorID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+ALTER TABLE `ws_p40_cups_sponsors` ADD CONSTRAINT `FK_CupSponsors_CupID` FOREIGN KEY (`cupID`) REFERENCES `ws_p40_cups`(`cupID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `ws_p40_cups_sponsors` ADD CONSTRAINT `FK_CupSponsors_SponsorID` FOREIGN KEY (`sponsorID`) REFERENCES `ws_p40_sponsors`(`sponsorID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Cup streams
+--
 
 CREATE TABLE `ws_p40_cups_streams` (
   `streamID` int(11) NOT NULL,

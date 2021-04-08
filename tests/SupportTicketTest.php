@@ -31,8 +31,10 @@ final class SupportTicketTest extends TestCase
     public function testIfDaysAreDetected(): void
     {
 
+        $date = new \DateTime("20 days 1 hour ago");
+
         $ticket = new SupportTicket();
-        $ticket->setStartDate(new \DateTime("20 days ago"));
+        $ticket->setStartDate($date);
 
         $this->assertEquals("20d", $ticket->isOpenSince(), "Days are detected");
 

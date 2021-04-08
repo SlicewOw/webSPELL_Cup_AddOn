@@ -8,6 +8,7 @@ use webspell_ng\Game;
 
 use myrisk\Cup\Admin;
 use myrisk\Cup\CupSponsor;
+use myrisk\Cup\MapPool;
 use myrisk\Cup\Enum\CupEnums;
 use myrisk\Cup\Utils\CupUtils;
 
@@ -48,6 +49,11 @@ class Cup {
      * @var ?Rule $cup_rule
      */
     private $cup_rule;
+
+    /**
+     * @var ?MapPool $map_pool
+     */
+    private $map_pool;
 
     /**
      * @var array<CupSponsor> $cup_sponsors
@@ -173,6 +179,16 @@ class Cup {
     public function getRule(): ?Rule
     {
         return $this->cup_rule;
+    }
+
+    public function setMapPool(MapPool $map_pool): void
+    {
+        $this->map_pool = $map_pool;
+    }
+
+    public function getMapPool(): ?MapPool
+    {
+        return $this->map_pool;
     }
 
     public function addSponsor(CupSponsor $sponsor): void
