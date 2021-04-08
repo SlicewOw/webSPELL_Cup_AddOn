@@ -135,10 +135,9 @@ CREATE TABLE `ws_p40_cups_gameaccounts_profiles` (
 CREATE TABLE `ws_p40_cups_mappool` (
   `mappoolID` int(11) NOT NULL,
   `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `game` varchar(3) COLLATE latin1_german1_ci NOT NULL,
-  `gameID` int(11) NOT NULL DEFAULT 0,
+  `gameID` int(11) NOT NULL,
   `maps` text COLLATE latin1_german1_ci NOT NULL,
-  `deleted` int(11) NOT NULL DEFAULT 0
+  `deleted` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 CREATE TABLE `ws_p40_cups_matches_playoff` (
