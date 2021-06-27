@@ -2,8 +2,6 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\FetchMode;
-
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\DateUtils;
@@ -29,11 +27,11 @@ class TeamLogHandler {
             ->setParameter(0, $team->getTeamId())
             ->orderBy("date", "ASC");
 
-        $logs_query = $queryBuilder->execute();
+        $logs_query = $queryBuilder->executeQuery();
 
         $team_logs = array();
 
-        while ($logs_result = $logs_query->fetch(FetchMode::MIXED))
+        while ($logs_result = $logs_query->fetch())
         {
 
             $team_log = new TeamLog();
@@ -89,7 +87,7 @@ class TeamLogHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 

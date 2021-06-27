@@ -2,8 +2,6 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\FetchMode;
-
 use Respect\Validation\Validator;
 
 use webspell_ng\UserLog;
@@ -35,9 +33,9 @@ class TeamMemberHandler {
             ->where('teamID = ?')
             ->setParameter(0, $team->getTeamId());
 
-        $member_query = $queryBuilder->execute();
+        $member_query = $queryBuilder->executeQuery();
 
-        while ($member_result = $member_query->fetch(FetchMode::MIXED)) {
+        while ($member_result = $member_query->fetch()) {
 
             $member = new TeamMember();
             $member->setMemberId((int) $member_result['memberID']);
@@ -167,7 +165,7 @@ class TeamMemberHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
         $member->setMemberId(
             (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
@@ -200,7 +198,7 @@ class TeamMemberHandler {
             ->setParameter(5, $team->getTeamId())
             ->setParameter(6, $member->getUser()->getUserId());
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 

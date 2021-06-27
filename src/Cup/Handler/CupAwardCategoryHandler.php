@@ -2,7 +2,6 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
@@ -29,8 +28,8 @@ class CupAwardCategoryHandler {
             ->where('categoryID = ?')
             ->setParameter(0, $category_id);
 
-        $category_query = $queryBuilder->execute();
-        $category_result = $category_query->fetch(FetchMode::MIXED);
+        $category_query = $queryBuilder->executeQuery();
+        $category_result = $category_query->fetch();
 
         if (empty($category_result)) {
             throw new \UnexpectedValueException('unknown_cup_award_category');
@@ -72,11 +71,11 @@ class CupAwardCategoryHandler {
             ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_CUPS_AWARDS_CATEGORY)
             ->orderBy("sort", "ASC");
 
-        $category_query = $queryBuilder->execute();
+        $category_query = $queryBuilder->executeQuery();
 
         $award_categories = array();
 
-        while ($category_result = $category_query->fetch(FetchMode::MIXED))
+        while ($category_result = $category_query->fetch())
         {
             array_push(
                 $award_categories,
@@ -144,7 +143,7 @@ class CupAwardCategoryHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
         $category->setCategoryId(
             (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
@@ -191,7 +190,7 @@ class CupAwardCategoryHandler {
             ->setParameter(7, $category->getInfo())
             ->setParameter(8, $category->getCategoryId());
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 

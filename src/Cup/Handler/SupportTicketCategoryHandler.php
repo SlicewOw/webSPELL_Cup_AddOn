@@ -2,7 +2,6 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
@@ -28,8 +27,8 @@ class SupportTicketCategoryHandler {
             ->where('categoryID = ?')
             ->setParameter(0, $category_id);
 
-        $category_query = $queryBuilder->execute();
-        $category_result = $category_query->fetch(FetchMode::MIXED);
+        $category_query = $queryBuilder->executeQuery();
+        $category_result = $category_query->fetch();
 
         if (empty($category_result)) {
             throw new \UnexpectedValueException("unknown_support_ticket_category");
@@ -79,7 +78,7 @@ class SupportTicketCategoryHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
         $category->setCategoryId(
             (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
@@ -104,7 +103,7 @@ class SupportTicketCategoryHandler {
             ->setParameter(2, $category->getTemplate())
             ->setParameter(3, $category->getCategoryId());
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 

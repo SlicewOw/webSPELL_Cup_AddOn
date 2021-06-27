@@ -2,10 +2,8 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
-use webspell_ng\User;
 use webspell_ng\UserSession;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Exception\AccessDeniedException;
@@ -39,8 +37,8 @@ class SupportTicketHandler {
             ->where('ticketID = ?')
             ->setParameter(0, $ticket_id);
 
-        $ticket_query = $queryBuilder->execute();
-        $ticket_result = $ticket_query->fetch(FetchMode::MIXED);
+        $ticket_query = $queryBuilder->executeQuery();
+        $ticket_result = $ticket_query->fetch();
 
         if (empty($ticket_result)) {
             throw new \UnexpectedValueException('unknown_support_ticket');
@@ -126,11 +124,11 @@ class SupportTicketHandler {
             ->where('status = ?')
             ->setParameter(0, SupportTicketEnums::TICKET_STATUS_OPEN);
 
-        $ticket_query = $queryBuilder->execute();
+        $ticket_query = $queryBuilder->executeQuery();
 
         $ticket_array = array();
 
-        while ($ticket_result = $ticket_query->fetch(FetchMode::MIXED))
+        while ($ticket_result = $ticket_query->fetch())
         {
             array_push(
                 $ticket_array,
@@ -194,11 +192,11 @@ class SupportTicketHandler {
             ->setParameter(0, UserSession::getUserId())
             ->setParameter(1, UserSession::getUserId());
 
-        $ticket_query = $queryBuilder->execute();
+        $ticket_query = $queryBuilder->executeQuery();
 
         $ticket_array = array();
 
-        while ($ticket_result = $ticket_query->fetch(FetchMode::MIXED))
+        while ($ticket_result = $ticket_query->fetch())
         {
             array_push(
                 $ticket_array,
@@ -263,7 +261,7 @@ class SupportTicketHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
         $ticket->setTicketId(
             (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
@@ -322,7 +320,7 @@ class SupportTicketHandler {
             ->setParameter(13, $ticket->getOpener()->getUserId())
             ->setParameter(14, $ticket->getTicketId());
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 

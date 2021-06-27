@@ -2,7 +2,6 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
@@ -35,11 +34,11 @@ class SupportTicketContentHandler {
             ->setParameter(0, $ticket_id)
             ->orderBy("date", "ASC");
 
-        $content_query = $queryBuilder->execute();
+        $content_query = $queryBuilder->executeQuery();
 
         $content_array = array();
 
-        while ($content_result = $content_query->fetch(FetchMode::MIXED))
+        while ($content_result = $content_query->fetch())
         {
 
             $content = new SupportTicketContent();
@@ -98,7 +97,7 @@ class SupportTicketContentHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 
@@ -117,7 +116,7 @@ class SupportTicketContentHandler {
             ->setParameter(2, $content->getText())
             ->setParameter(3, $content->getContentId());
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 

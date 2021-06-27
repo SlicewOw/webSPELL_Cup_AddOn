@@ -2,7 +2,6 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
@@ -28,8 +27,8 @@ class MapPoolHandler {
             ->where('mappoolID = ?')
             ->setParameter(0, $map_pool_id);
 
-        $pool_query = $queryBuilder->execute();
-        $pool_result = $pool_query->fetch(FetchMode::MIXED);
+        $pool_query = $queryBuilder->executeQuery();
+        $pool_result = $pool_query->fetch();
 
         if (empty($pool_result)) {
             throw new \UnexpectedValueException('unknown_map_pool');
@@ -66,10 +65,10 @@ class MapPoolHandler {
             ->orderBy("gameID", "ASC")
             ->addOrderBy("name", "ASC");
 
-        $pool_query = $queryBuilder->execute();
+        $pool_query = $queryBuilder->executeQuery();
 
         $map_pools = array();
-        while ($pool_result = $pool_query->fetch(FetchMode::MIXED))
+        while ($pool_result = $pool_query->fetch())
         {
             array_push(
                 $map_pools,
@@ -117,7 +116,7 @@ class MapPoolHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
         $map_pool->setMapPoolId(
             (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
@@ -144,7 +143,7 @@ class MapPoolHandler {
             ->setParameter(3, $map_pool->isDeleted() ? 1 : 0)
             ->setParameter(4, $map_pool->getMapPoolId());
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 

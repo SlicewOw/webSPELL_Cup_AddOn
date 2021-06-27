@@ -2,7 +2,6 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
@@ -31,8 +30,8 @@ class CupHandler {
             ->where('cupID = ?')
             ->setParameter(0, $cup_id);
 
-        $cup_query = $queryBuilder->execute();
-        $cup_result = $cup_query->fetch(FetchMode::MIXED);
+        $cup_query = $queryBuilder->executeQuery();
+        $cup_result = $cup_query->fetch();
 
         if (empty($cup_result)) {
             throw new \InvalidArgumentException('unknown_cup');
@@ -144,7 +143,7 @@ class CupHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
         $cup->setCupId(
             (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
@@ -187,7 +186,7 @@ class CupHandler {
             ->setParameter(10, $cup->isAdminCup() ? 1 : 0)
             ->setParameter(11, $cup->getCupId());
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 

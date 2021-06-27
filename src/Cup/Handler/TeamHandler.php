@@ -33,7 +33,7 @@ class TeamHandler {
             ->where('teamID = ?')
             ->setParameter(0, $team_id);
 
-        $team_query = $queryBuilder->execute();
+        $team_query = $queryBuilder->executeQuery();
         $team_result = $team_query->fetch();
 
         if (empty($team_result)) {
@@ -80,7 +80,7 @@ class TeamHandler {
             ->where('deleted = 0', 'admin = 0')
             ->orderBy("name", "ASC");
 
-        $team_query = $queryBuilder->execute();
+        $team_query = $queryBuilder->executeQuery();
 
         $teams = array();
 
@@ -111,7 +111,7 @@ class TeamHandler {
             ->setParameter(0, $user->getUserId())
             ->orderBy("t.name", "ASC");
 
-        $team_query = $queryBuilder->execute();
+        $team_query = $queryBuilder->executeQuery();
 
         $teams = array();
 
@@ -193,7 +193,7 @@ class TeamHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
         $team->setTeamId(
             (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
@@ -228,7 +228,7 @@ class TeamHandler {
             ->setParameter(7, $team->isAdminTeam() ? 1 : 0)
             ->setParameter(8, $team->getTeamId());
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 

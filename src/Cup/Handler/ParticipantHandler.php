@@ -2,8 +2,7 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\FetchMode;
-use Doctrine\DBAL\Driver\ResultStatement;
+use Doctrine\DBAL\Result;
 
 use webspell_ng\UserLog;
 use webspell_ng\WebSpellDatabaseConnection;
@@ -37,7 +36,7 @@ class ParticipantHandler {
             ->where('cupID = ?')
             ->setParameter(0, $cup->getCupId());
 
-        $cup_participant_query = $queryBuilder->execute();
+        $cup_participant_query = $queryBuilder->executeQuery();
 
         if ($cup->getMode() == CupEnums::CUP_MODE_1ON1) {
             return self::getUserParticipantsOfCup($cup_participant_query);
@@ -50,13 +49,13 @@ class ParticipantHandler {
     /**
      * @return array<UserParticipant>
      */
-    private static function getUserParticipantsOfCup(ResultStatement $cup_participant_query): array
+    private static function getUserParticipantsOfCup(Result $cup_participant_query): array
     {
 
         $user_participants = array();
 
-        while ($user_participant = $cup_participant_query->fetch(FetchMode::MIXED))
-        {
+        $user_participant_array = $cup_participant_query->fetchAllAssociative();
+        foreach ($user_participant_array as $user_participant) {
 
             $particpant = new UserParticipant();
             $particpant->setParticipantId($user_participant['ID']);
@@ -90,13 +89,13 @@ class ParticipantHandler {
     /**
      * @return array<TeamParticipant>
      */
-    private static function getTeamParticipantsOfCup(ResultStatement $cup_participant_query): array
+    private static function getTeamParticipantsOfCup(Result $cup_participant_query): array
     {
 
         $team_participants = array();
 
-        while ($team_participant = $cup_participant_query->fetch(FetchMode::MIXED))
-        {
+        $team_participant_array = $cup_participant_query->fetchAllAssociative();
+        foreach ($team_participant_array as $team_participant) {
 
             $particpant = new TeamParticipant();
             $particpant->setParticipantId($team_participant['ID']);
@@ -179,7 +178,7 @@ class ParticipantHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 
@@ -215,7 +214,7 @@ class ParticipantHandler {
             ->setParameter(4, $date_checkin)
             ->setParameter(5, $participant->getParticipantId());
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 
@@ -232,7 +231,7 @@ class ParticipantHandler {
             ->setParameter(0, $participant->getParticipantId())
             ->setParameter(1, $cup->getCupId());
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 

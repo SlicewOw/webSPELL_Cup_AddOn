@@ -2,7 +2,6 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
@@ -27,8 +26,8 @@ class RuleHandler {
             ->where('ruleID = ?')
             ->setParameter(0, $rule_id);
 
-        $rule_query = $queryBuilder->execute();
-        $rule_result = $rule_query->fetch(FetchMode::MIXED);
+        $rule_query = $queryBuilder->executeQuery();
+        $rule_result = $rule_query->fetch();
 
         if (empty($rule_result)) {
             throw new \InvalidArgumentException('unknown_cup_rule');
@@ -72,7 +71,7 @@ class RuleHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
         $rule->setRuleId(
             (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()

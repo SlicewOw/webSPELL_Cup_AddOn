@@ -13,15 +13,15 @@
         "respect/validation": "^2.0",
         "egulias/email-validator": "^2.1",
         "symfony/validator": "^5.1",
-        "doctrine/dbal": "^2.10",
+        "doctrine/dbal": "^3.0",
         "webspell_ng/query_builder": "dev-master",
         "webspell_ng/data_structures": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.2",
-        "phpstan/phpstan": "^0.12.36",
-        "phpstan/phpstan-doctrine": "^0.12.33",
-        "phpstan/phpstan-phpunit": "^0.12.18"
+        "phpunit/phpunit": "^9.5",
+        "phpstan/phpstan": "^0.12.90",
+        "phpstan/phpstan-doctrine": "^0.12",
+        "phpstan/phpstan-phpunit": "^0.12"
     },
     "autoload": {
         "psr-4": {

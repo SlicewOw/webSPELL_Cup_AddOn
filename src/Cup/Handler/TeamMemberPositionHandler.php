@@ -27,7 +27,7 @@ class TeamMemberPositionHandler {
             ->where('positionID = ?')
             ->setParameter(0, $position_id);
 
-        $position_query = $queryBuilder->execute();
+        $position_query = $queryBuilder->executeQuery();
         $position_result = $position_query->fetch();
 
         if (empty($position_result)) {
@@ -73,7 +73,7 @@ class TeamMemberPositionHandler {
             ->where('name = ?')
             ->setParameter(0, $position_name);
 
-        $position_query = $queryBuilder->execute();
+        $position_query = $queryBuilder->executeQuery();
         $position_result = $position_query->fetch();
 
         if (empty($position_result)) {
@@ -110,7 +110,7 @@ class TeamMemberPositionHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
         $position->setPositionId(
             (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()

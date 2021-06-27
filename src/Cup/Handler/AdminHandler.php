@@ -2,12 +2,10 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
-use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Admin;
 use myrisk\Cup\Cup;
@@ -29,9 +27,9 @@ class AdminHandler {
             ->where('cupID = ?')
             ->setParameter(0, $cup->getCupId());
 
-        $admin_query = $queryBuilder->execute();
+        $admin_query = $queryBuilder->executeQuery();
 
-        while ($admin_result = $admin_query->fetch(FetchMode::MIXED)) {
+        while ($admin_result = $admin_query->fetch()) {
 
             $cup_admin = self::getAdminByUserId(
                 $admin_result['userID'],
@@ -65,8 +63,8 @@ class AdminHandler {
             ->setParameter(0, $user_id)
             ->setParameter(1, $cup_id);
 
-        $admin_query = $queryBuilder->execute();
-        $admin_result = $admin_query->fetch(FetchMode::MIXED);
+        $admin_query = $queryBuilder->executeQuery();
+        $admin_result = $admin_query->fetch();
 
         if (empty($admin_result)) {
             throw new \InvalidArgumentException('unknown_cup_admin');
@@ -103,7 +101,7 @@ class AdminHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
         $admin->setAdminId(
             (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()

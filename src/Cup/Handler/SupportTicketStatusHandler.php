@@ -2,7 +2,6 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\UserSession;
@@ -31,8 +30,8 @@ class SupportTicketStatusHandler {
             ->setParameter(0, $ticket_id)
             ->setParameter(1, UserSession::getUserId());
 
-        $status_query = $queryBuilder->execute();
-        $status_result = $status_query->fetch(FetchMode::MIXED);
+        $status_query = $queryBuilder->executeQuery();
+        $status_result = $status_query->fetch();
 
         if (empty($status_result)) {
             return self::insertStatus($ticket_id, UserSession::getUserId());
@@ -71,7 +70,7 @@ class SupportTicketStatusHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 
@@ -107,7 +106,7 @@ class SupportTicketStatusHandler {
             ->setParameter(1, $ticket_id)
             ->setParameter(2, $status->getUser()->getUserId());
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 

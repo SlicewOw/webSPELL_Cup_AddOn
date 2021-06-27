@@ -2,7 +2,6 @@
 
 namespace myrisk\Cup\Handler;
 
-use Doctrine\DBAL\FetchMode;
 use Respect\Validation\Validator;
 
 use webspell_ng\User;
@@ -32,8 +31,8 @@ class CupAwardHandler {
             ->where('awardID = ?')
             ->setParameter(0, $award_id);
 
-        $award_query = $queryBuilder->execute();
-        $award_result = $award_query->fetch(FetchMode::MIXED);
+        $award_query = $queryBuilder->executeQuery();
+        $award_result = $award_query->fetch();
 
         if (empty($award_result)) {
             throw new \UnexpectedValueException('unknown_cup_award');
@@ -107,11 +106,11 @@ class CupAwardHandler {
             ->where($column_name . ' = ?')
             ->setParameter(0, $parent_id);
 
-        $award_query = $queryBuilder->execute();
+        $award_query = $queryBuilder->executeQuery();
 
         $awards_of_interest = array();
 
-        while ($award_result = $award_query->fetch(FetchMode::MIXED))
+        while ($award_result = $award_query->fetch())
         {
             array_push(
                 $awards_of_interest,
@@ -169,7 +168,7 @@ class CupAwardHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
         $award->setAwardId(
             (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
@@ -202,7 +201,7 @@ class CupAwardHandler {
             ->setParameter(4, $award->getdate()->getTimestamp())
             ->setParameter(5, $award->getAwardId());
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 

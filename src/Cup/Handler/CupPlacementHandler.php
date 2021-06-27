@@ -23,7 +23,7 @@ class CupPlacementHandler {
             ->setParameter(0, $cup->getCupId())
             ->setParameter(1, $team->getTeamId());
 
-        $placement_query = $queryBuilder->execute();
+        $placement_query = $queryBuilder->executeQuery();
         $placement_result = $placement_query->fetch();
 
         if (empty($placement_result)) {
@@ -70,7 +70,7 @@ class CupPlacementHandler {
                     ]
                 );
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 
@@ -89,7 +89,7 @@ class CupPlacementHandler {
             ->setParameter(2, $placement->getRanking())
             ->setParameter(3, $placement->getPlacementId());
 
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
 
     }
 
