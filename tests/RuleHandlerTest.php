@@ -2,11 +2,11 @@
 
 use PHPUnit\Framework\TestCase;
 
-use \webspell_ng\Handler\GameHandler;
-use \webspell_ng\Utils\StringFormatterUtils;
+use webspell_ng\Handler\GameHandler;
+use webspell_ng\Utils\StringFormatterUtils;
 
-use \myrisk\Cup\Rule;
-use \myrisk\Cup\Handler\RuleHandler;
+use myrisk\Cup\Rule;
+use myrisk\Cup\Handler\RuleHandler;
 
 final class RuleHandlerTest extends TestCase
 {
@@ -15,7 +15,7 @@ final class RuleHandlerTest extends TestCase
     {
 
         $datetime_now = new DateTime('now');
-        $datetime_now->format("Y-m-d H:i:s");
+        $datetime_now->setTime((int) $datetime_now->format("H"), (int) $datetime_now->format("i"), (int) $datetime_now->format("s"), 0);
 
         $game = GameHandler::getGameByGameId(1);
 
@@ -35,7 +35,7 @@ final class RuleHandlerTest extends TestCase
         $this->assertEquals($saved_rule->getRuleId(), $rule->getRuleId(), "Rule ID is the same.");
         $this->assertEquals($saved_rule->getName(), $rule->getName(), "Rule name is the same.");
         $this->assertEquals($saved_rule->getText(), $rule->getText(), "Rule test is the same.");
-        $this->assertEquals($saved_rule->getLastChangeOn()->getTimestamp(), $rule->getLastChangeOn()->getTimestamp(), "Last change on is the same.");
+        $this->assertEquals($saved_rule->getLastChangeOn(), $rule->getLastChangeOn(), "Last change on is the same.");
         $this->assertEquals($saved_rule->getGame()->getTag(), $rule->getGame()->getTag(), "Rule game tag is the same.");
 
     }

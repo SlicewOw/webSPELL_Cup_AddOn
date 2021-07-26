@@ -8,7 +8,6 @@ use webspell_ng\UserLog;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
 use webspell_ng\Handler\UserLogHandler;
-use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Cup;
 use myrisk\Cup\TeamLog;
@@ -63,7 +62,7 @@ class ParticipantHandler {
                 ($user_participant['checked_in'] == 1)
             );
             $particpant->setRegisterDateTime(
-                DateUtils::getDateTimeByMktimeValue($user_participant['date_register'])
+                new \DateTime($user_participant['date_register'])
             );
             $particpant->setUser(
                 UserHandler::getUserByUserId((int) $user_participant['teamID'])
@@ -71,7 +70,7 @@ class ParticipantHandler {
 
             if (!is_null($user_participant['date_checkin'])) {
                 $particpant->setCheckInDateTime(
-                    DateUtils::getDateTimeByMktimeValue($user_participant['date_checkin'])
+                    new \DateTime($user_participant['date_checkin'])
                 );
             }
 
@@ -103,7 +102,7 @@ class ParticipantHandler {
                 ($team_participant['checked_in'] == 1)
             );
             $particpant->setRegisterDateTime(
-                DateUtils::getDateTimeByMktimeValue($team_participant['date_register'])
+                new \DateTime($team_participant['date_register'])
             );
             $particpant->setTeam(
                 TeamHandler::getTeamByTeamId((int) $team_participant['teamID'])
@@ -111,7 +110,7 @@ class ParticipantHandler {
 
             if (!is_null($team_participant['date_checkin'])) {
                 $particpant->setCheckInDateTime(
-                    DateUtils::getDateTimeByMktimeValue($team_participant['date_checkin'])
+                    new \DateTime($team_participant['date_checkin'])
                 );
             }
 
@@ -154,7 +153,7 @@ class ParticipantHandler {
 
         $checked_in = $participant->getCheckedIn() ? 1 : 0;
 
-        $date_checkin = (!is_null($participant->getCheckInDateTime())) ? $participant->getCheckInDateTime()->getTimestamp() : null;
+        $date_checkin = (!is_null($participant->getCheckInDateTime())) ? $participant->getCheckInDateTime()->format("Y-m-d H:i:s") : null;
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
@@ -173,7 +172,7 @@ class ParticipantHandler {
                         0 => $cup->getCupId(),
                         1 => $team_id,
                         2 => $checked_in,
-                        3 => $participant->getRegisterDateTime()->getTimestamp(),
+                        3 => $participant->getRegisterDateTime()->format("Y-m-d H:i:s"),
                         4 => $date_checkin
                     ]
                 );
@@ -196,7 +195,7 @@ class ParticipantHandler {
 
         $checked_in = $participant->getCheckedIn() ? 1 : 0;
 
-        $date_checkin = (!is_null($participant->getCheckInDateTime())) ? $participant->getCheckInDateTime()->getTimestamp() : null;
+        $date_checkin = (!is_null($participant->getCheckInDateTime())) ? $participant->getCheckInDateTime()->format("Y-m-d H:i:s") : null;
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
         $queryBuilder
@@ -210,7 +209,7 @@ class ParticipantHandler {
             ->setParameter(0, $cup->getCupId())
             ->setParameter(1, $team_id)
             ->setParameter(2, $checked_in)
-            ->setParameter(3, $participant->getRegisterDateTime()->getTimestamp())
+            ->setParameter(3, $participant->getRegisterDateTime()->format("Y-m-d H:i:s"))
             ->setParameter(4, $date_checkin)
             ->setParameter(5, $participant->getParticipantId());
 

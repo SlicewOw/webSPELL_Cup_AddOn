@@ -6,7 +6,6 @@ use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
-use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\SupportTicket;
 use myrisk\Cup\SupportTicketContent;
@@ -38,14 +37,15 @@ class SupportTicketContentHandler {
 
         $content_array = array();
 
-        while ($content_result = $content_query->fetch())
+        $content_results = $content_query->fetchAllAssociative();
+        foreach ($content_results as $content_result)
         {
 
             $content = new SupportTicketContent();
-            $content->setContentId($content_result['contentID']);
+            $content->setContentId((int) $content_result['contentID']);
             $content->setText($content_result['text']);
             $content->setDate(
-                DateUtils::getDateTimeByMktimeValue($content_result['date'])
+                new \DateTime($content_result['date'])
             );
             $content->setPoster(
                 UserHandler::getUserByUserId($content_result['userID'])
@@ -91,7 +91,7 @@ class SupportTicketContentHandler {
             ->setParameters(
                     [
                         0 => $ticket->getTicketId(),
-                        1 => $content->getDate()->getTimestamp(),
+                        1 => $content->getDate()->format("Y-m-d H:i:s"),
                         2 => $content->getPoster()->getUserId(),
                         3 => $content->getText()
                     ]
@@ -111,7 +111,7 @@ class SupportTicketContentHandler {
             ->set("userID", "?")
             ->set("text", "?")
             ->where("contentID = ?")
-            ->setParameter(0, $content->getDate()->getTimestamp())
+            ->setParameter(0, $content->getDate()->format("Y-m-d H:i:s"))
             ->setParameter(1, $content->getPoster()->getUserId())
             ->setParameter(2, $content->getText())
             ->setParameter(3, $content->getContentId());

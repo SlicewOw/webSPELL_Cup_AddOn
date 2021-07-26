@@ -6,7 +6,6 @@ use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\GameHandler;
-use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Cup;
 use myrisk\Cup\Handler\AdminHandler;
@@ -31,7 +30,7 @@ class CupHandler {
             ->setParameter(0, $cup_id);
 
         $cup_query = $queryBuilder->executeQuery();
-        $cup_result = $cup_query->fetch();
+        $cup_result = $cup_query->fetchAssociative();
 
         if (empty($cup_result)) {
             throw new \InvalidArgumentException('unknown_cup');
@@ -43,8 +42,12 @@ class CupHandler {
         $cup->setMode($cup_result['mode']);
         $cup->setSize($cup_result['max_size']);
         $cup->setStatus($cup_result['status']);
-        $cup->setCheckInDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['checkin_date']));
-        $cup->setStartDateTime(DateUtils::getDateTimeByMktimeValue($cup_result['start_date']));
+        $cup->setCheckInDateTime(
+            new \DateTime($cup_result['checkin_date'])
+        );
+        $cup->setStartDateTime(
+            new \DateTime($cup_result['start_date'])
+        );
         $cup->setIsSaved(
             ($cup_result['saved'] == 1)
         );
@@ -130,8 +133,8 @@ class CupHandler {
             ->setParameters(
                     [
                         0 => $cup->getName(),
-                        1 => $cup->getCheckInDateTime()->getTimestamp(),
-                        2 => $cup->getStartDateTime()->getTimestamp(),
+                        1 => $cup->getCheckInDateTime()->format("Y-m-d H:i:s"),
+                        2 => $cup->getStartDateTime()->format("Y-m-d H:i:s"),
                         3 => $cup->getMode(),
                         4 => $cup->getSize(),
                         5 => $cup->getStatus(),
@@ -174,8 +177,8 @@ class CupHandler {
             ->set("admin_visible", "?")
             ->where('cupID = ?')
             ->setParameter(0, $cup->getName())
-            ->setParameter(1, $cup->getCheckInDateTime()->getTimestamp())
-            ->setParameter(2, $cup->getStartDateTime()->getTimestamp())
+            ->setParameter(1, $cup->getCheckInDateTime()->format("Y-m-d H:i:s"))
+            ->setParameter(2, $cup->getStartDateTime()->format("Y-m-d H:i:s"))
             ->setParameter(3, $cup->getMode())
             ->setParameter(4, $cup->getSize())
             ->setParameter(5, $cup->getStatus())

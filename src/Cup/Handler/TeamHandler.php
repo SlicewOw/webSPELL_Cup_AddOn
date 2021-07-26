@@ -9,7 +9,6 @@ use webspell_ng\UserSession;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\CountryHandler;
 use webspell_ng\Handler\UserHandler;
-use webspell_ng\Utils\DateUtils;
 use webspell_ng\Utils\StringFormatterUtils;
 
 use myrisk\Cup\Team;
@@ -34,7 +33,7 @@ class TeamHandler {
             ->setParameter(0, $team_id);
 
         $team_query = $queryBuilder->executeQuery();
-        $team_result = $team_query->fetch();
+        $team_result = $team_query->fetchAssociative();
 
         if (empty($team_result)) {
             throw new \UnexpectedValueException('unknown_cup_team');
@@ -49,7 +48,7 @@ class TeamHandler {
         $team->setLogotype($team_result['logotype']);
         $team->setIsDeleted($team_result['deleted']);
         $team->setCreationDate(
-            DateUtils::getDateTimeByMktimeValue($team_result['date'])
+            new \DateTime($team_result['date'])
         );
         $team->setCountry(
             CountryHandler::getCountryByCountryShortcut($team_result['country'])
@@ -84,7 +83,8 @@ class TeamHandler {
 
         $teams = array();
 
-        while ($team_result = $team_query->fetch())
+        $team_results = $team_query->fetchAllAssociative();
+        foreach ($team_results as $team_result)
         {
             array_push(
                 $teams,
@@ -115,7 +115,8 @@ class TeamHandler {
 
         $teams = array();
 
-        while ($team_result = $team_query->fetch())
+        $team_results = $team_query->fetchAllAssociative();
+        foreach ($team_results as $team_result)
         {
             array_push(
                 $teams,
@@ -181,7 +182,7 @@ class TeamHandler {
                 )
             ->setParameters(
                     [
-                        0 => $team->getCreationDate()->getTimestamp(),
+                        0 => $team->getCreationDate()->format("Y-m-d H:i:s"),
                         1 => $team->getName(),
                         2 => $team->getTag(),
                         3 => $team_admin->getUser()->getUserId(),
@@ -218,7 +219,7 @@ class TeamHandler {
             ->set("password", "?")
             ->set("admin", "?")
             ->where('teamID = ?')
-            ->setParameter(0, $team->getCreationDate()->getTimestamp())
+            ->setParameter(0, $team->getCreationDate()->format("Y-m-d H:i:s"))
             ->setParameter(1, $team->getName())
             ->setParameter(2, $team->getTag())
             ->setParameter(3, $team->getCountry()->getShortcut())

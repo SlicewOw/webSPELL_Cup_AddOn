@@ -8,18 +8,18 @@ CREATE TABLE `ws_p40_cups` (
   `registration` varchar(20) COLLATE latin1_german1_ci NOT NULL DEFAULT 'open',
   `priority` varchar(50) COLLATE latin1_german1_ci NOT NULL DEFAULT 'normal',
   `elimination` varchar(20) COLLATE latin1_german1_ci NOT NULL DEFAULT 'single',
-  `checkin_date` int(11) NOT NULL,
-  `start_date` int(11) NOT NULL,
-  `gameID` int(11) NOT NULL DEFAULT 0,
+  `checkin_date` datetime NOT NULL,
+  `start_date` datetime NOT NULL,
+  `gameID` int(11) NOT NULL,
   `server` int(1) NOT NULL DEFAULT 0,
   `mapvote_enable` int(1) NOT NULL DEFAULT 0,
   `mappool` int(11) DEFAULT NULL,
   `mode` varchar(255) COLLATE latin1_german1_ci NOT NULL DEFAULT '5on5',
   `ruleID` int(11) NOT NULL,
   `max_size` int(11) NOT NULL,
-  `max_penalty` int(11) NOT NULL DEFAULT 12,
-  `groupstage` int(11) NOT NULL DEFAULT 0,
-  `status` int(11) NOT NULL DEFAULT 1,
+  `max_penalty` int(5) NOT NULL DEFAULT 12,
+  `groupstage` int(1) NOT NULL DEFAULT 0,
+  `status` int(3) NOT NULL DEFAULT 1,
   `hits` int(11) NOT NULL DEFAULT 0,
   `hits_teams` int(11) NOT NULL DEFAULT 0,
   `hits_groups` int(11) NOT NULL DEFAULT 0,
@@ -59,7 +59,7 @@ CREATE TABLE `ws_p40_cups_awards` (
   `teamID` int(11) DEFAULT NULL,
   `userID` int(11) DEFAULT NULL,
   `cupID` int(11) DEFAULT NULL,
-  `date` int(11) NOT NULL
+  `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 ALTER TABLE `ws_p40_cups_awards` ADD PRIMARY KEY (`awardID`), ADD UNIQUE KEY `awardID` (`awardID`), ADD UNIQUE KEY `teamID` (`teamID`,`categoryID`);
@@ -89,13 +89,13 @@ COMMIT;
 CREATE TABLE `ws_p40_cups_gameaccounts` (
   `gameaccID` int(11) NOT NULL,
   `userID` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
+  `date` datetime NOT NULL,
   `category` varchar(3) COLLATE latin1_german1_ci NOT NULL,
   `value` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `smurf` int(1) NOT NULL DEFAULT 0,
   `active` int(1) NOT NULL DEFAULT 0,
   `deleted` int(1) NOT NULL DEFAULT 0,
-  `deleted_date` int(11) NOT NULL DEFAULT 0,
+  `deleted_date` datetime,
   `deleted_seen` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
@@ -106,7 +106,7 @@ CREATE TABLE `ws_p40_cups_gameaccounts_banned` (
   `value` varchar(50) COLLATE latin1_german1_ci NOT NULL,
   `unique_id` varchar(50) COLLATE latin1_german1_ci NOT NULL,
   `description` text COLLATE latin1_german1_ci NOT NULL,
-  `date` int(11) NOT NULL
+  `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 CREATE TABLE `ws_p40_cups_gameaccounts_csgo` (
@@ -115,7 +115,7 @@ CREATE TABLE `ws_p40_cups_gameaccounts_csgo` (
   `date` int(11) DEFAULT NULL,
   `hours` int(11) DEFAULT NULL,
   `vac_bann` int(11) NOT NULL DEFAULT 0,
-  `bann_date` int(11) NOT NULL DEFAULT 0
+  `bann_date` datetime
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 CREATE TABLE `ws_p40_cups_gameaccounts_lol` (
@@ -123,7 +123,7 @@ CREATE TABLE `ws_p40_cups_gameaccounts_lol` (
   `unique_id` int(11) NOT NULL,
   `region` varchar(20) COLLATE latin1_german1_ci NOT NULL DEFAULT 'euw',
   `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `date` int(11) NOT NULL,
+  `date` datetime NOT NULL,
   `division` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `rank` int(11) NOT NULL DEFAULT 0,
   `level` int(11) NOT NULL DEFAULT 0
@@ -133,7 +133,7 @@ CREATE TABLE `ws_p40_cups_gameaccounts_mc` (
   `gameaccID` int(11) NOT NULL,
   `unique_id` varchar(50) COLLATE latin1_german1_ci NOT NULL,
   `active` int(1) NOT NULL DEFAULT 0,
-  `date` int(11) NOT NULL
+  `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 CREATE TABLE `ws_p40_cups_gameaccounts_profiles` (
@@ -141,7 +141,7 @@ CREATE TABLE `ws_p40_cups_gameaccounts_profiles` (
   `user_id` int(11) NOT NULL,
   `category` varchar(30) COLLATE latin1_german1_ci NOT NULL,
   `url` varchar(100) COLLATE latin1_german1_ci NOT NULL,
-  `date` int(11) NOT NULL,
+  `date` datetime NOT NULL,
   `deleted` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
@@ -160,7 +160,7 @@ CREATE TABLE `ws_p40_cups_matches_playoff` (
   `runde` int(11) NOT NULL,
   `spiel` int(11) NOT NULL,
   `format` varchar(5) COLLATE latin1_german1_ci NOT NULL DEFAULT 'bo1',
-  `date` int(11) NOT NULL DEFAULT 0,
+  `date` datetime NOT NULL,
   `mapvote` int(11) NOT NULL DEFAULT 0,
   `team1` int(11) NOT NULL,
   `team1_freilos` int(1) NOT NULL DEFAULT 0,
@@ -170,9 +170,9 @@ CREATE TABLE `ws_p40_cups_matches_playoff` (
   `ergebnis2` int(11) NOT NULL DEFAULT 0,
   `active` int(1) NOT NULL DEFAULT 0,
   `comments` int(11) NOT NULL DEFAULT 1,
-  `team1_confirmed` int(11) NOT NULL DEFAULT 0,
-  `team2_confirmed` int(11) NOT NULL DEFAULT 0,
-  `admin_confirmed` int(11) NOT NULL DEFAULT 0,
+  `team1_confirmed` int(1) NOT NULL DEFAULT 0,
+  `team2_confirmed` int(1) NOT NULL DEFAULT 0,
+  `admin_confirmed` int(1) NOT NULL DEFAULT 0,
   `maps` text COLLATE latin1_german1_ci NOT NULL,
   `server` text COLLATE latin1_german1_ci NOT NULL,
   `hits` int(11) NOT NULL DEFAULT 0,
@@ -185,7 +185,7 @@ CREATE TABLE `ws_p40_cups_matches_playoff_screens` (
   `matchID` int(11) NOT NULL,
   `file` varchar(100) COLLATE latin1_german1_ci NOT NULL,
   `category_id` int(11) NOT NULL,
-  `date` int(11) NOT NULL
+  `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 CREATE TABLE `ws_p40_cups_matches_playoff_screens_category` (
@@ -198,7 +198,7 @@ CREATE TABLE `ws_p40_cups_matches_playoff_screens_category` (
 CREATE TABLE `ws_p40_cups_penalty` (
   `ppID` int(11) NOT NULL,
   `adminID` int(11) NOT NULL DEFAULT 0,
-  `date` int(11) NOT NULL,
+  `date` datetime NOT NULL,
   `duration_time` int(11) NOT NULL DEFAULT 0,
   `teamID` int(11) NOT NULL DEFAULT 0,
   `userID` int(11) NOT NULL DEFAULT 0,
@@ -233,7 +233,7 @@ ALTER TABLE `ws_p40_cups_placements` MODIFY `pID` int(11) NOT NULL AUTO_INCREMEN
 CREATE TABLE `ws_p40_cups_policy` (
   `id` int(11) NOT NULL,
   `content` text COLLATE latin1_german1_ci NOT NULL,
-  `date` int(11) NOT NULL DEFAULT 0
+  `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 CREATE TABLE `ws_p40_cups_prizes` (
@@ -248,14 +248,14 @@ CREATE TABLE `ws_p40_cups_rules` (
   `gameID` int(11) NOT NULL DEFAULT 0,
   `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `text` text COLLATE latin1_german1_ci NOT NULL,
-  `date` int(11) NOT NULL
+  `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 CREATE TABLE `ws_p40_cups_screenshots` (
   `screenID` int(11) NOT NULL,
   `match_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
+  `date` datetime NOT NULL,
   `image` int(11) NOT NULL,
   `is_file` int(1) NOT NULL DEFAULT 1,
   `deleted` int(1) NOT NULL DEFAULT 0
@@ -291,9 +291,9 @@ CREATE TABLE `ws_p40_cups_streams` (
 
 CREATE TABLE `ws_p40_cups_supporttickets` (
   `ticketID` int(11) NOT NULL,
-  `start_date` int(11) NOT NULL,
-  `take_date` int(11) DEFAULT NULL,
-  `closed_date` int(11) DEFAULT NULL,
+  `start_date` datetime NOT NULL,
+  `take_date` datetime DEFAULT NULL,
+  `closed_date` datetime DEFAULT NULL,
   `closed_by_id` int(11) DEFAULT NULL,
   `userID` int(11) NOT NULL,
   `opponent_adminID` int(11) DEFAULT NULL,
@@ -338,7 +338,7 @@ VALUES
 CREATE TABLE `ws_p40_cups_supporttickets_content` (
   `contentID` int(11) NOT NULL,
   `ticketID` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
+  `date` datetime NOT NULL,
   `userID` int(11) NOT NULL,
   `text` text COLLATE latin1_german1_ci NOT NULL,
   `new` int(1) NOT NULL DEFAULT 1,
@@ -355,7 +355,7 @@ ALTER TABLE `ws_p40_cups_supporttickets_content` MODIFY `contentID` int(11) NOT 
 CREATE TABLE `ws_p40_cups_supporttickets_status` (
   `ticketID` int(11) NOT NULL,
   `userID` int(11) NOT NULL,
-  `date` int(11) NOT NULL
+  `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 ALTER TABLE `ws_p40_cups_supporttickets_status` ADD UNIQUE KEY `ticketID` (`ticketID`,`userID`);
@@ -369,7 +369,7 @@ CREATE TABLE `ws_p40_cups_team` (
 
 CREATE TABLE `ws_p40_cups_teams` (
   `teamID` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
+  `date` datetime NOT NULL,
   `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `tag` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `userID` int(11) NOT NULL,
@@ -384,7 +384,7 @@ CREATE TABLE `ws_p40_cups_teams` (
 
 CREATE TABLE `ws_p40_cups_teams_comments` (
   `teamID` int(11) NOT NULL,
-  `date` int(11) NOT NULL DEFAULT 0,
+  `date` datetime NOT NULL,
   `userID` int(11) NOT NULL DEFAULT 0,
   `comment` text COLLATE latin1_german1_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
@@ -392,7 +392,7 @@ CREATE TABLE `ws_p40_cups_teams_comments` (
 CREATE TABLE `ws_p40_cups_teams_log` (
   `teamID` int(11) NOT NULL,
   `teamName` varchar(100) COLLATE latin1_german1_ci NOT NULL,
-  `date` int(11) NOT NULL,
+  `date` datetime NOT NULL,
   `parent_id` int(11) DEFAULT NULL,
   `kicked_id` int(11) DEFAULT NULL,
   `action` varchar(255) COLLATE latin1_german1_ci NOT NULL
@@ -403,8 +403,8 @@ CREATE TABLE `ws_p40_cups_teams_member` (
   `userID` int(11) NOT NULL,
   `teamID` int(11) NOT NULL,
   `position` int(11) NOT NULL,
-  `join_date` int(11) NOT NULL,
-  `left_date` int(11) DEFAULT NULL,
+  `join_date` datetime NOT NULL,
+  `left_date` datetime DEFAULT NULL,
   `kickID` int(11) DEFAULT NULL,
   `active` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
@@ -439,8 +439,8 @@ CREATE TABLE `ws_p40_cups_participants` (
   `cupID` int(11) NOT NULL,
   `teamID` int(11) NOT NULL,
   `checked_in` int(1) NOT NULL DEFAULT 0,
-  `date_register` int(11) NOT NULL DEFAULT 0,
-  `date_checkin` int(11) DEFAULT NULL
+  `date_register` datetime NOT NULL,
+  `date_checkin` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 ALTER TABLE `ws_p40_cups_participants` ADD PRIMARY KEY (`ID`), ADD UNIQUE KEY `unique_participants` (`cupID`,`teamID`);
@@ -454,7 +454,7 @@ CREATE TABLE `ws_p40_cups_teams_social` (
   `teamID` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   `value` varchar(50) COLLATE latin1_german1_ci NOT NULL,
-  `date` int(11) NOT NULL
+  `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 ALTER TABLE `ws_p40_cups_admin`

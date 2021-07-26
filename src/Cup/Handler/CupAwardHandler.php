@@ -7,7 +7,6 @@ use Respect\Validation\Validator;
 use webspell_ng\User;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
-use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\CupAward;
 use myrisk\Cup\CupAwardCategory;
@@ -32,7 +31,7 @@ class CupAwardHandler {
             ->setParameter(0, $award_id);
 
         $award_query = $queryBuilder->executeQuery();
-        $award_result = $award_query->fetch();
+        $award_result = $award_query->fetchAssociative();
 
         if (empty($award_result)) {
             throw new \UnexpectedValueException('unknown_cup_award');
@@ -44,7 +43,7 @@ class CupAwardHandler {
             CupAwardCategoryHandler::getCategoryByCategoryId((int) $award_result['categoryID'])
         );
         $award->setDate(
-            DateUtils::getDateTimeByMktimeValue((int) $award_result['date'])
+            new \DateTime($award_result['date'])
         );
 
         if (!is_null($award_result['teamID'])) {
@@ -110,7 +109,9 @@ class CupAwardHandler {
 
         $awards_of_interest = array();
 
-        while ($award_result = $award_query->fetch())
+        $award_results = $award_query->fetchAllAssociative();
+
+        foreach ($award_results as $award_result)
         {
             array_push(
                 $awards_of_interest,
@@ -164,7 +165,7 @@ class CupAwardHandler {
                         1 => $team_id,
                         2 => $user_id,
                         3 => $cup_id,
-                        4 => $award->getdate()->getTimestamp()
+                        4 => $award->getDate()->format("Y-m-d H:i:s")
                     ]
                 );
 
@@ -198,7 +199,7 @@ class CupAwardHandler {
             ->setParameter(1, $team_id)
             ->setParameter(2, $user_id)
             ->setParameter(3, $cup_id)
-            ->setParameter(4, $award->getdate()->getTimestamp())
+            ->setParameter(4, $award->getDate()->format("Y-m-d H:i:s"))
             ->setParameter(5, $award->getAwardId());
 
         $queryBuilder->executeQuery();

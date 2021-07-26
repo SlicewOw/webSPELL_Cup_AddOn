@@ -6,7 +6,6 @@ use Respect\Validation\Validator;
 
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\GameHandler;
-use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Rule;
 
@@ -27,7 +26,7 @@ class RuleHandler {
             ->setParameter(0, $rule_id);
 
         $rule_query = $queryBuilder->executeQuery();
-        $rule_result = $rule_query->fetch();
+        $rule_result = $rule_query->fetchAssociative();
 
         if (empty($rule_result)) {
             throw new \InvalidArgumentException('unknown_cup_rule');
@@ -41,7 +40,7 @@ class RuleHandler {
         $rule->setName($rule_result['name']);
         $rule->setText($rule_result['text']);
         $rule->setLastChangeOn(
-            DateUtils::getDateTimeByMktimeValue($rule_result['date'])
+            new \DateTime($rule_result['date'])
         );
 
         return $rule;
@@ -67,7 +66,7 @@ class RuleHandler {
                         0 => $rule->getGame()->getGameId(),
                         1 => $rule->getName(),
                         2 => $rule->getText(),
-                        3 => $rule->getLastChangeOn()->getTimestamp()
+                        3 => $rule->getLastChangeOn()->format("Y-m-d H:i:s")
                     ]
                 );
 

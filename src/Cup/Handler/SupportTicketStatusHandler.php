@@ -7,7 +7,6 @@ use Respect\Validation\Validator;
 use webspell_ng\UserSession;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
-use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\SupportTicketStatus;
 
@@ -31,7 +30,7 @@ class SupportTicketStatusHandler {
             ->setParameter(1, UserSession::getUserId());
 
         $status_query = $queryBuilder->executeQuery();
-        $status_result = $status_query->fetch();
+        $status_result = $status_query->fetchAssociative();
 
         if (empty($status_result)) {
             return self::insertStatus($ticket_id, UserSession::getUserId());
@@ -42,7 +41,7 @@ class SupportTicketStatusHandler {
             UserHandler::getUserByUserId($status_result['userID'])
         );
         $status->setDate(
-            DateUtils::getDateTimeByMktimeValue($status_result['date'])
+            new \DateTime($status_result['date'])
         );
 
         return $status;
@@ -66,7 +65,7 @@ class SupportTicketStatusHandler {
                     [
                         0 => $ticket_id,
                         1 => $status->getUser()->getUserId(),
-                        2 => $status->getDate()->getTimestamp()
+                        2 => $status->getDate()->format("Y-m-d H:i:s")
                     ]
                 );
 
@@ -102,7 +101,7 @@ class SupportTicketStatusHandler {
             ->update(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_SUPPORT_TICKETS_STATUS)
             ->set("date", "?")
             ->where("ticketID = ?", "userID = ?")
-            ->setParameter(0, $status->getDate()->getTimestamp())
+            ->setParameter(0, $status->getDate()->format("Y-m-d H:i:s"))
             ->setParameter(1, $ticket_id)
             ->setParameter(2, $status->getUser()->getUserId());
 

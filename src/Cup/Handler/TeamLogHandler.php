@@ -4,7 +4,6 @@ namespace myrisk\Cup\Handler;
 
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
-use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Team;
 use myrisk\Cup\TeamLog;
@@ -31,15 +30,16 @@ class TeamLogHandler {
 
         $team_logs = array();
 
-        while ($logs_result = $logs_query->fetch())
+        $logs_results = $logs_query->fetchAllAssociative();
+        foreach ($logs_results as $logs_result)
         {
 
             $team_log = new TeamLog();
             $team_log->setTeamName($logs_result['teamName']);
             $team_log->setInfo($logs_result['action']);
-            $team_log->setParentId($logs_result['parent_id']);
+            $team_log->setParentId((int) $logs_result['parent_id']);
             $team_log->setDate(
-                DateUtils::getDateTimeByMktimeValue((int) $logs_result['date'])
+                new \DateTime((int) $logs_result['date'])
             );
 
             if (!is_null($logs_result['kicked_id'])) {
@@ -80,7 +80,7 @@ class TeamLogHandler {
                     [
                         0 => $cup_team->getTeamId(),
                         1 => $cup_team->getName(),
-                        2 => $log->getDate()->getTimestamp(),
+                        2 => $log->getDate()->format("Y-m-d H:i:s"),
                         3 => $kicked_by_user_id,
                         4 => $log->getParentId(),
                         5 => $log->getInfo()

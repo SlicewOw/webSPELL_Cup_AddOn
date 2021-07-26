@@ -8,7 +8,6 @@ use webspell_ng\UserSession;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Exception\AccessDeniedException;
 use webspell_ng\Handler\UserHandler;
-use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\SupportTicket;
 use myrisk\Cup\Enum\SupportTicketEnums;
@@ -38,7 +37,7 @@ class SupportTicketHandler {
             ->setParameter(0, $ticket_id);
 
         $ticket_query = $queryBuilder->executeQuery();
-        $ticket_result = $ticket_query->fetch();
+        $ticket_result = $ticket_query->fetchAssociative();
 
         if (empty($ticket_result)) {
             throw new \UnexpectedValueException('unknown_support_ticket');
@@ -50,19 +49,19 @@ class SupportTicketHandler {
         $ticket->setText($ticket_result['text']);
         $ticket->setStatus($ticket_result['status']);
         $ticket->setStartDate(
-            DateUtils::getDateTimeByMktimeValue($ticket_result['start_date'])
+            new \DateTime($ticket_result['start_date'])
         );
         $ticket->setOpener(
             UserHandler::getUserByUserId($ticket_result['userID'])
         );
         if (!is_null($ticket_result['take_date'])) {
             $ticket->setTakeDate(
-                DateUtils::getDateTimeByMktimeValue($ticket_result['take_date'])
+                new \DateTime($ticket_result['take_date'])
             );
         }
         if (!is_null($ticket_result['closed_date'])) {
             $ticket->setCloseDate(
-                DateUtils::getDateTimeByMktimeValue($ticket_result['closed_date'])
+                new \DateTime($ticket_result['closed_date'])
             );
         }
         if (!is_null($ticket_result['categoryID'])) {
@@ -128,11 +127,12 @@ class SupportTicketHandler {
 
         $ticket_array = array();
 
-        while ($ticket_result = $ticket_query->fetch())
+        $ticket_results = $ticket_query->fetchAllAssociative();
+        foreach ($ticket_results as $ticket_result)
         {
             array_push(
                 $ticket_array,
-                self::getTicketByTicketId($ticket_result['ticketID'])
+                self::getTicketByTicketId((int) $ticket_result['ticketID'])
             );
         }
 
@@ -196,7 +196,8 @@ class SupportTicketHandler {
 
         $ticket_array = array();
 
-        while ($ticket_result = $ticket_query->fetch())
+        $ticket_results = $ticket_query->fetchAllAssociative();
+        foreach ($ticket_results as $ticket_result)
         {
             array_push(
                 $ticket_array,
@@ -251,7 +252,7 @@ class SupportTicketHandler {
                     [
                         0 => $ticket->getSubject(),
                         1 => $ticket->getText(),
-                        2 => $ticket->getStartDate()->getTimestamp(),
+                        2 => $ticket->getStartDate()->format("Y-m-d H:i:s"),
                         3 => $ticket->getOpener()->getUserId(),
                         4 => $category_id,
                         5 => $cup_id,
@@ -274,8 +275,8 @@ class SupportTicketHandler {
     private static function updateTicket(SupportTicket $ticket): void
     {
 
-        $take_timestamp = (!is_null($ticket->getTakeDate())) ? $ticket->getTakeDate()->getTimestamp() : null;
-        $close_timestamp = (!is_null($ticket->getCloseDate())) ? $ticket->getCloseDate()->getTimestamp() : null;
+        $take_timestamp = (!is_null($ticket->getTakeDate())) ? $ticket->getTakeDate()->format("Y-m-d H:i:s") : null;
+        $close_timestamp = (!is_null($ticket->getCloseDate())) ? $ticket->getCloseDate()->format("Y-m-d H:i:s") : null;
 
         $admin_id = (!is_null($ticket->getAdmin())) ? $ticket->getAdmin()->getUserId() : null;
         $category_id = !is_null($ticket->getCategory()) ? $ticket->getCategory()->getCategoryId() : null;
@@ -315,7 +316,7 @@ class SupportTicketHandler {
             ->setParameter(8, $match_id)
             ->setParameter(9, $team_id)
             ->setParameter(10, $opponent_id)
-            ->setParameter(11, $ticket->getStartDate()->getTimestamp())
+            ->setParameter(11, $ticket->getStartDate()->format("Y-m-d H:i:s"))
             ->setParameter(12, $ticket->getStatus())
             ->setParameter(13, $ticket->getOpener()->getUserId())
             ->setParameter(14, $ticket->getTicketId());

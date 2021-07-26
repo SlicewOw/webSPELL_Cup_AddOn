@@ -9,7 +9,6 @@ use webspell_ng\UserSession;
 use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\UserHandler;
 use webspell_ng\Handler\UserLogHandler;
-use webspell_ng\Utils\DateUtils;
 
 use myrisk\Cup\Team;
 use myrisk\Cup\TeamMember;
@@ -35,7 +34,8 @@ class TeamMemberHandler {
 
         $member_query = $queryBuilder->executeQuery();
 
-        while ($member_result = $member_query->fetch()) {
+        $member_results = $member_query->fetchAllAssociative();
+        foreach ($member_results as $member_result) {
 
             $member = new TeamMember();
             $member->setMemberId((int) $member_result['memberID']);
@@ -47,12 +47,12 @@ class TeamMemberHandler {
                 TeamMemberPositionHandler::getPositionByPositionId($member_result['position'])
             );
             $member->setJoinDate(
-                DateUtils::getDateTimeByMktimeValue($member_result['join_date'])
+                new \DateTime($member_result['join_date'])
             );
 
             if (!is_null($member_result['left_date'])) {
                 $member->setLeftDate(
-                    DateUtils::getDateTimeByMktimeValue($member_result['left_date'])
+                    new \DateTime($member_result['left_date'])
                 );
             }
 
@@ -160,7 +160,7 @@ class TeamMemberHandler {
                         0 => $member->getUser()->getUserId(),
                         1 => $team->getTeamId(),
                         2 => $member->getPosition()->getPositionId(),
-                        3 => $member->getJoinDate()->getTimestamp(),
+                        3 => $member->getJoinDate()->format("Y-m-d H:i:s"),
                         4 => 1
                     ]
                 );
@@ -176,7 +176,7 @@ class TeamMemberHandler {
     private static function updateTeamMember(Team $team, TeamMember $member): void
     {
 
-        $left_date = (!is_null($member->getLeftDate())) ? $member->getLeftDate()->getTimestamp() : null;
+        $left_date = (!is_null($member->getLeftDate())) ? $member->getLeftDate()->format("Y-m-d H:i:s") : null;
         $kick_id = (!is_null($member->getKickId())) ? $member->getKickId() : null;
 
         $is_active = ($member->isActive()) ? 1 : 0;
@@ -191,7 +191,7 @@ class TeamMemberHandler {
             ->set("active", "?")
             ->where("teamID = ?", "userID = ?")
             ->setParameter(0, $member->getPosition()->getPositionId())
-            ->setParameter(1, $member->getJoinDate()->getTimestamp())
+            ->setParameter(1, $member->getJoinDate()->format("Y-m-d H:i:s"))
             ->setParameter(2, $left_date)
             ->setParameter(3, $kick_id)
             ->setParameter(4, $is_active)

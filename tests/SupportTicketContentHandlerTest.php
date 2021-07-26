@@ -137,7 +137,7 @@ final class SupportTicketContentHandlerTest extends TestCase
 
         $this->assertGreaterThan(0, $ticket_content_01->getContentId(), "Content ID is set.");
         $this->assertEquals($content_text, $ticket_content_01->getText(), "Content text is set.");
-        $this->assertGreaterThan(0, $ticket_content_01->getDate()->getTimestamp(), "Content date is set.");
+        $this->assertGreaterThan(new \DateTime("5 minutes ago"), $ticket_content_01->getDate(), "Content date is set.");
 
         $ticket_content_02 = $ticket_content_array[1];
 
