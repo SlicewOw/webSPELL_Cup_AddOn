@@ -60,7 +60,7 @@ class SupportTicket {
     private $user_status;
 
     /**
-     * @var User $opened_by_user
+     * @var ?User $opened_by_user
      */
     private $opened_by_user;
 
@@ -231,8 +231,11 @@ class SupportTicket {
         $this->opened_by_user = $opener;
     }
 
-    public function getOpener(): ?User
+    public function getOpener(): User
     {
+        if (is_null($this->opened_by_user)) {
+            throw new \UnexpectedValueException("Support ticket opener is not set.");
+        }
         return $this->opened_by_user;
     }
 
@@ -241,8 +244,11 @@ class SupportTicket {
         $this->closed_by_user = $closer;
     }
 
-    public function getCloser(): ?User
+    public function getCloser(): User
     {
+        if (is_null($this->closed_by_user)) {
+            throw new \UnexpectedValueException("Support ticket closer is not set.");
+        }
         return $this->closed_by_user;
     }
 
@@ -264,6 +270,11 @@ class SupportTicket {
     public function getStatus(): int
     {
         return $this->ticket_status;
+    }
+
+    public function isClosed(): bool
+    {
+        return $this->ticket_status == SupportTicketEnums::TICKET_STATUS_DONE;
     }
 
     public function hasUnreadContent(): bool

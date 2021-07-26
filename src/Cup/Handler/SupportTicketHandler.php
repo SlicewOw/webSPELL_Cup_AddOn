@@ -218,6 +218,10 @@ class SupportTicketHandler {
             self::updateTicket($ticket);
         }
 
+        if (is_null($ticket->getTicketId())) {
+            throw new \InvalidArgumentException("ticket_id_is_invalid");
+        }
+
         return self::getTicketByTicketId($ticket->getTicketId());
 
     }
@@ -280,7 +284,7 @@ class SupportTicketHandler {
 
         $admin_id = (!is_null($ticket->getAdmin())) ? $ticket->getAdmin()->getUserId() : null;
         $category_id = !is_null($ticket->getCategory()) ? $ticket->getCategory()->getCategoryId() : null;
-        $closed_by_id = (!is_null($ticket->getCloser())) ? $ticket->getCloser()->getUserId() : null;
+        $closed_by_id = $ticket->isClosed() ? $ticket->getCloser()->getUserId() : null;
 
         $cup_id = (!is_null($ticket->getCup())) ? $ticket->getCup()->getCupId() : null;
         $match_id = (!is_null($ticket->getMatch())) ? $ticket->getMatch()->getMatchId() : null;

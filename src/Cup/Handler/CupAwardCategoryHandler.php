@@ -29,14 +29,14 @@ class CupAwardCategoryHandler {
             ->setParameter(0, $category_id);
 
         $category_query = $queryBuilder->executeQuery();
-        $category_result = $category_query->fetch();
+        $category_result = $category_query->fetchAssociative();
 
         if (empty($category_result)) {
             throw new \UnexpectedValueException('unknown_cup_award_category');
         }
 
         $category = new CupAwardCategory();
-        $category->setCategoryId($category_result['categoryID']);
+        $category->setCategoryId((int) $category_result['categoryID']);
         $category->setName($category_result['name']);
         $category->setIcon($category_result['icon']);
         $category->setActiveColumn($category_result['active_column']);
@@ -75,7 +75,8 @@ class CupAwardCategoryHandler {
 
         $award_categories = array();
 
-        while ($category_result = $category_query->fetch())
+        $category_results = $category_query->fetchAllAssociative();
+        foreach ($category_results as $category_result)
         {
             array_push(
                 $award_categories,
@@ -94,6 +95,10 @@ class CupAwardCategoryHandler {
             $category = self::insertCategory($category);
         } else {
             self::updateCategory($category);
+        }
+
+        if (is_null($category->getCategoryId())) {
+            throw new \InvalidArgumentException("category_id_is_invalid");
         }
 
         return self::getCategoryByCategoryId($category->getCategoryId());

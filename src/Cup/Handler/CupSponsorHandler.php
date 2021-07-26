@@ -22,12 +22,13 @@ class CupSponsorHandler {
 
         $sponsor_query = $queryBuilder->executeQuery();
 
-        while ($sponsor_result = $sponsor_query->fetch()) {
+        $sponsor_results = $sponsor_query->fetchAllAssociative();
+        foreach ($sponsor_results as $sponsor_result) {
 
             $sponsor = new CupSponsor();
-            $sponsor->setCupSponsorId($sponsor_result['id']);
+            $sponsor->setCupSponsorId((int) $sponsor_result['id']);
             $sponsor->setSponsor(
-                SponsorHandler::getSponsorBySponsorId($sponsor_result['sponsorID'])
+                SponsorHandler::getSponsorBySponsorId((int) $sponsor_result['sponsorID'])
             );
 
             $cup->addSponsor($sponsor);

@@ -121,6 +121,10 @@ class TeamMemberHandler {
             self::saveSingleTeamMember($team, $member);
         }
 
+        if (is_null($team->getTeamId())) {
+            throw new \InvalidArgumentException("team_id_is_invalid");
+        }
+
         return TeamHandler::getTeamByTeamId($team->getTeamId());
 
     }
@@ -250,33 +254,39 @@ class TeamMemberHandler {
 
     private static function saveUserLogLeftCupTeamMember(Team $team, TeamMember $member): void
     {
-        UserLogHandler::saveUserLog(
-            $member->getUser(),
-            self::getCupTeamMemberUserLog($team, "cup_team_left")
-        );
+        if (!is_null($team->getTeamId())) {
+            UserLogHandler::saveUserLog(
+                $member->getUser(),
+                self::getCupTeamMemberUserLog($team->getTeamId(), "cup_team_left")
+            );
+        }
     }
 
     private static function saveUserLogKickedCupTeamMember(Team $team, TeamMember $member): void
     {
-        UserLogHandler::saveUserLog(
-            $member->getUser(),
-            self::getCupTeamMemberUserLog($team, "cup_team_kicked")
-        );
+        if (!is_null($team->getTeamId())) {
+            UserLogHandler::saveUserLog(
+                $member->getUser(),
+                self::getCupTeamMemberUserLog($team->getTeamId(), "cup_team_kicked")
+            );
+        }
     }
 
     private static function saveUserLogNewCupTeamMember(Team $team, TeamMember $member): void
     {
-        UserLogHandler::saveUserLog(
-            $member->getUser(),
-            self::getCupTeamMemberUserLog($team, "cup_team_joined")
-        );
+        if (!is_null($team->getTeamId())) {
+            UserLogHandler::saveUserLog(
+                $member->getUser(),
+                self::getCupTeamMemberUserLog($team->getTeamId(), "cup_team_joined")
+            );
+        }
     }
 
-    private static function getCupTeamMemberUserLog(Team $team, string $info): UserLog
+    private static function getCupTeamMemberUserLog(int $team_id, string $info): UserLog
     {
         $log = new UserLog();
         $log->setInfo($info);
-        $log->setParentId($team->getTeamId());
+        $log->setParentId($team_id);
         return $log;
     }
 

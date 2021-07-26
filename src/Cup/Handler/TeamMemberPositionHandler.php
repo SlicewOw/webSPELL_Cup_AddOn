@@ -28,7 +28,7 @@ class TeamMemberPositionHandler {
             ->setParameter(0, $position_id);
 
         $position_query = $queryBuilder->executeQuery();
-        $position_result = $position_query->fetch();
+        $position_result = $position_query->fetchAssociative();
 
         if (empty($position_result)) {
             throw new \UnexpectedValueException('unknown_cup_team_member_position');
@@ -74,7 +74,7 @@ class TeamMemberPositionHandler {
             ->setParameter(0, $position_name);
 
         $position_query = $queryBuilder->executeQuery();
-        $position_result = $position_query->fetch();
+        $position_result = $position_query->fetchAssociative();
 
         if (empty($position_result)) {
             // @codeCoverageIgnoreStart

@@ -85,7 +85,6 @@ final class SupportTicketHandlerTest extends TestCase
         $this->assertEquals($ticket_text, $ticket->getText(), "Text is set.");
         $this->assertEquals(SupportTicketEnums::TICKET_STATUS_OPEN, $ticket->getStatus(), "Ticket status is set.");
         $this->assertNull($ticket->getAdmin(), "Admin is not set yet.");
-        $this->assertNull($ticket->getCloser(), "Admin is not set yet.");
 
         $changed_ticket_subject = "Test Ticket " . StringFormatterUtils::getRandomString(10, 2);
         $changed_ticket_text = "Test Content \n " . StringFormatterUtils::getRandomString(10, 2) . " \n " . StringFormatterUtils::getRandomString(10, 2);
@@ -105,7 +104,6 @@ final class SupportTicketHandlerTest extends TestCase
         $this->assertEquals($changed_ticket_text, $changed_ticket->getText(), "Text is set.");
         $this->assertEquals(SupportTicketEnums::TICKET_STATUS_IN_PROGRESS, $changed_ticket->getStatus(), "Ticket status is set.");
         $this->assertEquals(self::$admin->getUserId(), $changed_ticket->getAdmin()->getUserId(), "Admin is set.");
-        $this->assertNull($ticket->getCloser(), "Admin is not set yet.");
 
         SupportTicketHandler::closeTicket($ticket->getTicketId(), self::$admin);
 

@@ -294,65 +294,77 @@ class ParticipantHandler {
 
     private static function saveUserLogJoinCup(Cup $cup, UserParticipant $participant): void
     {
-        UserLogHandler::saveUserLog(
-            $participant->getUser(),
-            self::getUserParticipantUserLog($cup, CupEnums::CUP_PARTICIPANT_JOINED)
-        );
+        if (!is_null($cup->getCupId())) {
+            UserLogHandler::saveUserLog(
+                $participant->getUser(),
+                self::getUserParticipantUserLog($cup->getCupId(), CupEnums::CUP_PARTICIPANT_JOINED)
+            );
+        }
     }
 
     private static function saveTeamLogJoinCup(Cup $cup, TeamParticipant $participant): void
     {
-        TeamLogHandler::saveTeamLog(
-            $participant->getTeam(),
-            self::getTeamParticipantTeamLog($cup, CupEnums::CUP_PARTICIPANT_JOINED)
-        );
+        if (!is_null($cup->getCupId())) {
+            TeamLogHandler::saveTeamLog(
+                $participant->getTeam(),
+                self::getTeamParticipantTeamLog($cup->getCupId(), CupEnums::CUP_PARTICIPANT_JOINED)
+            );
+        }
     }
 
     private static function saveUserLogCheckedInCup(Cup $cup, UserParticipant $participant): void
     {
-        UserLogHandler::saveUserLog(
-            $participant->getUser(),
-            self::getUserParticipantUserLog($cup, CupEnums::CUP_PARTICIPANT_CHECKED_IN)
-        );
+        if (!is_null($cup->getCupId())) {
+            UserLogHandler::saveUserLog(
+                $participant->getUser(),
+                self::getUserParticipantUserLog($cup->getCupId(), CupEnums::CUP_PARTICIPANT_CHECKED_IN)
+            );
+        }
     }
 
     private static function saveTeamLogCheckedInCup(Cup $cup, TeamParticipant $participant): void
     {
-        TeamLogHandler::saveTeamLog(
-            $participant->getTeam(),
-            self::getTeamParticipantTeamLog($cup, CupEnums::CUP_PARTICIPANT_CHECKED_IN)
-        );
+        if (!is_null($cup->getCupId())) {
+            TeamLogHandler::saveTeamLog(
+                $participant->getTeam(),
+                self::getTeamParticipantTeamLog($cup->getCupId(), CupEnums::CUP_PARTICIPANT_CHECKED_IN)
+            );
+        }
     }
 
     private static function saveUserLogLeftCup(Cup $cup, UserParticipant $participant): void
     {
-        UserLogHandler::saveUserLog(
-            $participant->getUser(),
-            self::getUserParticipantUserLog($cup, CupEnums::CUP_PARTICIPANT_LEFT)
-        );
+        if (!is_null($cup->getCupId())) {
+            UserLogHandler::saveUserLog(
+                $participant->getUser(),
+                self::getUserParticipantUserLog($cup->getCupId(), CupEnums::CUP_PARTICIPANT_LEFT)
+            );
+        }
     }
 
     private static function saveTeamLogLeftCup(Cup $cup, TeamParticipant $participant): void
     {
-        TeamLogHandler::saveTeamLog(
-            $participant->getTeam(),
-            self::getTeamParticipantTeamLog($cup, CupEnums::CUP_PARTICIPANT_LEFT)
-        );
+        if (!is_null($cup->getCupId())) {
+            TeamLogHandler::saveTeamLog(
+                $participant->getTeam(),
+                self::getTeamParticipantTeamLog($cup->getCupId(), CupEnums::CUP_PARTICIPANT_LEFT)
+            );
+        }
     }
 
-    private static function getUserParticipantUserLog(Cup $cup, string $info): UserLog
+    private static function getUserParticipantUserLog(int $cup_id, string $info): UserLog
     {
         $log = new UserLog();
         $log->setInfo($info);
-        $log->setParentId($cup->getCupId());
+        $log->setParentId($cup_id);
         return $log;
     }
 
-    private static function getTeamParticipantTeamLog(Cup $cup, string $info): TeamLog
+    private static function getTeamParticipantTeamLog(int $cup_id, string $info): TeamLog
     {
         $log = new TeamLog();
         $log->setInfo($info);
-        $log->setParentId($cup->getCupId());
+        $log->setParentId($cup_id);
         return $log;
     }
 

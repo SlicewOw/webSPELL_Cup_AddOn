@@ -73,6 +73,9 @@ class CupAwardHandler {
      */
     public static function getCupAwardsOfUser(User $user): array
     {
+        if (is_null($user->getUserId())) {
+            return array();
+        }
         return self::getAwardsByParameters("userID", $user->getUserId());
     }
 
@@ -81,6 +84,9 @@ class CupAwardHandler {
      */
     public static function getCupAwardsOfTeam(Team $team): array
     {
+        if (is_null($team->getTeamId())) {
+            return array();
+        }
         return self::getAwardsByParameters("teamID", $team->getTeamId());
     }
 
@@ -89,6 +95,9 @@ class CupAwardHandler {
      */
     public static function getCupAwardsOfAwardCategory(CupAwardCategory $category): array
     {
+        if (is_null($category->getCategoryId())) {
+            return array();
+        }
         return self::getAwardsByParameters("categoryID", $category->getCategoryId());
     }
 
@@ -134,6 +143,10 @@ class CupAwardHandler {
             $award = self::insertAward($award);
         } else {
             self::updateAward($award);
+        }
+
+        if (is_null($award->getAwardId())) {
+            throw new \InvalidArgumentException("award_id_is_invalid");
         }
 
         return self::getAwardByAwardId($award->getAwardId());

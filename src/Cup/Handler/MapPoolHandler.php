@@ -28,7 +28,7 @@ class MapPoolHandler {
             ->setParameter(0, $map_pool_id);
 
         $pool_query = $queryBuilder->executeQuery();
-        $pool_result = $pool_query->fetch();
+        $pool_result = $pool_query->fetchAssociative();
 
         if (empty($pool_result)) {
             throw new \UnexpectedValueException('unknown_map_pool');
@@ -68,7 +68,9 @@ class MapPoolHandler {
         $pool_query = $queryBuilder->executeQuery();
 
         $map_pools = array();
-        while ($pool_result = $pool_query->fetch())
+
+        $pool_results = $pool_query->fetchAllAssociative();
+        foreach ($pool_results as $pool_result)
         {
             array_push(
                 $map_pools,
@@ -87,6 +89,10 @@ class MapPoolHandler {
             $map_pool = self::insertMapPool($map_pool);
         } else {
             self::updateMapPool($map_pool);
+        }
+
+        if (is_null($map_pool->getMapPoolId())) {
+            throw new \InvalidArgumentException("mappool_id_is_invalid");
         }
 
         return self::getMapPoolById($map_pool->getMapPoolId());

@@ -18,6 +18,10 @@ class AdminHandler {
     public static function getAdminsOfCup(Cup $cup): array
     {
 
+        if (is_null($cup->getCupId())) {
+            return array();
+        }
+
         $cup_admins = array();
 
         $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
@@ -29,10 +33,11 @@ class AdminHandler {
 
         $admin_query = $queryBuilder->executeQuery();
 
-        while ($admin_result = $admin_query->fetch()) {
+        $admin_results = $admin_query->fetchAllAssociative();
+        foreach ($admin_results as $admin_result) {
 
             $cup_admin = self::getAdminByUserId(
-                $admin_result['userID'],
+                (int) $admin_result['userID'],
                 $cup->getCupId()
             );
 
@@ -64,7 +69,7 @@ class AdminHandler {
             ->setParameter(1, $cup_id);
 
         $admin_query = $queryBuilder->executeQuery();
-        $admin_result = $admin_query->fetch();
+        $admin_result = $admin_query->fetchAssociative();
 
         if (empty($admin_result)) {
             throw new \InvalidArgumentException('unknown_cup_admin');

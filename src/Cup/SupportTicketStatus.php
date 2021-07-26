@@ -34,6 +34,9 @@ class SupportTicketStatus {
 
     public function getDate(): \DateTime
     {
+        if (is_null($this->date)) {
+            return new \DateTime("now");
+        }
         return $this->date;
     }
 

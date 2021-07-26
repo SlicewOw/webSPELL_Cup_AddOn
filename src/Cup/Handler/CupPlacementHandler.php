@@ -24,7 +24,7 @@ class CupPlacementHandler {
             ->setParameter(1, $team->getTeamId());
 
         $placement_query = $queryBuilder->executeQuery();
-        $placement_result = $placement_query->fetch();
+        $placement_result = $placement_query->fetchAssociative();
 
         if (empty($placement_result)) {
             throw new \UnexpectedValueException('unknown_cup_placement');

@@ -93,14 +93,14 @@ class CupHandler {
     public static function saveCup(Cup $cup): Cup
     {
 
-        if (is_null($cup->getRule())) {
-            throw new \InvalidArgumentException('rule_of_cup_is_not_set_yet');
-        }
-
         if (is_null($cup->getCupId())) {
             $cup = self::insertCup($cup);
         } else {
             self::updateCup($cup);
+        }
+
+        if (is_null($cup->getCupId())) {
+            throw new \InvalidArgumentException("cup_id_is_invalid");
         }
 
         return self::getCupByCupId($cup->getCupId());
@@ -109,6 +109,10 @@ class CupHandler {
 
     private static function insertCup(Cup $cup): Cup
     {
+
+        if (is_null($cup->getRule())) {
+            throw new \InvalidArgumentException('rule_of_cup_is_not_set_yet');
+        }
 
         $map_pool_id = (!is_null($cup->getMapPool())) ? $cup->getMapPool()->getMapPoolId() : null;
 
@@ -158,6 +162,10 @@ class CupHandler {
 
     private static function updateCup(Cup $cup): void
     {
+
+        if (is_null($cup->getRule())) {
+            throw new \InvalidArgumentException('rule_of_cup_is_not_set_yet');
+        }
 
         $map_pool_id = (!is_null($cup->getMapPool())) ? $cup->getMapPool()->getMapPoolId() : null;
 

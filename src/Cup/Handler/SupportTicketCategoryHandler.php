@@ -28,7 +28,7 @@ class SupportTicketCategoryHandler {
             ->setParameter(0, $category_id);
 
         $category_query = $queryBuilder->executeQuery();
-        $category_result = $category_query->fetch();
+        $category_result = $category_query->fetchAssociative();
 
         if (empty($category_result)) {
             throw new \UnexpectedValueException("unknown_support_ticket_category");

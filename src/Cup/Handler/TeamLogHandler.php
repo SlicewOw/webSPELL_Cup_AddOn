@@ -39,7 +39,7 @@ class TeamLogHandler {
             $team_log->setInfo($logs_result['action']);
             $team_log->setParentId((int) $logs_result['parent_id']);
             $team_log->setDate(
-                new \DateTime((int) $logs_result['date'])
+                new \DateTime($logs_result['date'])
             );
 
             if (!is_null($logs_result['kicked_id'])) {

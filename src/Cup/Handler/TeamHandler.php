@@ -152,6 +152,10 @@ class TeamHandler {
             self::updateTeam($team);
         }
 
+        if (is_null($team->getTeamId())) {
+            throw new \InvalidArgumentException("team_id_is_invalid");
+        }
+
         return TeamHandler::getTeamByTeamId($team->getTeamId());
 
     }

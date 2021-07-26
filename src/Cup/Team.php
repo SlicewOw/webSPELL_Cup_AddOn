@@ -2,11 +2,11 @@
 
 namespace myrisk\Cup;
 
-use \webspell_ng\Country;
-use \webspell_ng\Handler\CountryHandler;
+use webspell_ng\Country;
+use webspell_ng\Handler\CountryHandler;
 
-use \myrisk\Cup\TeamMember;
-use \myrisk\Cup\Enum\TeamEnums;
+use myrisk\Cup\TeamMember;
+use myrisk\Cup\Enum\TeamEnums;
 
 class Team {
 
@@ -16,7 +16,7 @@ class Team {
     private $team_id;
 
     /**
-     * @var \DateTime $date
+     * @var ?\DateTime $date
      */
     private $date;
 
@@ -80,8 +80,11 @@ class Team {
         $this->date = $date;
     }
 
-    public function getCreationDate(): ?\DateTime
+    public function getCreationDate(): \DateTime
     {
+        if (is_null($this->date)) {
+            return new \DateTime("now");
+        }
         return $this->date;
     }
 
