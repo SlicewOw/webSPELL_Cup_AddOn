@@ -8,6 +8,7 @@ use webspell_ng\WebSpellDatabaseConnection;
 use webspell_ng\Handler\GameHandler;
 
 use myrisk\Cup\Cup;
+use myrisk\Cup\Enum\CupEnums;
 use myrisk\Cup\Handler\AdminHandler;
 use myrisk\Cup\Handler\CupSponsorHandler;
 
@@ -198,6 +199,32 @@ class CupHandler {
             ->setParameter(11, $cup->getCupId());
 
         $queryBuilder->executeQuery();
+
+    }
+
+    public static function startCup(Cup $cup): void
+    {
+
+        // TODO: Implement check if cup is startable
+
+        // TODO: Implement creation of bracket
+
+        $cup->setStatus(CupEnums::CUP_STATUS_RUNNING);
+
+        self::updateCup($cup);
+
+    }
+
+    public static function finishCup(Cup $cup): void
+    {
+
+        // TODO: Implement check if cup is finishable
+
+        // TODO: Implement creation of placements
+
+        $cup->setStatus(CupEnums::CUP_STATUS_FINISHED);
+
+        self::updateCup($cup);
 
     }
 

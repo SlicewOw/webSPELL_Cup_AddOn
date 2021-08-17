@@ -156,9 +156,19 @@ class Cup {
         $this->cup_status = $cup_status;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): int
     {
         return $this->cup_status;
+    }
+
+    public function isRunning(): bool
+    {
+        return ($this->getStatus() > 1 && $this->getStatus() < 4);
+    }
+
+    public function isFinished(): bool
+    {
+        return ($this->getStatus() == 4);
     }
 
     public function getPhase(): string

@@ -43,6 +43,8 @@ final class CupTest extends TestCase
         $this->assertEquals(3, $cup->getTotalRoundCount(), "Total count of rounds is set.");
         $this->assertEquals("5on5", $cup->getMode(), "Cup mode is set.");
         $this->assertEquals(3, $cup->getStatus(), "Cup status is set.");
+        $this->assertTrue($cup->isRunning(), "Cup status is 'running'.");
+        $this->assertFalse($cup->isFinished(), "Cup status is not 'finished'.");
         $this->assertEquals($datetime_now, $cup->getCheckInDateTime(), "Cup check-in datetime is set.");
         $this->assertEquals($datetime_later, $cup->getStartDateTime(), "Cup start datetime is set.");
         $this->assertEquals(0, count($cup->getCupParticipants()), "Cup participant count is expected.");

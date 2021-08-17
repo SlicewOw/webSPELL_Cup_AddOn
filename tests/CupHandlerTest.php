@@ -97,6 +97,8 @@ final class CupHandlerTest extends TestCase
         $this->assertInstanceOf(Cup::class, $updated_cup);
         $this->assertEquals(CupEnums::CUP_SIZE_8, $updated_cup->getSize(), "Cup size is set correctly.");
         $this->assertEquals(CupEnums::CUP_STATUS_FINISHED, $updated_cup->getStatus(), "Cup status is set correctly.");
+        $this->assertFalse($cup->isRunning(), "Cup status is not 'running'.");
+        $this->assertTrue($updated_cup->isFinished(), "Cup status is set correctly.");
         $this->assertEquals(CupEnums::CUP_PHASE_FINISHED, $updated_cup->getPhase(), "Cup phase is set correctly.");
         $this->assertEquals($cup->getRule()->getRuleId(), $updated_cup->getRule()->getRuleId(), "Rule is set.");
         $this->assertTrue($cup->isSaved(), "Cup is saved.");
