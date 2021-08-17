@@ -90,6 +90,15 @@ final class MapPoolHandlerTest extends TestCase
 
     }
 
+    public function testIfMapPoolsAreReturnedAsOptions(): void
+    {
+
+        $map_pools_as_options = MapPoolHandler::getMapPoolsAsOptions();
+
+        $this->assertNotEmpty($map_pools_as_options, "Options are returned in general.");
+
+    }
+
     public function testIfInvalidArgumentExceptionIsThrownIfMapPoolIdIsInvalid(): void
     {
 

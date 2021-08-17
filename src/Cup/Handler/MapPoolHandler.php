@@ -82,6 +82,41 @@ class MapPoolHandler {
 
     }
 
+    public static function getMapPoolsAsOptions(?int $selected_map_pool_id = null): string
+    {
+
+        $all_map_pools = self::getAllMapPools();
+
+        $map_pools_as_options = "";
+        $active_game_tag = null;
+
+        foreach ($all_map_pools as $map_pool) {
+
+            if (empty($active_game_tag) || ($active_game_tag != $map_pool->getGame()->getTag())) {
+                $active_game_tag = $map_pool->getGame()->getTag();
+                if (!empty($active_game_tag)) {
+                    $map_pools_as_options .= '</optgroup>';
+                }
+                $map_pools_as_options .= '<optgroup label="' . $map_pool->getGame()->getName() . '">';
+            }
+
+            $map_count_of_map_pool = count($map_pool->getMaps());
+            $map_pools_as_options .= '<option value="' . $map_pool->getMapPoolId() . '">' . $map_pool->getName() . ' (' . $map_count_of_map_pool . ' Maps)' . '</option';
+
+        }
+
+        if (!is_null($selected_map_pool_id)) {
+            $map_pools_as_options = str_replace(
+                'value="' . $selected_map_pool_id . '"',
+                'value="' . $selected_map_pool_id . '" selected="selected',
+                $map_pools_as_options
+            );
+        }
+
+        return $map_pools_as_options;
+
+    }
+
     public static function saveMapPool(MapPool $map_pool): MapPool
     {
 
