@@ -42,6 +42,7 @@ final class CupTest extends TestCase
         $this->assertEquals(CupEnums::CUP_SIZE_8, $cup->getSize(), "Cup size is set.");
         $this->assertEquals(3, $cup->getTotalRoundCount(), "Total count of rounds is set.");
         $this->assertEquals("5on5", $cup->getMode(), "Cup mode is set.");
+        $this->assertEquals(5, $cup->getRequiredPlayersPerTeam(), "5on5 cup requires 5 players.");
         $this->assertEquals(3, $cup->getStatus(), "Cup status is set.");
         $this->assertTrue($cup->isRunning(), "Cup status is 'running'.");
         $this->assertFalse($cup->isFinished(), "Cup status is not 'finished'.");

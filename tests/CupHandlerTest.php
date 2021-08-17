@@ -83,13 +83,18 @@ final class CupHandlerTest extends TestCase
         $this->assertEquals(CupEnums::CUP_SIZE_8, $cup->getSize(), "Cup size is set correctly.");
         $this->assertEquals(CupEnums::CUP_PHASE_RUNNING, $cup->getPhase(), "Cup phase is set correctly.");
         $this->assertGreaterThan(0, $cup->getRule()->getRuleId(), "Rule is set.");
+        $this->assertFalse($cup->isMapVoteEnabled(), "Map vote is disabled.");
         $this->assertFalse($cup->isSaved(), "Cup is not saved yet.");
         $this->assertTrue($cup->isAdminCup(), "Cup is for admins only.");
         $this->assertNull($cup->getMapPool(), "Map Pool is not set yet.");
 
+        $maximum_pps = random_int(1, 89999);
+
         $changed_cup = $cup;
         $changed_cup->setStatus(CupEnums::CUP_STATUS_FINISHED);
         $changed_cup->setIsSaved(true);
+        $changed_cup->setMapVoteEnabled(true);
+        $changed_cup->setMaximumOfPenaltyPoints($maximum_pps);
         $changed_cup->setMapPool(self::$map_pool);
 
         $updated_cup = CupHandler::saveCup($changed_cup);
@@ -97,6 +102,8 @@ final class CupHandlerTest extends TestCase
         $this->assertInstanceOf(Cup::class, $updated_cup);
         $this->assertEquals(CupEnums::CUP_SIZE_8, $updated_cup->getSize(), "Cup size is set correctly.");
         $this->assertEquals(CupEnums::CUP_STATUS_FINISHED, $updated_cup->getStatus(), "Cup status is set correctly.");
+        $this->assertEquals($maximum_pps, $updated_cup->getMaximumOfPenaltyPoints(), "Maximum of PPS is set correctly.");
+        $this->assertTrue($cup->isMapVoteEnabled(), "Map vote is enabled.");
         $this->assertFalse($cup->isRunning(), "Cup status is not 'running'.");
         $this->assertTrue($updated_cup->isFinished(), "Cup status is set correctly.");
         $this->assertEquals(CupEnums::CUP_PHASE_FINISHED, $updated_cup->getPhase(), "Cup phase is set correctly.");

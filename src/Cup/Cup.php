@@ -51,9 +51,19 @@ class Cup {
     private $cup_rule;
 
     /**
+     * @var bool $map_vote_enabled
+     */
+    private $map_vote_enabled = false;
+
+    /**
      * @var ?MapPool $map_pool
      */
     private $map_pool;
+
+    /**
+     * @var int $maximum_of_penalty_points
+     */
+    private $maximum_of_penalty_points = 99999;
 
     /**
      * @var array<CupSponsor> $cup_sponsors
@@ -118,9 +128,16 @@ class Cup {
         $this->cup_mode = $cup_mode;
     }
 
-    public function getMode(): ?string
+    public function getMode(): string
     {
         return $this->cup_mode;
+    }
+
+    // TODO: Implement logic to set this setting per cup (e.g. allow ONLY 5 players per team vs. >= 5 players per team for a 5on5 cup)
+    public function getRequiredPlayersPerTeam(): int
+    {
+        $exploded_mode = explode("on", $this->getMode());
+        return (int) $exploded_mode[0];
     }
 
     public function setSize(int $size): void
@@ -196,6 +213,16 @@ class Cup {
         return $this->cup_rule;
     }
 
+    public function setMapVoteEnabled(bool $map_vote_enabled): void
+    {
+        $this->map_vote_enabled = $map_vote_enabled;
+    }
+
+    public function isMapVoteEnabled(): bool
+    {
+        return $this->map_vote_enabled;
+    }
+
     public function setMapPool(MapPool $map_pool): void
     {
         $this->map_pool = $map_pool;
@@ -204,6 +231,16 @@ class Cup {
     public function getMapPool(): ?MapPool
     {
         return $this->map_pool;
+    }
+
+    public function setMaximumOfPenaltyPoints(int $maximum_of_penalty_points): void
+    {
+        $this->maximum_of_penalty_points = $maximum_of_penalty_points;
+    }
+
+    public function getMaximumOfPenaltyPoints(): int
+    {
+        return $this->maximum_of_penalty_points;
     }
 
     public function addSponsor(CupSponsor $sponsor): void

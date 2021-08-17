@@ -42,7 +42,11 @@ class CupHandler {
         $cup->setName($cup_result['name']);
         $cup->setMode($cup_result['mode']);
         $cup->setSize($cup_result['max_size']);
+        $cup->setMaximumOfPenaltyPoints((int) $cup_result['max_penalty']);
         $cup->setStatus((int) $cup_result['status']);
+        $cup->setMapVoteEnabled(
+            ($cup_result['mapvote_enable'] == 1)
+        );
         $cup->setCheckInDateTime(
             new \DateTime($cup_result['checkin_date'])
         );
@@ -130,7 +134,9 @@ class CupHandler {
                         'status' => '?',
                         'gameID' => '?',
                         'ruleID' => '?',
+                        'mapvote_enable' => '?',
                         'mappool' => '?',
+                        'max_penalty' => '?',
                         'saved' => '?',
                         'admin_visible' => '?'
                     ]
@@ -145,9 +151,11 @@ class CupHandler {
                         5 => $cup->getStatus(),
                         6 => $cup->getGame()->getGameId(),
                         7 => $cup->getRule()->getRuleId(),
-                        8 => $map_pool_id,
-                        9 => $cup->isSaved() ? 1 : 0,
-                        10 => $cup->isAdminCup() ? 1 : 0
+                        8 => $cup->isMapVoteEnabled() ? 1 : 0,
+                        9 => $map_pool_id,
+                        10 => $cup->getMaximumOfPenaltyPoints(),
+                        11 => $cup->isSaved() ? 1 : 0,
+                        12 => $cup->isAdminCup() ? 1 : 0
                     ]
                 );
 
@@ -181,7 +189,9 @@ class CupHandler {
             ->set("status", "?")
             ->set("gameID", "?")
             ->set("ruleID", "?")
+            ->set("mapvote_enable", "?")
             ->set("mappool", "?")
+            ->set("max_penalty", "?")
             ->set("saved", "?")
             ->set("admin_visible", "?")
             ->where('cupID = ?')
@@ -193,10 +203,12 @@ class CupHandler {
             ->setParameter(5, $cup->getStatus())
             ->setParameter(6, $cup->getGame()->getGameId())
             ->setParameter(7, $cup->getRule()->getRuleId())
-            ->setParameter(8, $map_pool_id)
-            ->setParameter(9, $cup->isSaved() ? 1 : 0)
-            ->setParameter(10, $cup->isAdminCup() ? 1 : 0)
-            ->setParameter(11, $cup->getCupId());
+            ->setParameter(8, $cup->isMapVoteEnabled() ? 1 : 0)
+            ->setParameter(9, $map_pool_id)
+            ->setParameter(10, $cup->getMaximumOfPenaltyPoints())
+            ->setParameter(11, $cup->isSaved() ? 1 : 0)
+            ->setParameter(12, $cup->isAdminCup() ? 1 : 0)
+            ->setParameter(13, $cup->getCupId());
 
         $queryBuilder->executeQuery();
 
