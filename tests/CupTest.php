@@ -28,6 +28,7 @@ final class CupTest extends TestCase
         $cup = new Cup();
         $cup->setCupId(1337);
         $cup->setName("Test Cup Name");
+        $cup->setSize(CupEnums::CUP_SIZE_8);
         $cup->setMode(CupEnums::CUP_MODE_5ON5);
         $cup->setStatus(CupEnums::CUP_STATUS_RUNNING);
         $cup->setCheckInDateTime($datetime_now);
@@ -38,6 +39,8 @@ final class CupTest extends TestCase
         $this->assertInstanceOf(Cup::class, $cup);
         $this->assertEquals(1337, $cup->getCupId(), "Cup ID is set.");
         $this->assertEquals("Test Cup Name", $cup->getName(), "Cup name is set.");
+        $this->assertEquals(CupEnums::CUP_SIZE_8, $cup->getSize(), "Cup size is set.");
+        $this->assertEquals(3, $cup->getTotalRoundCount(), "Total count of rounds is set.");
         $this->assertEquals("5on5", $cup->getMode(), "Cup mode is set.");
         $this->assertEquals(3, $cup->getStatus(), "Cup status is set.");
         $this->assertEquals($datetime_now, $cup->getCheckInDateTime(), "Cup check-in datetime is set.");

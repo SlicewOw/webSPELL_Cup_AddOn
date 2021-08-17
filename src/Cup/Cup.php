@@ -143,6 +143,11 @@ class Cup {
         return $this->cup_size;
     }
 
+    public function getTotalRoundCount(): int
+    {
+        return (int) log($this->getSize(), 2);
+    }
+
     public function setStatus(int $cup_status): void
     {
         if (!Validator::numericVal()->positive()->between(1, 4)->validate($cup_status)) {
