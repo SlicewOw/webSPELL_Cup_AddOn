@@ -37,11 +37,11 @@ class CupHandler {
         }
 
         $cup = new Cup();
-        $cup->setCupId($cup_result['cupID']);
+        $cup->setCupId((int) $cup_result['cupID']);
         $cup->setName($cup_result['name']);
         $cup->setMode($cup_result['mode']);
         $cup->setSize($cup_result['max_size']);
-        $cup->setStatus($cup_result['status']);
+        $cup->setStatus((int) $cup_result['status']);
         $cup->setCheckInDateTime(
             new \DateTime($cup_result['checkin_date'])
         );

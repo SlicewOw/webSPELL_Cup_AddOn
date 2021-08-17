@@ -57,7 +57,7 @@ class ParticipantHandler {
         foreach ($user_participant_array as $user_participant) {
 
             $particpant = new UserParticipant();
-            $particpant->setParticipantId($user_participant['ID']);
+            $particpant->setParticipantId((int) $user_participant['ID']);
             $particpant->setCheckedIn(
                 ($user_participant['checked_in'] == 1)
             );
@@ -97,7 +97,7 @@ class ParticipantHandler {
         foreach ($team_participant_array as $team_participant) {
 
             $particpant = new TeamParticipant();
-            $particpant->setParticipantId($team_participant['ID']);
+            $particpant->setParticipantId((int) $team_participant['ID']);
             $particpant->setCheckedIn(
                 ($team_participant['checked_in'] == 1)
             );

@@ -22,6 +22,7 @@ class TeamHandler {
     {
 
         if (!Validator::numericVal()->min(1)->validate($team_id)) {
+            error_log("[CUSTOM] Team ID must be greater than 0, but found: " . $team_id);
             throw new \InvalidArgumentException('team_id_value_is_invalid');
         }
 
@@ -40,13 +41,15 @@ class TeamHandler {
         }
 
         $team = new Team();
-        $team->setTeamId($team_result['teamID']);
+        $team->setTeamId((int) $team_result['teamID']);
         $team->setName($team_result['name']);
         $team->setTag($team_result['tag']);
         $team->setPassword($team_result['password']);
         $team->setHomepage($team_result['hp']);
         $team->setLogotype($team_result['logotype']);
-        $team->setIsDeleted($team_result['deleted']);
+        $team->setIsDeleted(
+            ($team_result['deleted'] == 1)
+        );
         $team->setCreationDate(
             new \DateTime($team_result['date'])
         );
