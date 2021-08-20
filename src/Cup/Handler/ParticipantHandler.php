@@ -250,6 +250,11 @@ class ParticipantHandler {
     public static function joinCup(Cup $cup, $participant): void
     {
 
+        if (self::testIfTeamOrPlayerIsPartOfTheCup($cup, $participant)) {
+            // TODO: Implement customized exception
+            throw new \InvalidArgumentException("cannot_join_cup_twice");
+        }
+
         $participant->setCheckedIn(false);
         $participant->setCheckInDateTime(null);
         $participant->setRegisterDateTime(
@@ -300,6 +305,47 @@ class ParticipantHandler {
         } else {
             self::saveUserLogLeftCup($cup, $participant);
         }
+
+    }
+
+    /**
+     * @param UserParticipant|TeamParticipant $participant
+     */
+    public static function testIfTeamOrPlayerIsPartOfTheCup(Cup $cup, $participant): bool
+    {
+
+        foreach ($cup->getCupParticipants() as $registered_participant) {
+
+            if ($cup->isTeamCup()) {
+
+                $team_members = TeamMemberHandler::getActiveMembersOfTeam(
+                    $registered_participant->getTeam()
+                );
+                foreach ($team_members as $team_member) {
+
+                    $teams_of_team_member = TeamHandler::getTeamsOfUser($team_member->getUser());
+                    foreach ($teams_of_team_member as $team_of_team_member) {
+
+                        if ($participant->getTeam()->getTeamId() == $team_of_team_member->getTeamId()) {
+                            return true;
+                        }
+
+                    }
+
+                }
+
+            } else {
+
+                $user = $registered_participant->getUser();
+                if ($participant->getUser()->getUserId() == $user->getUserId()) {
+                    return true;
+                }
+
+            }
+
+        }
+
+        return false;
 
     }
 

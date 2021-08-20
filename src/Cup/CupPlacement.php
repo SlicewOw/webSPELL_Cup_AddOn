@@ -2,6 +2,10 @@
 
 namespace myrisk\Cup;
 
+use webspell_ng\User;
+
+use myrisk\Cup\Team;
+
 
 class CupPlacement {
 
@@ -14,6 +18,11 @@ class CupPlacement {
      * @var string $ranking
      */
     private $ranking;
+
+    /**
+     * @var User|Team $receiver
+     */
+    private $receiver;
 
     public function setPlacementId(int $placement_id): void
     {
@@ -33,6 +42,22 @@ class CupPlacement {
     public function getRanking(): ?string
     {
         return $this->ranking;
+    }
+
+    /**
+     * @param User|Team $receiver
+     */
+    public function setReceiver($receiver): void
+    {
+        $this->receiver = $receiver;
+    }
+
+    /**
+     * @return User|Team
+     */
+    public function getReceiver()
+    {
+        return $this->receiver;
     }
 
 }
