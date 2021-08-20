@@ -239,7 +239,8 @@ class CupMatchHandler {
                         'team1_confirmed' => '?',
                         'team2_confirmed' => '?',
                         'admin_confirmed' => '?',
-                        'maps' => '?'
+                        'maps' => '?',
+                        'server' => '?'
                     ]
                 )
             ->setParameters(
@@ -258,7 +259,8 @@ class CupMatchHandler {
                         11 => $match->isConfirmedByLeftTeam() ? 1 : 0,
                         12 => $match->isConfirmedByRightTeam() ? 1 : 0,
                         13 => $match->isConfirmedByAdmin() ? 1 : 0,
-                        14 => serialize($match->getMaps())
+                        14 => serialize($match->getMaps()),
+                        15 => serialize($match->getServerDetails())
                     ]
                 );
 
@@ -297,6 +299,7 @@ class CupMatchHandler {
             ->set("runde", "?")
             ->set("spiel", "?")
             ->set("format", "?")
+            ->set("date", "?")
             ->set("team1", "?")
             ->set("team1_freilos", "?")
             ->set("team2", "?")
@@ -306,21 +309,25 @@ class CupMatchHandler {
             ->set("team2_confirmed", "?")
             ->set("admin_confirmed", "?")
             ->set("maps", "?")
+            ->set("server", "?")
             ->where('matchID = ?')
             ->setParameter(0, $cup->getCupId())
             ->setParameter(1, $bracket_round->isWinnerBracket() ? 1 : 0)
             ->setParameter(2, $bracket_round->getRoundIdentifier())
             ->setParameter(3, $match->getMatchIdentifier())
             ->setParameter(4, $match->getFormat())
-            ->setParameter(5, $left_team_id)
-            ->setParameter(6, $left_team_walkover)
-            ->setParameter(7, $right_team_id)
-            ->setParameter(8, $right_team_walkover)
-            ->setParameter(8, $match->isActive() ? 1 : 0)
-            ->setParameter(8, $match->isConfirmedByLeftTeam() ? 1 : 0)
-            ->setParameter(8, $match->isConfirmedByRightTeam() ? 1 : 0)
-            ->setParameter(8, $match->isConfirmedByAdmin() ? 1 : 0)
-            ->setParameter(8, serialize($match->getMaps()));
+            ->setParameter(5, $match->getDate()->format("Y-m-d H:i:s"))
+            ->setParameter(6, $left_team_id)
+            ->setParameter(7, $left_team_walkover)
+            ->setParameter(8, $right_team_id)
+            ->setParameter(9, $right_team_walkover)
+            ->setParameter(10, $match->isActive() ? 1 : 0)
+            ->setParameter(11, $match->isConfirmedByLeftTeam() ? 1 : 0)
+            ->setParameter(12, $match->isConfirmedByRightTeam() ? 1 : 0)
+            ->setParameter(13, $match->isConfirmedByAdmin() ? 1 : 0)
+            ->setParameter(14, serialize($match->getMaps()))
+            ->setParameter(15, serialize($match->getServerDetails()))
+            ->setParameter(16, $match->getMatchId());
 
         $queryBuilder->executeQuery();
 

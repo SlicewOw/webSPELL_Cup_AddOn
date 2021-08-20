@@ -46,6 +46,11 @@ class CupMatch {
     private $maps = array();
 
     /**
+     * @var array<string> $server_details
+     */
+    private $server_details = array();
+
+    /**
      * @var bool $is_active
      */
     private $is_active = false;
@@ -151,6 +156,22 @@ class CupMatch {
     public function getMaps(): array
     {
         return $this->maps;
+    }
+
+    /**
+     * @param array<string> $maps
+     */
+    public function setServerDetails(array $server_details): void
+    {
+        $this->server_details = $server_details;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getServerDetails(): array
+    {
+        return $this->server_details;
     }
 
     public function setIsActive(bool $is_active): void

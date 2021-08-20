@@ -77,12 +77,12 @@ final class CupPlacementHandlerTest extends TestCase
 
         $updated_ranking = "5-8";
 
-        $new_placement->setRanking($updated_ranking);
+        $saved_placement->setRanking($updated_ranking);
 
-        $changed_placement = CupPlacementHandler::savePlacement(self::$cup, $new_placement);
+        $changed_placement = CupPlacementHandler::savePlacement(self::$cup, $saved_placement);
 
         $this->assertInstanceOf(CupPlacement::class, $changed_placement, "Placement is saved.");
-        $this->assertGreaterThan(0, $changed_placement->getPlacementId(), "Placement ID is set.");
+        $this->assertEquals($saved_placement->getPlacementId(), $changed_placement->getPlacementId(), "Placement ID is set.");
         $this->assertEquals($updated_ranking, $changed_placement->getRanking(), "Ranking is set.");
         $this->assertInstanceOf(User::class, $changed_placement->getReceiver(), "Receiver is a 'User'.");
         $this->assertEquals($user_id, $changed_placement->getReceiver()->getUserId(), "User ID is set.");
