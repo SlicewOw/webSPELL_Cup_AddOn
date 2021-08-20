@@ -11,6 +11,8 @@ use myrisk\Cup\Cup;
 use myrisk\Cup\Enum\CupEnums;
 use myrisk\Cup\Handler\AdminHandler;
 use myrisk\Cup\Handler\CupSponsorHandler;
+use myrisk\Cup\Handler\SingleEliminationBracketHandler;
+use myrisk\Cup\Utils\CupUtils;
 
 class CupHandler {
 
@@ -219,11 +221,16 @@ class CupHandler {
 
         // TODO: Implement check if cup is startable
 
-        // TODO: Implement creation of bracket
-
         $cup->setStatus(CupEnums::CUP_STATUS_RUNNING);
+        $cup->setSize(
+            CupUtils::getSizeByCheckedInParticipants(
+                count($cup->getCheckedInCupParticipants())
+            )
+        );
 
         self::updateCup($cup);
+
+        SingleEliminationBracketHandler::saveBracket($cup);
 
     }
 

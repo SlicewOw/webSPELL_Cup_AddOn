@@ -37,10 +37,10 @@ class ParticipantHandler {
 
         $cup_participant_query = $queryBuilder->executeQuery();
 
-        if ($cup->getMode() == CupEnums::CUP_MODE_1ON1) {
-            return self::getUserParticipantsOfCup($cup_participant_query);
-        } else {
+        if ($cup->isTeamCup()) {
             return self::getTeamParticipantsOfCup($cup_participant_query);
+        } else {
+            return self::getUserParticipantsOfCup($cup_participant_query);
         }
 
     }
@@ -127,25 +127,29 @@ class ParticipantHandler {
 
     /**
      * @param UserParticipant|TeamParticipant $participant
+     * @return UserParticipant|TeamParticipant
      */
-    private static function saveCupParticipant(Cup $cup, $participant): void
+    private static function saveCupParticipant(Cup $cup, $participant)
     {
 
         if (is_null($participant->getParticipantId())) {
-            self::insertCupParticipant($cup, $participant);
+            $participant = self::insertCupParticipant($cup, $participant);
         } else {
             self::updateCupParticipant($cup, $participant);
         }
+
+        return $participant;
 
     }
 
     /**
      * @param UserParticipant|TeamParticipant $participant
+     * @return UserParticipant|TeamParticipant
      */
-    private static function insertCupParticipant(Cup $cup, $participant): void
+    private static function insertCupParticipant(Cup $cup, $participant)
     {
 
-        if (get_class($participant) == "myrisk\Cup\TeamParticipant") {
+        if (is_a($participant, TeamParticipant::class)) {
             $team_id = $participant->getTeam()->getTeamId();
         } else {
             $team_id = $participant->getUser()->getUserId();
@@ -179,6 +183,12 @@ class ParticipantHandler {
 
         $queryBuilder->executeQuery();
 
+        $participant->setParticipantId(
+            (int) WebSpellDatabaseConnection::getDatabaseConnection()->lastInsertId()
+        );
+
+        return $participant;
+
     }
 
     /**
@@ -187,7 +197,7 @@ class ParticipantHandler {
     private static function updateCupParticipant(Cup $cup, $participant): void
     {
 
-        if (get_class($participant) == "myrisk\Cup\TeamParticipant") {
+        if (is_a($participant, TeamParticipant::class)) {
             $team_id = $participant->getTeam()->getTeamId();
         } else {
             $team_id = $participant->getUser()->getUserId();
@@ -241,13 +251,14 @@ class ParticipantHandler {
     {
 
         $participant->setCheckedIn(false);
+        $participant->setCheckInDateTime(null);
         $participant->setRegisterDateTime(
             new \DateTime("now")
         );
 
-        self::saveCupParticipant($cup, $participant);
+        $participant = self::saveCupParticipant($cup, $participant);
 
-        if (get_class($participant) == "myrisk\Cup\TeamParticipant") {
+        if (is_a($participant, TeamParticipant::class)) {
             self::saveTeamLogJoinCup($cup, $participant);
         } else {
             self::saveUserLogJoinCup($cup, $participant);
@@ -266,9 +277,9 @@ class ParticipantHandler {
             new \DateTime("now")
         );
 
-        self::saveCupParticipant($cup, $participant);
+        $participant = self::saveCupParticipant($cup, $participant);
 
-        if (get_class($participant) == "myrisk\Cup\TeamParticipant") {
+        if (is_a($participant, TeamParticipant::class)) {
             self::saveTeamLogCheckedInCup($cup, $participant);
         } else {
             self::saveUserLogCheckedInCup($cup, $participant);
@@ -284,7 +295,7 @@ class ParticipantHandler {
 
         self::removeCupParticipant($cup, $participant);
 
-        if (get_class($participant) == "myrisk\Cup\TeamParticipant") {
+        if (is_a($participant, TeamParticipant::class)) {
             self::saveTeamLogLeftCup($cup, $participant);
         } else {
             self::saveUserLogLeftCup($cup, $participant);

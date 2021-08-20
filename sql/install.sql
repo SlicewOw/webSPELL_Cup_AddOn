@@ -153,6 +153,10 @@ CREATE TABLE `ws_p40_cups_mappool` (
   `deleted` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
+--
+-- Cup playoff matches
+--
+
 CREATE TABLE `ws_p40_cups_matches_playoff` (
   `matchID` int(11) NOT NULL,
   `cupID` int(11) NOT NULL,
@@ -162,10 +166,10 @@ CREATE TABLE `ws_p40_cups_matches_playoff` (
   `format` varchar(5) COLLATE latin1_german1_ci NOT NULL DEFAULT 'bo1',
   `date` datetime NOT NULL,
   `mapvote` int(11) NOT NULL DEFAULT 0,
-  `team1` int(11) NOT NULL,
+  `team1` int(11) DEFAULT NULL,
   `team1_freilos` int(1) NOT NULL DEFAULT 0,
   `ergebnis1` int(11) NOT NULL DEFAULT 0,
-  `team2` int(11) NOT NULL,
+  `team2` int(11) DEFAULT NULL,
   `team2_freilos` int(1) NOT NULL DEFAULT 0,
   `ergebnis2` int(11) NOT NULL DEFAULT 0,
   `active` int(1) NOT NULL DEFAULT 0,
@@ -179,6 +183,14 @@ CREATE TABLE `ws_p40_cups_matches_playoff` (
   `bot` int(1) NOT NULL DEFAULT 0,
   `admin` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+ALTER TABLE `ws_p40_cups_matches_playoff` ADD UNIQUE( `cupID`, `wb`, `runde`, `spiel`);
+ALTER TABLE `ws_p40_cups_matches_playoff` ADD CONSTRAINT `FK_CupMatchPlayoff_CupID` FOREIGN KEY (`cupID`) REFERENCES `ws_p40_cups`(`cupID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+COMMIT;
+
+--
+-- Cup playoff match screenshots
+--
 
 CREATE TABLE `ws_p40_cups_matches_playoff_screens` (
   `screenshotID` int(11) NOT NULL,

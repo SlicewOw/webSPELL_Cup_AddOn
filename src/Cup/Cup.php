@@ -100,6 +100,11 @@ class Cup {
      */
     private $is_admin_cup = false;
 
+    /**
+     * @var bool $is_third_placemenent_set
+     */
+    private $is_third_placemenent_set = false;
+
     public function setCupId(int $cup_id): void
     {
         if (!Validator::numericVal()->positive()->min(1)->validate($cup_id)) {
@@ -131,6 +136,11 @@ class Cup {
     public function getMode(): string
     {
         return $this->cup_mode;
+    }
+
+    public function isTeamCup(): bool
+    {
+        return $this->getMode() != CupEnums::CUP_MODE_1ON1;
     }
 
     // TODO: Implement logic to set this setting per cup (e.g. allow ONLY 5 players per team vs. >= 5 players per team for a 5on5 cup)
@@ -342,6 +352,11 @@ class Cup {
     public function isAdminCup(): bool
     {
         return $this->is_admin_cup;
+    }
+
+    public function isThirdPlacementSet(): bool
+    {
+        return $this->is_third_placemenent_set;
     }
 
 }

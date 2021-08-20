@@ -48,4 +48,11 @@ abstract class CupEnums
     const CUP_PARTICIPANT_CHECKED_IN = "cup_checked_in";
     const CUP_PARTICIPANT_LEFT = "cup_left";
 
+    /**
+     * Formats
+     */
+    const CUP_FORMAT_BEST_OF_ONE = "bo1";
+    const CUP_FORMAT_BEST_OF_THREE = "bo3";
+    const CUP_FORMAT_BEST_OF_FIVE = "bo5";
+
 }
