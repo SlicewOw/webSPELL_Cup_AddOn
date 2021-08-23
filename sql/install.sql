@@ -35,6 +35,29 @@ ALTER TABLE `ws_p40_cups` MODIFY `cupID` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 --
+-- Cup teams
+--
+
+CREATE TABLE `ws_p40_cups_teams` (
+  `teamID` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `tag` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `userID` int(11) NOT NULL,
+  `country` varchar(4) COLLATE latin1_german1_ci NOT NULL DEFAULT 'de',
+  `hp` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `logotype` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `password` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `hits` int(11) NOT NULL DEFAULT 0,
+  `deleted` int(1) NOT NULL DEFAULT 0,
+  `admin` int(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+ALTER TABLE `ws_p40_cups_teams` ADD PRIMARY KEY (`teamID`);
+ALTER TABLE `ws_p40_cups_teams` MODIFY `teamID` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+--
 -- Cup admins
 --
 
@@ -238,7 +261,6 @@ CREATE TABLE `ws_p40_cups_penalty` (
   `deleted` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
-
 ALTER TABLE `ws_p40_cups_penalty` ADD PRIMARY KEY (`ppID`), ADD UNIQUE KEY `ppID` (`ppID`);
 ALTER TABLE `ws_p40_cups_penalty` MODIFY `ppID` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `ws_p40_cups_penalty` ADD CONSTRAINT `FK_CupPenalty_ReasonID` FOREIGN KEY (`reasonID`) REFERENCES `ws_p40_cups_penalty_category`(`reasonID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
@@ -399,21 +421,6 @@ CREATE TABLE `ws_p40_cups_team` (
   `description` text COLLATE latin1_german1_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
-CREATE TABLE `ws_p40_cups_teams` (
-  `teamID` int(11) NOT NULL,
-  `date` datetime NOT NULL,
-  `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `tag` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `userID` int(11) NOT NULL,
-  `country` varchar(4) COLLATE latin1_german1_ci NOT NULL DEFAULT 'de',
-  `hp` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `logotype` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `password` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `hits` int(11) NOT NULL DEFAULT 0,
-  `deleted` int(1) NOT NULL DEFAULT 0,
-  `admin` int(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
-
 CREATE TABLE `ws_p40_cups_teams_comments` (
   `teamID` int(11) NOT NULL,
   `date` datetime NOT NULL,
@@ -553,9 +560,6 @@ ALTER TABLE `ws_p40_cups_streams`
 ALTER TABLE `ws_p40_cups_team`
   ADD PRIMARY KEY (`userID`);
 
-ALTER TABLE `ws_p40_cups_teams`
-  ADD PRIMARY KEY (`teamID`);
-
 ALTER TABLE `ws_p40_cups_teams_comments`
   ADD PRIMARY KEY (`teamID`,`date`);
 
@@ -607,9 +611,6 @@ ALTER TABLE `ws_p40_cups_sponsors`
 
 ALTER TABLE `ws_p40_cups_streams`
   MODIFY `streamID` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `ws_p40_cups_teams`
-  MODIFY `teamID` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `ws_p40_cups_teams_member`
   MODIFY `memberID` int(11) NOT NULL AUTO_INCREMENT;
