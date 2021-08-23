@@ -31,7 +31,7 @@ class CupPenalty {
     private $date;
 
     /**
-     * @var ?\DateTime $duration_time
+     * @var ?\DateTime $until_date
      */
     private $until_date;
 

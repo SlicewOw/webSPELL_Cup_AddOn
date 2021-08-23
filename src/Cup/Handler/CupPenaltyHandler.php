@@ -17,6 +17,9 @@ class CupPenaltyHandler {
 
     private const DB_TABLE_NAME_PENALTY = "cups_penalty";
 
+    /**
+     * @return array<CupPenalty>
+     */
     public static function getPenaltiesOfUser(User $user): array
     {
 
@@ -43,6 +46,9 @@ class CupPenaltyHandler {
 
     }
 
+    /**
+     * @return array<CupPenalty>
+     */
     public static function getPenaltiesOfTeam(Team $team): array
     {
 

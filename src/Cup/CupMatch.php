@@ -143,7 +143,7 @@ class CupMatch {
     }
 
     /**
-     * @param array<string> $maps
+     * @param array<mixed> $maps
      */
     public function setMaps(array $maps): void
     {
@@ -151,7 +151,7 @@ class CupMatch {
     }
 
     /**
-     * @return array<string>
+     * @return array<mixed>
      */
     public function getMaps(): array
     {
