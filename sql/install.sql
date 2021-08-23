@@ -207,17 +207,9 @@ CREATE TABLE `ws_p40_cups_matches_playoff_screens_category` (
   `deleted` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
-CREATE TABLE `ws_p40_cups_penalty` (
-  `ppID` int(11) NOT NULL,
-  `adminID` int(11) NOT NULL DEFAULT 0,
-  `date` datetime NOT NULL,
-  `duration_time` int(11) NOT NULL DEFAULT 0,
-  `teamID` int(11) NOT NULL DEFAULT 0,
-  `userID` int(11) NOT NULL DEFAULT 0,
-  `reasonID` int(11) NOT NULL DEFAULT 0,
-  `comment` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `deleted` int(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+--
+-- Cups penalty category
+--
 
 CREATE TABLE `ws_p40_cups_penalty_category` (
   `reasonID` int(11) NOT NULL,
@@ -226,6 +218,34 @@ CREATE TABLE `ws_p40_cups_penalty_category` (
   `points` int(11) NOT NULL DEFAULT 0,
   `lifetime` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+ALTER TABLE `ws_p40_cups_penalty_category` ADD PRIMARY KEY (`reasonID`), ADD UNIQUE KEY `reasonID` (`reasonID`);
+ALTER TABLE `ws_p40_cups_penalty_category` MODIFY `reasonID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Cups penalty
+--
+
+CREATE TABLE `ws_p40_cups_penalty` (
+  `ppID` int(11) NOT NULL,
+  `adminID` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `duration_time` int(11) NOT NULL,
+  `teamID` int(11) DEFAULT NULL,
+  `userID` int(11) DEFAULT NULL,
+  `reasonID` int(11) NOT NULL,
+  `comment` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `deleted` int(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+
+ALTER TABLE `ws_p40_cups_penalty` ADD PRIMARY KEY (`ppID`), ADD UNIQUE KEY `ppID` (`ppID`);
+ALTER TABLE `ws_p40_cups_penalty` MODIFY `ppID` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ws_p40_cups_penalty` ADD CONSTRAINT `FK_CupPenalty_ReasonID` FOREIGN KEY (`reasonID`) REFERENCES `ws_p40_cups_penalty_category`(`reasonID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `ws_p40_cups_penalty` ADD CONSTRAINT `FK_CupPenalty_AdminID` FOREIGN KEY (`adminID`) REFERENCES `ws_p40_user`(`userID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `ws_p40_cups_penalty` ADD CONSTRAINT `FK_CupPenalty_UserID` FOREIGN KEY (`userID`) REFERENCES `ws_p40_user`(`userID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `ws_p40_cups_penalty` ADD CONSTRAINT `FK_CupPenalty_TeamID` FOREIGN KEY (`teamID`) REFERENCES `ws_p40_cups_teams`(`teamID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+COMMIT;
 
 --
 -- Cups placements
@@ -508,14 +528,6 @@ ALTER TABLE `ws_p40_cups_matches_playoff_screens`
 ALTER TABLE `ws_p40_cups_matches_playoff_screens_category`
   ADD PRIMARY KEY (`categoryID`);
 
-ALTER TABLE `ws_p40_cups_penalty`
-  ADD PRIMARY KEY (`ppID`),
-  ADD UNIQUE KEY `ppID` (`ppID`);
-
-ALTER TABLE `ws_p40_cups_penalty_category`
-  ADD PRIMARY KEY (`reasonID`),
-  ADD UNIQUE KEY `reasonID` (`reasonID`);
-
 ALTER TABLE `ws_p40_cups_policy`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`);
@@ -577,12 +589,6 @@ ALTER TABLE `ws_p40_cups_matches_playoff_screens`
 
 ALTER TABLE `ws_p40_cups_matches_playoff_screens_category`
   MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `ws_p40_cups_penalty`
-  MODIFY `ppID` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `ws_p40_cups_penalty_category`
-  MODIFY `reasonID` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `ws_p40_cups_policy`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

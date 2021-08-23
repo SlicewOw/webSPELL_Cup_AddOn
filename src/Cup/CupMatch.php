@@ -159,7 +159,7 @@ class CupMatch {
     }
 
     /**
-     * @param array<string> $maps
+     * @param array<string> $server_details
      */
     public function setServerDetails(array $server_details): void
     {
