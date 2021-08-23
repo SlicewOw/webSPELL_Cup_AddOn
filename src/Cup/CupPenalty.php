@@ -31,9 +31,9 @@ class CupPenalty {
     private $date;
 
     /**
-     * @var int $duration_time
+     * @var ?\DateTime $duration_time
      */
-    private $duration_time = 60 * 60 * 24;
+    private $until_date;
 
     /**
      * @var ?Team $team
@@ -98,14 +98,27 @@ class CupPenalty {
         return $this->date;
     }
 
-    public function setDurationTime(int $duration_time): void
+    public function setDateUntilPenaltyIsActive(\DateTime $until_date): void
     {
-        $this->duration_time = $duration_time;
+        $this->until_date = $until_date;
     }
 
-    public function getDurationTime(): int
+    public function getDateUntilPenaltyIsActive(): \DateTime
     {
-        return $this->duration_time;
+        if (is_null($this->until_date)) {
+            $until_date = new \DateTime("now");
+            if ($this->getPenaltyCategory()->isLifetimeBan()) {
+                $until_date->add(
+                    new \DateInterval("P50Y")
+                );
+            } else {
+                $until_date->add(
+                    new \DateInterval("P1D")
+                );
+            }
+            return $until_date;
+        }
+        return $this->until_date;
     }
 
     public function setTeam(Team $team): void
@@ -146,6 +159,11 @@ class CupPenalty {
     public function isDeleted(): bool
     {
         return $this->is_deleted;
+    }
+
+    public function isActive(): bool
+    {
+        return (!$this->isDeleted() && new \DateTime("now") < $this->getDateUntilPenaltyIsActive());
     }
 
 }

@@ -253,7 +253,7 @@ CREATE TABLE `ws_p40_cups_penalty` (
   `ppID` int(11) NOT NULL,
   `adminID` int(11) NOT NULL,
   `date` datetime NOT NULL,
-  `duration_time` int(11) NOT NULL,
+  `until_date` datetime NOT NULL,
   `teamID` int(11) DEFAULT NULL,
   `userID` int(11) DEFAULT NULL,
   `reasonID` int(11) NOT NULL,

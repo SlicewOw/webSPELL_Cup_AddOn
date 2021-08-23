@@ -93,13 +93,15 @@ class CupPenaltyHandler {
 
         $penalty = new CupPenalty();
         $penalty->setPenaltyId((int) $penalty_result['ppID']);
-        $penalty->setDurationTime((int) $penalty_result['duration_time']);
         $penalty->setComment($penalty_result['comment']);
         $penalty->setAdmin(
             UserHandler::getUserByUserId((int) $penalty_result['adminID'])
         );
         $penalty->setDate(
             new \DateTime($penalty_result['date'])
+        );
+        $penalty->setDateUntilPenaltyIsActive(
+            new \DateTime($penalty_result['until_date'])
         );
         $penalty->setPenaltyCategory(
             CupPenaltyCategoryHandler::getCategoryByCategoryId((int) $penalty_result['reasonID'])
@@ -160,7 +162,7 @@ class CupPenaltyHandler {
                     [
                         'adminID' => '?',
                         'date' => '?',
-                        'duration_time' => '?',
+                        'until_date' => '?',
                         'teamID' => '?',
                         'userID' => '?',
                         'reasonID' => '?',
@@ -172,7 +174,7 @@ class CupPenaltyHandler {
                     [
                         0 => $penalty->getAdmin()->getUserId(),
                         1 => $penalty->getDate()->format("Y-m-d H:i:s"),
-                        2 => $penalty->getDurationTime(),
+                        2 => $penalty->getDateUntilPenaltyIsActive()->format("Y-m-d H:i:s"),
                         3 => $team_id,
                         4 => $user_id,
                         5 => $penalty->getPenaltyCategory()->getCategoryId(),
@@ -202,7 +204,7 @@ class CupPenaltyHandler {
             ->update(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_PENALTY)
             ->set("adminID", "?")
             ->set("date", "?")
-            ->set("duration_time", "?")
+            ->set("until_date", "?")
             ->set("teamID", "?")
             ->set("userID", "?")
             ->set("reasonID", "?")
@@ -211,7 +213,7 @@ class CupPenaltyHandler {
             ->where('ppID = ?')
             ->setParameter(0, $penalty->getAdmin()->getUserId())
             ->setParameter(1, $penalty->getDate()->format("Y-m-d H:i:s"))
-            ->setParameter(2, $penalty->getDurationTime())
+            ->setParameter(2, $penalty->getDateUntilPenaltyIsActive()->format("Y-m-d H:i:s"))
             ->setParameter(3, $team_id)
             ->setParameter(4, $user_id)
             ->setParameter(5, $penalty->getPenaltyCategory()->getCategoryId())

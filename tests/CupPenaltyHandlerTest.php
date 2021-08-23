@@ -92,6 +92,7 @@ final class CupPenaltyHandlerTest extends TestCase
         $this->assertEquals(self::$user->getUserId(), $saved_penalty->getUser()->getUserId(), "User is set.");
         $this->assertEquals($comment, $saved_penalty->getComment(), "Comment is set.");
         $this->assertFalse($saved_penalty->isDeleted(), "Penalty is NOT deleted.");
+        $this->assertTrue($saved_penalty->isActive(), "Penalty is active!");
 
         $changed_penalty = $saved_penalty;
         $changed_penalty->setIsDeleted(true);
@@ -105,6 +106,7 @@ final class CupPenaltyHandlerTest extends TestCase
         $this->assertEquals(self::$user->getUserId(), $updated_penalty->getUser()->getUserId(), "User is set.");
         $this->assertEquals($comment, $updated_penalty->getComment(), "Comment is set.");
         $this->assertTrue($updated_penalty->isDeleted(), "Penalty is deleted.");
+        $this->assertFalse($saved_penalty->isActive(), "Penalty is NOT active!");
 
         $penalties_of_user = CupPenaltyHandler::getPenaltiesOfUser(self::$user);
 
@@ -133,6 +135,7 @@ final class CupPenaltyHandlerTest extends TestCase
         $this->assertNull($saved_penalty->getUser(), "User is NOT set.");
         $this->assertEquals($comment, $saved_penalty->getComment(), "Comment is set.");
         $this->assertFalse($saved_penalty->isDeleted(), "Penalty is NOT deleted.");
+        $this->assertTrue($saved_penalty->isActive(), "Penalty is active!");
 
         $changed_penalty = $saved_penalty;
         $changed_penalty->setIsDeleted(true);
@@ -140,12 +143,13 @@ final class CupPenaltyHandlerTest extends TestCase
         $updated_penalty = CupPenaltyHandler::savePenalty($changed_penalty);
 
         $this->assertEquals($saved_penalty->getPenaltyId(), $updated_penalty->getPenaltyId(), "Penalty ID is set.");
-        $this->assertEquals(self::$user->getUserId(), $saved_penalty->getAdmin()->getUserId(), "Admin is set.");
-        $this->assertNotNull($saved_penalty->getTeam(), "Team is set.");
-        $this->assertEquals(self::$team->getTeamId(), $saved_penalty->getTeam()->getTeamId(), "Team is set.");
-        $this->assertNull($saved_penalty->getUser(), "User is NOT set.");
+        $this->assertEquals(self::$user->getUserId(), $updated_penalty->getAdmin()->getUserId(), "Admin is set.");
+        $this->assertNotNull($updated_penalty->getTeam(), "Team is set.");
+        $this->assertEquals(self::$team->getTeamId(), $updated_penalty->getTeam()->getTeamId(), "Team is set.");
+        $this->assertNull($updated_penalty->getUser(), "User is NOT set.");
         $this->assertEquals($comment, $updated_penalty->getComment(), "Comment is set.");
         $this->assertTrue($updated_penalty->isDeleted(), "Penalty is deleted.");
+        $this->assertFalse($updated_penalty->isActive(), "Penalty is NOT active!");
 
         $penalties_of_team = CupPenaltyHandler::getPenaltiesOfTeam(self::$team);
 

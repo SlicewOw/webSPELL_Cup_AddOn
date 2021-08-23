@@ -47,6 +47,71 @@ class CupPenaltyCategoryHandler {
 
     }
 
+    /**
+     * @return array<CupPenaltyCategory>
+     */
+    public static function getAllPenaltyCategories(): array
+    {
+
+        $queryBuilder = WebSpellDatabaseConnection::getDatabaseConnection()->createQueryBuilder();
+        $queryBuilder
+            ->select('reasonID')
+            ->from(WebSpellDatabaseConnection::getTablePrefix() . self::DB_TABLE_NAME_PENALTY_CATEGORY)
+            ->orderBy("lifetime", "DESC")
+            ->addOrderBy("points", "ASC");
+
+        $category_query = $queryBuilder->executeQuery();
+        $category_results = $category_query->fetchAllAssociative();
+
+        $all_categories = array();
+
+        foreach ($category_results as $category_result) {
+            array_push(
+                $all_categories,
+                self::getCategoryByCategoryId((int) $category_result['reasonID'])
+            );
+        }
+
+        return $all_categories;
+
+    }
+
+    public static function getPenaltyCategoriesAsOptions(?int $selected_category_id = null): string
+    {
+
+        $all_categories = self::getAllPenaltyCategories();
+
+        $categories_as_options = "";
+        $active_category = null;
+
+        foreach ($all_categories as $category) {
+
+            $is_lifetime_ban = $category->isLifetimeBan() ? 1 : 0;
+            if (empty($active_category) || ($active_category != $is_lifetime_ban)) {
+                $active_category = $is_lifetime_ban;
+                if (!empty($active_category)) {
+                    $categories_as_options .= '</optgroup>';
+                }
+                $optgroup_label = $category->isLifetimeBan() ? 'Lifetime Ban' : 'Normal Ban';
+                $categories_as_options .= '<optgroup label="' . $optgroup_label . '">';
+            }
+
+            $categories_as_options .= '<option value="' . $category->getCategoryId() . '">' . $category->getNameInEnglish() . '</option';
+
+        }
+
+        if (!is_null($selected_category_id)) {
+            $categories_as_options = str_replace(
+                'value="' . $selected_category_id . '"',
+                'value="' . $selected_category_id . '" selected="selected',
+                $categories_as_options
+            );
+        }
+
+        return $categories_as_options;
+
+    }
+
     public static function saveCategory(CupPenaltyCategory $category): CupPenaltyCategory
     {
 
