@@ -91,6 +91,11 @@ class Cup {
     private $participants = array();
 
     /**
+     * @var string $description
+     */
+    private $description = "";
+
+    /**
      * @var bool $is_saved
      */
     private $is_saved = false;
@@ -104,6 +109,11 @@ class Cup {
      * @var bool $is_third_placemenent_set
      */
     private $is_third_placemenent_set = false;
+
+    /**
+     * @var bool $is_using_servers
+     */
+    private $is_using_servers = false;
 
     public function setCupId(int $cup_id): void
     {
@@ -334,6 +344,16 @@ class Cup {
 
     }
 
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
     public function setIsSaved(bool $is_saved): void
     {
         $this->is_saved = $is_saved;
@@ -357,6 +377,16 @@ class Cup {
     public function isThirdPlacementSet(): bool
     {
         return $this->is_third_placemenent_set;
+    }
+
+    public function setIsUsingServers(bool $is_using_servers): void
+    {
+        $this->is_using_servers = $is_using_servers;
+    }
+
+    public function isUsingServers(): bool
+    {
+        return $this->is_using_servers;
     }
 
 }

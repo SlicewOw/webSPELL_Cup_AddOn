@@ -46,6 +46,7 @@ class CupHandler {
         $cup->setSize($cup_result['max_size']);
         $cup->setMaximumOfPenaltyPoints((int) $cup_result['max_penalty']);
         $cup->setStatus((int) $cup_result['status']);
+        $cup->setDescription($cup_result['description']);
         $cup->setMapVoteEnabled(
             ($cup_result['mapvote_enable'] == 1)
         );
@@ -60,6 +61,9 @@ class CupHandler {
         );
         $cup->setIsAdminCup(
             ($cup_result['admin_visible'] == 1)
+        );
+        $cup->setIsUsingServers(
+            ($cup_result['server'] == 1)
         );
 
         $cup->setRule(
@@ -140,7 +144,9 @@ class CupHandler {
                         'mappool' => '?',
                         'max_penalty' => '?',
                         'saved' => '?',
-                        'admin_visible' => '?'
+                        'admin_visible' => '?',
+                        'server' => '?',
+                        'description' => '?'
                     ]
                 )
             ->setParameters(
@@ -157,7 +163,9 @@ class CupHandler {
                         9 => $map_pool_id,
                         10 => $cup->getMaximumOfPenaltyPoints(),
                         11 => $cup->isSaved() ? 1 : 0,
-                        12 => $cup->isAdminCup() ? 1 : 0
+                        12 => $cup->isAdminCup() ? 1 : 0,
+                        13 => $cup->isUsingServers() ? 1 : 0,
+                        14 => $cup->getDescription()
                     ]
                 );
 
@@ -196,6 +204,8 @@ class CupHandler {
             ->set("max_penalty", "?")
             ->set("saved", "?")
             ->set("admin_visible", "?")
+            ->set("server", "?")
+            ->set("description", "?")
             ->where('cupID = ?')
             ->setParameter(0, $cup->getName())
             ->setParameter(1, $cup->getCheckInDateTime()->format("Y-m-d H:i:s"))
@@ -210,7 +220,9 @@ class CupHandler {
             ->setParameter(10, $cup->getMaximumOfPenaltyPoints())
             ->setParameter(11, $cup->isSaved() ? 1 : 0)
             ->setParameter(12, $cup->isAdminCup() ? 1 : 0)
-            ->setParameter(13, $cup->getCupId());
+            ->setParameter(13, $cup->isUsingServers() ? 1 : 0)
+            ->setParameter(14, $cup->getDescription())
+            ->setParameter(15, $cup->getCupId());
 
         $queryBuilder->executeQuery();
 

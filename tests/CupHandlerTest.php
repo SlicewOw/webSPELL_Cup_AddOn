@@ -52,6 +52,7 @@ final class CupHandlerTest extends TestCase
 
         $datetime_now = new DateTime('now');
         $datetime_later = new DateTime('2025-05-01 13:37:00');
+        $description = "Test Description !!111";
 
         $game = GameHandler::getGameByGameId(1);
 
@@ -74,10 +75,9 @@ final class CupHandlerTest extends TestCase
         $new_cup->setRule($rule);
         $new_cup->setIsSaved(false);
         $new_cup->setIsAdminCup(true);
+        $new_cup->setDescription($description);
 
-        $saved_cup = CupHandler::saveCup($new_cup);
-
-        $cup = CupHandler::getCupByCupId($saved_cup->getCupId());
+        $cup = CupHandler::saveCup($new_cup);
 
         $this->assertInstanceOf(Cup::class, $cup);
         $this->assertEquals(CupEnums::CUP_SIZE_8, $cup->getSize(), "Cup size is set correctly.");
@@ -87,6 +87,8 @@ final class CupHandlerTest extends TestCase
         $this->assertFalse($cup->isSaved(), "Cup is not saved yet.");
         $this->assertTrue($cup->isAdminCup(), "Cup is for admins only.");
         $this->assertNull($cup->getMapPool(), "Map Pool is not set yet.");
+        $this->assertFalse($cup->isUsingServers(), "Cup is not using servers.");
+        $this->assertEquals($description, $cup->getDescription(), "Cup description is set correctly.");
 
         $maximum_pps = random_int(1, 89999);
 
@@ -96,6 +98,7 @@ final class CupHandlerTest extends TestCase
         $changed_cup->setMapVoteEnabled(true);
         $changed_cup->setMaximumOfPenaltyPoints($maximum_pps);
         $changed_cup->setMapPool(self::$map_pool);
+        $changed_cup->setIsUsingServers(true);
 
         $updated_cup = CupHandler::saveCup($changed_cup);
 
@@ -111,6 +114,8 @@ final class CupHandlerTest extends TestCase
         $this->assertTrue($cup->isSaved(), "Cup is saved.");
         $this->assertTrue($cup->isAdminCup(), "Cup is for admins only.");
         $this->assertEquals(self::$map_pool->getMapPoolId(), $updated_cup->getMapPool()->getMapPoolId(), "Map Pool is set.");
+        $this->assertTrue($cup->isUsingServers(), "Cup is using servers.");
+        $this->assertEquals($description, $cup->getDescription(), "Cup description is set correctly.");
 
     }
 
