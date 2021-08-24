@@ -45,6 +45,8 @@ class CupMatchHandler {
         $match->setIsWinnerBracket(
             ($cup_match["wb"] == 1)
         );
+        $match->setRoundIdentifier((int) $cup_match["runde"]);
+        $match->setMatchIdentifier((int) $cup_match["spiel"]);
         $match->setIsMapVoteEnabled(
             ($cup_match["mapvote"] == 1)
         );

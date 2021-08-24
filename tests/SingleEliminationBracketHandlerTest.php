@@ -220,6 +220,7 @@ final class SingleEliminationBracketHandlerTest extends TestCase
         $final_match = $third_bracket_round->getMatches()[0];
 
         $this->assertInstanceOf(CupMatch::class, $final_match, "CupMatch instance is returned.");
+        $this->assertEquals(3, $final_match->getRoundIdentifier(), "Match round is expected.");
         $this->assertTrue($final_match->isWinnerBracket(), "Match is the winner bracket final.");
 
     }

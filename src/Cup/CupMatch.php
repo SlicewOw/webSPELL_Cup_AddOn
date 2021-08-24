@@ -17,6 +17,11 @@ class CupMatch {
     private $match_id;
 
     /**
+     * @var int $round_identifier
+     */
+    private $round_identifier = 1;
+
+    /**
      * @var int $match_identifier
      */
     private $match_identifier = 1;
@@ -114,6 +119,16 @@ class CupMatch {
     public function getMatchId(): ?int
     {
         return $this->match_id;
+    }
+
+    public function setRoundIdentifier(int $round_identifier): void
+    {
+        $this->round_identifier = $round_identifier;
+    }
+
+    public function getRoundIdentifier(): int
+    {
+        return $this->round_identifier;
     }
 
     public function setMatchIdentifier(int $match_identifier): void
