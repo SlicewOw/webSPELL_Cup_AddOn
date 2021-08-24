@@ -188,7 +188,7 @@ CREATE TABLE `ws_p40_cups_matches_playoff` (
   `spiel` int(11) NOT NULL,
   `format` varchar(5) COLLATE latin1_german1_ci NOT NULL DEFAULT 'bo1',
   `date` datetime NOT NULL,
-  `mapvote` int(11) NOT NULL DEFAULT 0,
+  `mapvote` int(1) NOT NULL DEFAULT 0,
   `team1` int(11) DEFAULT NULL,
   `team1_freilos` int(1) NOT NULL DEFAULT 0,
   `ergebnis1` int(11) NOT NULL DEFAULT 0,
@@ -196,7 +196,7 @@ CREATE TABLE `ws_p40_cups_matches_playoff` (
   `team2_freilos` int(1) NOT NULL DEFAULT 0,
   `ergebnis2` int(11) NOT NULL DEFAULT 0,
   `active` int(1) NOT NULL DEFAULT 0,
-  `comments` int(11) NOT NULL DEFAULT 1,
+  `comments` int(1) NOT NULL DEFAULT 1,
   `team1_confirmed` int(1) NOT NULL DEFAULT 0,
   `team2_confirmed` int(1) NOT NULL DEFAULT 0,
   `admin_confirmed` int(1) NOT NULL DEFAULT 0,
@@ -212,6 +212,21 @@ ALTER TABLE `ws_p40_cups_matches_playoff` ADD CONSTRAINT `FK_CupMatchPlayoff_Cup
 COMMIT;
 
 --
+-- Cup playoff match screenshot categories
+--
+
+CREATE TABLE `ws_p40_cups_matches_playoff_screens_category` (
+  `categoryID` int(11) NOT NULL,
+  `game_id` int(11) NOT NULL,
+  `name` varchar(100) COLLATE latin1_german1_ci NOT NULL,
+  `deleted` int(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+ALTER TABLE `ws_p40_cups_matches_playoff_screens_category` ADD PRIMARY KEY (`categoryID`);
+ALTER TABLE `ws_p40_cups_matches_playoff_screens_category` MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+--
 -- Cup playoff match screenshots
 --
 
@@ -223,12 +238,11 @@ CREATE TABLE `ws_p40_cups_matches_playoff_screens` (
   `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
-CREATE TABLE `ws_p40_cups_matches_playoff_screens_category` (
-  `categoryID` int(11) NOT NULL,
-  `game_id` int(11) NOT NULL,
-  `name` varchar(100) COLLATE latin1_german1_ci NOT NULL,
-  `deleted` int(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+ALTER TABLE `ws_p40_cups_matches_playoff_screens` ADD PRIMARY KEY (`screenshotID`);
+ALTER TABLE `ws_p40_cups_matches_playoff_screens` MODIFY `screenshotID` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ws_p40_cups_matches_playoff_screens` ADD CONSTRAINT `FK_CupMatchScreenshot_CategoryID` FOREIGN KEY (`category_id`) REFERENCES `ws_p40_cups_matches_playoff_screens_category`(`categoryID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `ws_p40_cups_matches_playoff_screens` ADD CONSTRAINT `FK_CupMatchScreenshot_MatchID` FOREIGN KEY (`matchID`) REFERENCES `ws_p40_cups_matches_playoff`(`matchID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+COMMIT;
 
 --
 -- Cups penalty category
@@ -529,12 +543,6 @@ ALTER TABLE `ws_p40_cups_matches_playoff`
   ADD PRIMARY KEY (`matchID`),
   ADD UNIQUE KEY `matchID` (`matchID`);
 
-ALTER TABLE `ws_p40_cups_matches_playoff_screens`
-  ADD PRIMARY KEY (`screenshotID`);
-
-ALTER TABLE `ws_p40_cups_matches_playoff_screens_category`
-  ADD PRIMARY KEY (`categoryID`);
-
 ALTER TABLE `ws_p40_cups_policy`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`);
@@ -587,12 +595,6 @@ ALTER TABLE `ws_p40_cups_mappool`
 
 ALTER TABLE `ws_p40_cups_matches_playoff`
   MODIFY `matchID` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `ws_p40_cups_matches_playoff_screens`
-  MODIFY `screenshotID` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `ws_p40_cups_matches_playoff_screens_category`
-  MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `ws_p40_cups_policy`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

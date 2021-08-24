@@ -11,6 +11,7 @@ use webspell_ng\Handler\UserHandler;
 use webspell_ng\Utils\StringFormatterUtils;
 
 use myrisk\Cup\Cup;
+use myrisk\Cup\CupMatch;
 use myrisk\Cup\Rule;
 use myrisk\Cup\SingleEliminationBracket;
 use myrisk\Cup\UserParticipant;
@@ -215,6 +216,11 @@ final class SingleEliminationBracketHandlerTest extends TestCase
 
         $this->assertEquals(3, $third_bracket_round->getRoundIdentifier(), "Round identifier is expected.");
         $this->assertEquals(1, count($third_bracket_round->getMatches()), "Count of matches is expected.");
+
+        $final_match = $third_bracket_round->getMatches()[0];
+
+        $this->assertInstanceOf(CupMatch::class, $final_match, "CupMatch instance is returned.");
+        $this->assertTrue($final_match->isWinnerBracket(), "Match is the winner bracket final.");
 
     }
 

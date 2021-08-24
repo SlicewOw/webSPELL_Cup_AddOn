@@ -8,9 +8,10 @@ use webspell_ng\Handler\UserHandler;
 use myrisk\Cup\BracketRound;
 use myrisk\Cup\Cup;
 use myrisk\Cup\CupMatch;
-use myrisk\Cup\Enum\CupEnums;
+use myrisk\Cup\MapVote;
 use myrisk\Cup\TeamParticipant;
 use myrisk\Cup\UserParticipant;
+use myrisk\Cup\Enum\CupEnums;
 
 class CupMatchHandler {
 
@@ -36,14 +37,44 @@ class CupMatchHandler {
         $match = new CupMatch();
         $match->setMatchId((int) $cup_match["matchID"]);
         $match->setFormat($cup_match["format"]);
+        $match->setLeftTeamResult((int) $cup_match["ergebnis1"]);
+        $match->setRightTeamResult((int) $cup_match["ergebnis2"]);
         $match->setDate(
             new \DateTime($cup_match["date"])
         );
-        $match->setMaps(
-            unserialize($cup_match["maps"])
+        $match->setIsWinnerBracket(
+            ($cup_match["wb"] == 1)
         );
+        $match->setIsMapVoteEnabled(
+            ($cup_match["mapvote"] == 1)
+        );
+        if (!empty($cup_match["maps"])) {
+            $map_vote = unserialize($cup_match["maps"]);
+            if (!is_array($map_vote)) {
+                $map_vote = array();
+            }
+            $match->setMapVote(
+                new MapVote($map_vote)
+            );
+        }
+        if (!empty($cup_match["server"])) {
+            $server_details = unserialize($cup_match["server"]);
+            if (!is_array($server_details)) {
+                $server_details = array();
+            }
+            $match->setServerDetails($server_details);
+        }
         $match->setIsActive(
             ($cup_match["active"] == 1)
+        );
+        $match->setIsAdminMatch(
+            ($cup_match["admin"] == 1)
+        );
+        $match->setIsLeftTeamWalkover(
+            ($cup_match["team1_freilos"] == 1)
+        );
+        $match->setIsRightTeamWalkover(
+            ($cup_match["team2_freilos"] == 1)
         );
         $match->setLeftTeamConfirmed(
             ($cup_match["team1_confirmed"] == 1)
@@ -206,14 +237,10 @@ class CupMatchHandler {
     private static function insertMatch(Cup $cup, BracketRound $bracket_round, CupMatch $match): CupMatch
     {
 
-        $left_team_walkover = ($bracket_round->getRoundIdentifier() == 1 && is_null($match->getLeftTeam())) ? 1 : 0;
-
         $left_team_id = null;
         if (!is_null($match->getLeftTeam())) {
             $left_team_id = $cup->isTeamCup() ? $match->getLeftTeam()->getTeamId() : $match->getLeftTeam()->getUserId();
         }
-
-        $right_team_walkover = ($bracket_round->getRoundIdentifier() == 1 && is_null($match->getRightTeam())) ? 1 : 0;
 
         $right_team_id = null;
         if (!is_null($match->getRightTeam())) {
@@ -235,12 +262,16 @@ class CupMatchHandler {
                         'team1_freilos' => '?',
                         'team2' => '?',
                         'team2_freilos' => '?',
+                        'ergebnis1' => '?',
+                        'ergebnis2' => '?',
                         'active' => '?',
                         'team1_confirmed' => '?',
                         'team2_confirmed' => '?',
                         'admin_confirmed' => '?',
+                        'mapvote' => '?',
                         'maps' => '?',
-                        'server' => '?'
+                        'server' => '?',
+                        'admin' => '?'
                     ]
                 )
             ->setParameters(
@@ -252,15 +283,19 @@ class CupMatchHandler {
                         4 => $match->getFormat(),
                         5 => $match->getDate()->format("Y-m-d H:i:s"),
                         6 => $left_team_id,
-                        7 => $left_team_walkover,
+                        7 => $match->isLeftTeamWalkover() ? 1 : 0,
                         8 => $right_team_id,
-                        9 => $right_team_walkover,
-                        10 => $match->isActive() ? 1 : 0,
-                        11 => $match->isConfirmedByLeftTeam() ? 1 : 0,
-                        12 => $match->isConfirmedByRightTeam() ? 1 : 0,
-                        13 => $match->isConfirmedByAdmin() ? 1 : 0,
-                        14 => serialize($match->getMaps()),
-                        15 => serialize($match->getServerDetails())
+                        9 => $match->isRightTeamWalkover() ? 1 : 0,
+                        10 => $match->getLeftTeamResult(),
+                        11 => $match->getRightTeamResult(),
+                        12 => $match->isActive() ? 1 : 0,
+                        13 => $match->isConfirmedByLeftTeam() ? 1 : 0,
+                        14 => $match->isConfirmedByRightTeam() ? 1 : 0,
+                        15 => $match->isConfirmedByAdmin() ? 1 : 0,
+                        16 => $match->isMapVoteEnabled() ? 1 : 0,
+                        17 => $match->getMapVote()->getSerialized(),
+                        18 => serialize($match->getServerDetails()),
+                        19 => $match->isAdminMatch() ? 1 : 0
                     ]
                 );
 
@@ -277,14 +312,10 @@ class CupMatchHandler {
     private static function updateMatch(Cup $cup, BracketRound $bracket_round, CupMatch $match): void
     {
 
-        $left_team_walkover = ($bracket_round->getRoundIdentifier() == 1 && is_null($match->getLeftTeam())) ? 1 : 0;
-
         $left_team_id = null;
         if (!is_null($match->getLeftTeam())) {
             $left_team_id = $cup->isTeamCup() ? $match->getLeftTeam()->getTeamId() : $match->getLeftTeam()->getUserId();
         }
-
-        $right_team_walkover = ($bracket_round->getRoundIdentifier() == 1 && is_null($match->getRightTeam())) ? 1 : 0;
 
         $right_team_id = null;
         if (!is_null($match->getRightTeam())) {
@@ -304,12 +335,16 @@ class CupMatchHandler {
             ->set("team1_freilos", "?")
             ->set("team2", "?")
             ->set("team2_freilos", "?")
+            ->set("ergebnis1", "?")
+            ->set("ergebnis2", "?")
             ->set("active", "?")
             ->set("team1_confirmed", "?")
             ->set("team2_confirmed", "?")
             ->set("admin_confirmed", "?")
+            ->set("mapvote", "?")
             ->set("maps", "?")
             ->set("server", "?")
+            ->set("admin", "?")
             ->where('matchID = ?')
             ->setParameter(0, $cup->getCupId())
             ->setParameter(1, $bracket_round->isWinnerBracket() ? 1 : 0)
@@ -318,16 +353,20 @@ class CupMatchHandler {
             ->setParameter(4, $match->getFormat())
             ->setParameter(5, $match->getDate()->format("Y-m-d H:i:s"))
             ->setParameter(6, $left_team_id)
-            ->setParameter(7, $left_team_walkover)
+            ->setParameter(7, $match->isLeftTeamWalkover() ? 1 : 0)
             ->setParameter(8, $right_team_id)
-            ->setParameter(9, $right_team_walkover)
-            ->setParameter(10, $match->isActive() ? 1 : 0)
-            ->setParameter(11, $match->isConfirmedByLeftTeam() ? 1 : 0)
-            ->setParameter(12, $match->isConfirmedByRightTeam() ? 1 : 0)
-            ->setParameter(13, $match->isConfirmedByAdmin() ? 1 : 0)
-            ->setParameter(14, serialize($match->getMaps()))
-            ->setParameter(15, serialize($match->getServerDetails()))
-            ->setParameter(16, $match->getMatchId());
+            ->setParameter(9, $match->isRightTeamWalkover() ? 1 : 0)
+            ->setParameter(10, $match->getLeftTeamResult())
+            ->setParameter(11, $match->getRightTeamResult())
+            ->setParameter(12, $match->isActive() ? 1 : 0)
+            ->setParameter(13, $match->isConfirmedByLeftTeam() ? 1 : 0)
+            ->setParameter(14, $match->isConfirmedByRightTeam() ? 1 : 0)
+            ->setParameter(15, $match->isConfirmedByAdmin() ? 1 : 0)
+            ->setParameter(16, $match->isMapVoteEnabled() ? 1 : 0)
+            ->setParameter(17, $match->getMapVote()->getSerialized())
+            ->setParameter(18, serialize($match->getServerDetails()))
+            ->setParameter(19, $match->isAdminMatch() ? 1 : 0)
+            ->setParameter(20, $match->getMatchId());
 
         $queryBuilder->executeQuery();
 
