@@ -207,6 +207,8 @@ CREATE TABLE `ws_p40_cups_matches_playoff` (
   `admin` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
+ALTER TABLE `ws_p40_cups_matches_playoff` ADD PRIMARY KEY (`matchID`), ADD UNIQUE KEY `matchID` (`matchID`);
+ALTER TABLE `ws_p40_cups_matches_playoff` MODIFY `matchID` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `ws_p40_cups_matches_playoff` ADD UNIQUE( `cupID`, `wb`, `runde`, `spiel`);
 ALTER TABLE `ws_p40_cups_matches_playoff` ADD CONSTRAINT `FK_CupMatchPlayoff_CupID` FOREIGN KEY (`cupID`) REFERENCES `ws_p40_cups`(`cupID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
@@ -258,6 +260,7 @@ CREATE TABLE `ws_p40_cups_penalty_category` (
 
 ALTER TABLE `ws_p40_cups_penalty_category` ADD PRIMARY KEY (`reasonID`), ADD UNIQUE KEY `reasonID` (`reasonID`);
 ALTER TABLE `ws_p40_cups_penalty_category` MODIFY `reasonID` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
 
 --
 -- Cups penalty
@@ -539,10 +542,6 @@ ALTER TABLE `ws_p40_cups_mappool`
   ADD UNIQUE KEY `mappoolID` (`mappoolID`),
   ADD UNIQUE KEY `unique_name` (`name`,`gameID`);
 
-ALTER TABLE `ws_p40_cups_matches_playoff`
-  ADD PRIMARY KEY (`matchID`),
-  ADD UNIQUE KEY `matchID` (`matchID`);
-
 ALTER TABLE `ws_p40_cups_policy`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`);
@@ -592,9 +591,6 @@ ALTER TABLE `ws_p40_cups_gameaccounts_profiles`
 
 ALTER TABLE `ws_p40_cups_mappool`
   MODIFY `mappoolID` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `ws_p40_cups_matches_playoff`
-  MODIFY `matchID` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `ws_p40_cups_policy`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
