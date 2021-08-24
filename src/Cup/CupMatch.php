@@ -72,9 +72,9 @@ class CupMatch {
     private $right_team_result = 0;
 
     /**
-     * @var bool $is_map_vote_enabled
+     * @var bool $is_map_vote_done
      */
-    private $is_map_vote_enabled = false;
+    private $is_map_vote_done = false;
 
     /**
      * @var ?MapVote $map_vote
@@ -110,6 +110,11 @@ class CupMatch {
      * @var bool $admin_confirmed
      */
     private $admin_confirmed = false;
+
+    /**
+     * @var bool $comments_allowed
+     */
+    private $comments_allowed = true;
 
     public function setMatchId(int $match_id): void
     {
@@ -243,14 +248,14 @@ class CupMatch {
         return $this->right_team_result;
     }
 
-    public function setIsMapVoteEnabled(bool $is_map_vote_enabled): void
+    public function setIsMapVoteDone(bool $is_map_vote_done): void
     {
-        $this->is_map_vote_enabled = $is_map_vote_enabled;
+        $this->is_map_vote_done = $is_map_vote_done;
     }
 
-    public function isMapVoteEnabled(): bool
+    public function isMapVoteDone(): bool
     {
-        return $this->is_map_vote_enabled;
+        return $this->is_map_vote_done;
     }
 
     public function setMapVote(MapVote $map_vote): void
@@ -335,6 +340,16 @@ class CupMatch {
     public function isFinished(): bool
     {
         return $this->admin_confirmed || ($this->left_team_confirmed && $this->right_team_confirmed);
+    }
+
+    public function setIsCommentingAllowed(bool $comments_allowed): void
+    {
+        $this->comments_allowed = $comments_allowed;
+    }
+
+    public function isCommentingAllowed(): bool
+    {
+        return $this->comments_allowed;
     }
 
 }

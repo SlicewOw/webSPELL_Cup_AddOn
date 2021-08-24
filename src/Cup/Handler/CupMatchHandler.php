@@ -39,16 +39,19 @@ class CupMatchHandler {
         $match->setFormat($cup_match["format"]);
         $match->setLeftTeamResult((int) $cup_match["ergebnis1"]);
         $match->setRightTeamResult((int) $cup_match["ergebnis2"]);
+        $match->setRoundIdentifier((int) $cup_match["runde"]);
+        $match->setMatchIdentifier((int) $cup_match["spiel"]);
         $match->setDate(
             new \DateTime($cup_match["date"])
         );
         $match->setIsWinnerBracket(
             ($cup_match["wb"] == 1)
         );
-        $match->setRoundIdentifier((int) $cup_match["runde"]);
-        $match->setMatchIdentifier((int) $cup_match["spiel"]);
-        $match->setIsMapVoteEnabled(
+        $match->setIsMapVoteDone(
             ($cup_match["mapvote"] == 1)
+        );
+        $match->setIsCommentingAllowed(
+            ($cup_match["comments"] == 1)
         );
         if (!empty($cup_match["maps"])) {
             $map_vote = unserialize($cup_match["maps"]);
@@ -181,6 +184,8 @@ class CupMatchHandler {
 
             $new_match = new CupMatch();
             $new_match->setMatchIdentifier($match_indentifier);
+            $new_match->setRoundIdentifier($round);
+            $new_match->setIsWinnerBracket($is_winner_bracket);
             // TODO: Implement logic to set format per round instead of global format
             $new_match->setFormat(CupEnums::CUP_FORMAT_BEST_OF_ONE);
             $new_match->setDate($match_datetime);
@@ -203,7 +208,7 @@ class CupMatchHandler {
                 $new_match->setIsActive(true);
             }
 
-            $saved_match = self::saveMatch($cup, $bracket_round, $new_match);
+            $saved_match = self::saveMatch($cup, $new_match);
 
             $bracket_round->addMatch($saved_match);
 
@@ -219,13 +224,13 @@ class CupMatchHandler {
 
     }
 
-    public static function saveMatch(Cup $cup, BracketRound $bracket_round, CupMatch $match): CupMatch
+    public static function saveMatch(Cup $cup, CupMatch $match): CupMatch
     {
 
         if (is_null($match->getMatchId())) {
-            $match = self::insertMatch($cup, $bracket_round, $match);
+            $match = self::insertMatch($cup, $match);
         } else {
-            self::updateMatch($cup, $bracket_round, $match);
+            self::updateMatch($cup, $match);
         }
 
         if (is_null($match->getMatchId())) {
@@ -236,7 +241,7 @@ class CupMatchHandler {
 
     }
 
-    private static function insertMatch(Cup $cup, BracketRound $bracket_round, CupMatch $match): CupMatch
+    private static function insertMatch(Cup $cup, CupMatch $match): CupMatch
     {
 
         $left_team_id = null;
@@ -279,8 +284,8 @@ class CupMatchHandler {
             ->setParameters(
                     [
                         0 => $cup->getCupId(),
-                        1 => $bracket_round->isWinnerBracket() ? 1 : 0,
-                        2 => $bracket_round->getRoundIdentifier(),
+                        1 => $match->isWinnerBracket() ? 1 : 0,
+                        2 => $match->getRoundIdentifier(),
                         3 => $match->getMatchIdentifier(),
                         4 => $match->getFormat(),
                         5 => $match->getDate()->format("Y-m-d H:i:s"),
@@ -294,7 +299,7 @@ class CupMatchHandler {
                         13 => $match->isConfirmedByLeftTeam() ? 1 : 0,
                         14 => $match->isConfirmedByRightTeam() ? 1 : 0,
                         15 => $match->isConfirmedByAdmin() ? 1 : 0,
-                        16 => $match->isMapVoteEnabled() ? 1 : 0,
+                        16 => $match->isMapVoteDone() ? 1 : 0,
                         17 => $match->getMapVote()->getSerialized(),
                         18 => serialize($match->getServerDetails()),
                         19 => $match->isAdminMatch() ? 1 : 0
@@ -311,7 +316,7 @@ class CupMatchHandler {
 
     }
 
-    private static function updateMatch(Cup $cup, BracketRound $bracket_round, CupMatch $match): void
+    private static function updateMatch(Cup $cup, CupMatch $match): void
     {
 
         $left_team_id = null;
@@ -349,8 +354,8 @@ class CupMatchHandler {
             ->set("admin", "?")
             ->where('matchID = ?')
             ->setParameter(0, $cup->getCupId())
-            ->setParameter(1, $bracket_round->isWinnerBracket() ? 1 : 0)
-            ->setParameter(2, $bracket_round->getRoundIdentifier())
+            ->setParameter(1, $match->isWinnerBracket() ? 1 : 0)
+            ->setParameter(2, $match->getRoundIdentifier())
             ->setParameter(3, $match->getMatchIdentifier())
             ->setParameter(4, $match->getFormat())
             ->setParameter(5, $match->getDate()->format("Y-m-d H:i:s"))
@@ -364,7 +369,7 @@ class CupMatchHandler {
             ->setParameter(13, $match->isConfirmedByLeftTeam() ? 1 : 0)
             ->setParameter(14, $match->isConfirmedByRightTeam() ? 1 : 0)
             ->setParameter(15, $match->isConfirmedByAdmin() ? 1 : 0)
-            ->setParameter(16, $match->isMapVoteEnabled() ? 1 : 0)
+            ->setParameter(16, $match->isMapVoteDone() ? 1 : 0)
             ->setParameter(17, $match->getMapVote()->getSerialized())
             ->setParameter(18, serialize($match->getServerDetails()))
             ->setParameter(19, $match->isAdminMatch() ? 1 : 0)

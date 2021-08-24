@@ -228,7 +228,7 @@ class Cup {
         $this->map_vote_enabled = $map_vote_enabled;
     }
 
-    public function isMapVoteEnabled(): bool
+    public function isMapVoteDone(): bool
     {
         return $this->map_vote_enabled;
     }

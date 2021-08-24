@@ -153,7 +153,7 @@ class CupHandler {
                         5 => $cup->getStatus(),
                         6 => $cup->getGame()->getGameId(),
                         7 => $cup->getRule()->getRuleId(),
-                        8 => $cup->isMapVoteEnabled() ? 1 : 0,
+                        8 => $cup->isMapVoteDone() ? 1 : 0,
                         9 => $map_pool_id,
                         10 => $cup->getMaximumOfPenaltyPoints(),
                         11 => $cup->isSaved() ? 1 : 0,
@@ -205,7 +205,7 @@ class CupHandler {
             ->setParameter(5, $cup->getStatus())
             ->setParameter(6, $cup->getGame()->getGameId())
             ->setParameter(7, $cup->getRule()->getRuleId())
-            ->setParameter(8, $cup->isMapVoteEnabled() ? 1 : 0)
+            ->setParameter(8, $cup->isMapVoteDone() ? 1 : 0)
             ->setParameter(9, $map_pool_id)
             ->setParameter(10, $cup->getMaximumOfPenaltyPoints())
             ->setParameter(11, $cup->isSaved() ? 1 : 0)
