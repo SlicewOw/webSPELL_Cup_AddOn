@@ -76,6 +76,11 @@ final class SingleEliminationBracketHandlerTest extends TestCase
 
         $new_user_01 = new User();
         $new_user_01->setUsername("Test User " . StringFormatterUtils::getRandomString(10));
+        $new_user_01->setPassword(
+            StringFormatterUtils::generateHashedPassword(
+                StringFormatterUtils::getRandomString(20)
+            )
+        );
         $new_user_01->setFirstname(StringFormatterUtils::getRandomString(10));
         $new_user_01->setEmail(StringFormatterUtils::getRandomString(10) . "@myrisk-ev.de");
         $new_user_01->setSex(UserEnums::SEXUALITY_WOMAN);
@@ -89,6 +94,11 @@ final class SingleEliminationBracketHandlerTest extends TestCase
 
         $new_user_02 = new User();
         $new_user_02->setUsername("Test User " . StringFormatterUtils::getRandomString(10));
+        $new_user_02->setPassword(
+            StringFormatterUtils::generateHashedPassword(
+                StringFormatterUtils::getRandomString(20)
+            )
+        );
         $new_user_02->setFirstname(StringFormatterUtils::getRandomString(10));
         $new_user_02->setEmail(StringFormatterUtils::getRandomString(10) . "@myrisk-ev.de");
         $new_user_02->setSex(UserEnums::SEXUALITY_WOMAN);
@@ -102,6 +112,11 @@ final class SingleEliminationBracketHandlerTest extends TestCase
 
         $new_user_03 = new User();
         $new_user_03->setUsername("Test User " . StringFormatterUtils::getRandomString(10));
+        $new_user_03->setPassword(
+            StringFormatterUtils::generateHashedPassword(
+                StringFormatterUtils::getRandomString(20)
+            )
+        );
         $new_user_03->setFirstname(StringFormatterUtils::getRandomString(10));
         $new_user_03->setEmail(StringFormatterUtils::getRandomString(10) . "@myrisk-ev.de");
         $new_user_03->setSex(UserEnums::SEXUALITY_WOMAN);
@@ -115,6 +130,11 @@ final class SingleEliminationBracketHandlerTest extends TestCase
 
         $new_user_04 = new User();
         $new_user_04->setUsername("Test User " . StringFormatterUtils::getRandomString(10));
+        $new_user_04->setPassword(
+            StringFormatterUtils::generateHashedPassword(
+                StringFormatterUtils::getRandomString(20)
+            )
+        );
         $new_user_04->setFirstname(StringFormatterUtils::getRandomString(10));
         $new_user_04->setEmail(StringFormatterUtils::getRandomString(10) . "@myrisk-ev.de");
         $new_user_04->setSex(UserEnums::SEXUALITY_WOMAN);
@@ -128,6 +148,11 @@ final class SingleEliminationBracketHandlerTest extends TestCase
 
         $new_user_05 = new User();
         $new_user_05->setUsername("Test User " . StringFormatterUtils::getRandomString(10));
+        $new_user_05->setPassword(
+            StringFormatterUtils::generateHashedPassword(
+                StringFormatterUtils::getRandomString(20)
+            )
+        );
         $new_user_05->setFirstname(StringFormatterUtils::getRandomString(10));
         $new_user_05->setEmail(StringFormatterUtils::getRandomString(10) . "@myrisk-ev.de");
         $new_user_05->setSex(UserEnums::SEXUALITY_WOMAN);

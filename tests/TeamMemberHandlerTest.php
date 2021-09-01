@@ -50,6 +50,11 @@ final class TeamMemberHandlerTest extends TestCase
 
         $tmp_new_user = new User();
         $tmp_new_user->setUsername("Test User " . StringFormatterUtils::getRandomString(10));
+        $tmp_new_user->setPassword(
+            StringFormatterUtils::generateHashedPassword(
+                StringFormatterUtils::getRandomString(20)
+            )
+        );
         $tmp_new_user->setFirstname("Test User " . StringFormatterUtils::getRandomString(10));
         $tmp_new_user->setEmail(StringFormatterUtils::getRandomString(10) . "@webspell-ng.de");
         $tmp_new_user->setTown("Berlin");

@@ -37,6 +37,11 @@ final class SupportTicketHandlerTest extends TestCase
 
         $new_user = new User();
         $new_user->setUsername("Test User " . StringFormatterUtils::getRandomString(10));
+        $new_user->setPassword(
+            StringFormatterUtils::generateHashedPassword(
+                StringFormatterUtils::getRandomString(20)
+            )
+        );
         $new_user->setFirstname("Test User " . StringFormatterUtils::getRandomString(10));
         $new_user->setEmail(StringFormatterUtils::getRandomString(10) . "@webspell-ng.de");
         $new_user->setTown("Hamburg");
