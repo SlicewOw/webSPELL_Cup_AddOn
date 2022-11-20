@@ -14,7 +14,7 @@ CREATE TABLE `ws_p40_cups` (
   `server` int(1) NOT NULL DEFAULT 0,
   `mapvote_enable` int(1) NOT NULL DEFAULT 0,
   `mappool` int(11) DEFAULT NULL,
-  `mode` varchar(255) COLLATE latin1_german1_ci NOT NULL DEFAULT '5on5',
+  `mode` varchar(10) COLLATE latin1_german1_ci NOT NULL DEFAULT '5on5',
   `ruleID` int(11) NOT NULL,
   `max_size` int(11) NOT NULL,
   `max_penalty` int(5) NOT NULL DEFAULT 12,
